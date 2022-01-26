@@ -13,8 +13,9 @@ class CreateSalasTable extends Migration
      */
     public function up()
     {
-        Schema::create('salas', function (Blueprint $table) {
-            $table->id();
+        Schema::create('sala', function (Blueprint $table) {
+            $table->id('idSala')->comment('Identificador autoincremental');
+            $table->string('nomSala')->comment('Nombre de sala');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreateSalasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salas');
+        Schema::dropIfExists('sala');
     }
 }
