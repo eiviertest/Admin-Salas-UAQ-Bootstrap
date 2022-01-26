@@ -13,8 +13,9 @@ class CreateAreasTable extends Migration
      */
     public function up()
     {
-        Schema::create('areas', function (Blueprint $table) {
-            $table->id();
+        Schema::create('area', function (Blueprint $table) {
+            $table->id('idArea')->comment('Identificador autoincremental');
+            $table->string('nomArea', 200)->comment('Nombre de area');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreateAreasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('areas');
+        Schema::dropIfExists('area');
     }
 }

@@ -15,7 +15,7 @@ class CreateSalasTable extends Migration
     {
         Schema::create('sala', function (Blueprint $table) {
             $table->id('idSala')->comment('Identificador autoincremental');
-            $table->string('nomSala')->comment('Nombre de sala');
+            $table->char('nomSala', 2)->comment('Nombre de sala');
             $table->timestamps();
         });
     }
