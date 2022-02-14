@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
+use App\Models\Estatus;
 use Illuminate\Http\Request;
 
-class AreaController extends Controller
+class EstatusController extends Controller
 {
     /**
-     * Lista todas las areas, dependencias registradoas
+     * Display a listing of the resource.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -16,57 +16,62 @@ class AreaController extends Controller
     public function index(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $areas = Area::select('idArea as ide', 'nomArea as nombre')->orderBy('nomArea', 'ASC')->paginate(10);
-        return ['areas' => $areas];
+        $estados = Estatus::select('idEst as ide', 'nomEst as nombre')->orderBy('nomEst', 'ASC')->paginate(10);
+        return ['estados' => $estados];
     }
 
     /**
-     * Almacena una area/dependencia
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if(!$request->ajax()) return redirect('/');
         $this->validarDatos($request);
         try {
-            $area = new Area();
-            $area->nomArea = $request->nomArea;
-            $area->save();
-            return ['mensaje' => 'Ha sido guardada el área'];
+            $estatus = new Estatus();
+            $estatus->nomEst = $request->nomEst;
+            $estatus->save();
+            return ['mensaje' => 'Ha sido guardado el estado'];
         } catch (exception $e) {
             return $e->getMessage();
         }
     }
 
     /**
-     * Actualiza una area/dependencia
+     * Show the form for editing the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
         $this->validarDatos($request);
         try {
-            $area = Area::findOrFail($request->id);
-            $area->nomArea = $request->nomArea;
-            $area->save();
-            return ['mensaje' => 'Ha sido actualizada el área'];
+            $estatus = Estatus::findOrFail($request->id);
+            $estatus->nomEst = $request->nomEst;
+            $estatus->save();
+            return ['mensaje' => 'Ha sido actualizado el estado'];
         } catch (exception $e) {
             return $e->getMessage();
         }
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
     public function validarDatos(Request $request) {
         $request->validate([
-            'nomArea' => 'required|string|max:200|unique:area',
+            'nomEst' => 'required|string|max:200|unique:estatus',
         ]);
     }
 
     /**
-     * Elimina una area/dependencia
+     * Remove the specified resource from storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -75,9 +80,9 @@ class AreaController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         try {
-            $area = Area::findOrFail($request->id);
-            $area->delete();
-            return ['mensaje' => 'Ha sido eliminada el área'];
+            $estatus = Estatus::findOrFail($request->id);
+            $estatus->delete();
+            return ['mensaje' => 'Ha sido eliminado el estado'];
         } catch (exception $e) {
             return $e->getMessage();
         }
