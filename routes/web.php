@@ -24,3 +24,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 require __DIR__.'/area.php';
 require __DIR__.'/sala.php';
 require __DIR__.'/estatus.php';
+require __DIR__.'/curso.php';
