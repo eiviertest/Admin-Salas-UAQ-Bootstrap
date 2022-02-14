@@ -21,6 +21,12 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/enrolarse', [CursoPersonaController::class, 'enrolarse_curso']);
+    Route::post('/rechazar_persona_curso', [CursoPersonaController::class, 'rechazar_persona_curso']);
+    Route::post('/aceptar_persona_curso', [CursoPersonaController::class, 'aceptar_persona_curso']);
+});
+
 require __DIR__.'/area.php';
 require __DIR__.'/sala.php';
 require __DIR__.'/estatus.php';
