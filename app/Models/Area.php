@@ -9,9 +9,15 @@ class Area extends Model
 {
     use HasFactory;
 
+    protected $table = 'area';
+
     protected $primaryKey = 'idArea';
 
     protected $fillable = [
         'nomArea'
     ];
+
+    public function personas(){
+        return $this->hasMany(Persona::class, 'idArea');
+    }
 }
