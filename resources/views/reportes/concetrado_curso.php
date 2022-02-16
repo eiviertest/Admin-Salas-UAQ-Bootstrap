@@ -8,33 +8,27 @@
     <!--<link href="{{ public_path('css/app.css') }}" rel="stylesheet" type="text/css">-->
 <body>
     <div>
-        <h2>Concentrado por curso</h2>
-        <h3><span class="derecha">{{$curso}}</span></h3>
+        <h2>Datos del curso</h2>
+        <h3>Nombre: {{$datos_curso->nomCur}}</h3>
+        <h3>Fecha de inicio: {{$datos_curso->fecInCur}}</h3>
+        <h3>Fecha de termino: {{$datos_curso->fecFinCur}}</h3>
+        <h3>Impartido en la sala: {{$datos_curso->nomSala}}</h3>
     </div>
     <table class="table table-bordered table-striped table-sm">
         <thead class="thead">
             <tr>
-                <th>Nombre de curso</th>
-                <th>Fecha de inicio</th>
-                <th>Fecha de terminación</th>
-                <th>Cupo de curso</th>
-                <th>Sala</th>
+                <th>Nombre de la persona</th>
+                <th>Área/Facultad/Institución</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($cursos as $curso)
+            @foreach ($personas as $persona)
             <tr>
-                <td>{{$curso->nomCur}}</td>
-                <td>{{$curso->fecInCur}}</td>
-                <td>{{$curso->fecFinCur}}</td>
-                <td>{{$curso->cupCur}}</td>
-                <td>{{$curso->nomSala}}</td>
+                <td>{{$personas->nombre}}</td>
+                <td>{{$personas->nomArea}}</td>
             </tr>
             @endforeach                                
         </tbody>
     </table>
-    <div class="izquierda">
-        <p><strong>Total de cursos: </strong>{{count($cursos)}}</p>
-    </div>
 </body>
 </html>

@@ -18,7 +18,7 @@ class CursoPersonaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function cursos_impartidos(Request $request){
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $fecha_actual = Carbon::now()->format('m-d');
         $semestre = "";
         $total_cursos = 0;
@@ -61,20 +61,17 @@ class CursoPersonaController extends Controller
     public function concentrado_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
         $idCurso = $request->idCur;
-        $personas = CursoPersona::select('c.fecInCur', 'c.fecFinCur', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
+        $personas = CursoPersona::select(DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
                     ->where('curso_persona.estatus', '=', 'Aceptado')
                     ->get();
-        $sala_curso = Curso::select('nomSala')
+        $datos_curso = Curso::select('nomCur', 'fecInCur', 'fecFinCur', 'nomSala')
                             ->join('sala as s', 's.idSala', '=', 'curso.idSala')
                             ->where('idCur', '=', $idCurso)
                             ->first();
-        $nombre_curso = Curso::select('nomCur')
-                        ->where('idCur', '=', $idCurso)
-                        ->first();
-        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, 'sala_curso'=>$sala_curso, 'curso' => $nombre_curso]);
+        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, 'datos_curso' => $datos_curso]);
         return $pdf->download('concentrado_curso.pdf');
     }
 
