@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\Area;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -87,5 +88,10 @@ class RegisterController extends Controller
         }catch(exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function mostrarFormulario(){
+        $areas = Area::select('idArea', 'nomArea')->orderBy('nomArea', 'ASC')->get();
+        return view('auth/register', ['areas' => $areas]);
     }
 }

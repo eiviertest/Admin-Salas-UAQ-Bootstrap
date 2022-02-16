@@ -18,7 +18,7 @@ class CursoPersonaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function cursos_impartidos(Request $request){
-        if(!$request->ajax()) return redirect('/');
+        //if(!$request->ajax()) return redirect('/');
         $fecha_actual = Carbon::now()->format('m-d');
         $semestre = "";
         $total_cursos = 0;
@@ -36,7 +36,7 @@ class CursoPersonaController extends Controller
             $cursos = $this->cursos_impartidos_fecha($medio_anio, $fin_anio);
         }
         $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $cursos, 'semestre'=>$semestre]);
-        return $pdf->download('cursos_impartidos.pdf');
+        return $pdf->stream();
     }
 
     /**
@@ -61,8 +61,7 @@ class CursoPersonaController extends Controller
     public function concentrado_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
         $idCurso = $request->idCur;
-        $personas = CursoPersona::select('c.nomCur', 'c.fecInCur', 'c.fecFinCur', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
-                    ->join('curso as c', 'curso_persona.idCur', '=', 'c.idCur')
+        $personas = CursoPersona::select('c.fecInCur', 'c.fecFinCur', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
@@ -72,7 +71,10 @@ class CursoPersonaController extends Controller
                             ->join('sala as s', 's.idSala', '=', 'curso.idSala')
                             ->where('idCur', '=', $idCurso)
                             ->first();
-        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, '$sala_curso'=>$sala_curso]);
+        $nombre_curso = Curso::select('nomCur')
+                        ->where('idCur', '=', $idCurso)
+                        ->first();
+        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, 'sala_curso'=>$sala_curso, 'curso' => $nombre_curso]);
         return $pdf->download('concentrado_curso.pdf');
     }
 
