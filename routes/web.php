@@ -16,10 +16,6 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Route::get('/', function () {
     return view('auth/login');
 });
