@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos impartidos</title>
+    <title>Concentrado por curso</title>
     <!--<link href="{{ public_path('css/app.css') }}" rel="stylesheet" type="text/css">-->
 <body>
     <div>
@@ -24,8 +24,8 @@
         <tbody>
             @foreach ($personas as $persona)
             <tr>
-                <td>{{$personas->nombre}}</td>
-                <td>{{$personas->nomArea}}</td>
+                <td>{{$persona->nombre}}</td>
+                <td>{{$persona->nomArea}}</td>
             </tr>
             @endforeach                                
         </tbody>

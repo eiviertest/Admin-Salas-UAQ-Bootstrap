@@ -4,37 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos impartidos</title>
+    <title>Detallado de solicitudes</title>
     <!--<link href="{{ public_path('css/app.css') }}" rel="stylesheet" type="text/css">-->
 <body>
     <div>
-        <h2>Cursos impartidos</h2>
-        <h3><span>{{$semestre}}</span></h3>
+        <h2>Detallado de solicitudes</h2>
     </div>
     <table class="table table-bordered table-striped table-sm">
         <thead class="thead">
             <tr>
-                <th>Nombre de curso</th>
-                <th>Fecha de inicio</th>
-                <th>Fecha de terminación</th>
-                <th>Cupo de curso</th>
+                <th>Nombre de persona</th>
+                <th>Área/Institución/Facultad</th>
+                <th>Estado</th>
                 <th>Sala</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($cursos as $curso)
+            @foreach ($solicitudes as $solicitud)
             <tr>
-                <td>{{$curso->nomCur}}</td>
-                <td>{{$curso->fecInCur}}</td>
-                <td>{{$curso->fecFinCur}}</td>
-                <td>{{$curso->cupCur}}</td>
-                <td>{{$curso->nomSala}}</td>
+                <td>{{$solicitud->nombre}}</td>
+                <td>{{$solicitud->nomArea}}</td>
+                <td>{{$solicitud->nomEst}}</td>
+                <td>{{$solicitud->nomSala}}</td>
             </tr>
             @endforeach                                
         </tbody>
     </table>
-    <div">
-        <p><strong>Total de cursos: </strong>{{count($cursos)}}</p>
+    <div>
+        <p><strong>Total de solicitudes: </strong>{{count($solicitudes)}}</p>
     </div>
 </body>
 </html>
