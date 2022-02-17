@@ -18,7 +18,7 @@ class CursoPersonaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function cursos_impartidos(Request $request){
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $fecha_actual = Carbon::now()->format('m-d');
         $semestre = "";
         $total_cursos = 0;

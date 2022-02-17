@@ -103,7 +103,7 @@ class SolicitudController extends Controller
     }
 
     public function solicitud_persona(Request $request){
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $solicitudes = Solicitud::select(DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomArea', 'nomEst', 'nomSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
@@ -111,11 +111,7 @@ class SolicitudController extends Controller
                         ->join('estatus as es', 'es.idEst', '=', 'solicitud.idEst')
                         ->orderBy('nomArea', 'ASC')
                         ->get();
-                        //Si encuentra data
-                        return $solicitudes;
-                        //La vista no encuentra la informacion
-        $pdf = PDF::loadView('reportes.solicitud_persona', ['solicitudes' => $solicitudes]);
-        return $pdf->stream();
+        $pdf = PDF::loadView('reportes.solicitud_persona', ['solicitudes    ' => $solicitudes]);
         return $pdf->download('solicitud_persona.pdf');
     }
 }
