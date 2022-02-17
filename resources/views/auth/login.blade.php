@@ -4,8 +4,10 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <img src="{{URL::asset('img/logo.png')}}" width="200" height="200" 
+                class="img-fluid rounded mx-auto d-block" alt="logo">
             <div class="card">
-                <div class="card-header">{{ __('Inicar sesión') }}</div>
+                <h4 class="card-header">{{ __('Inicar sesión') }}</h4>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
