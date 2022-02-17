@@ -15,6 +15,7 @@ class CursoPersona extends Model
 
     protected $fillable = [
         'idCur',
-        'idPer'
+        'idPer',
+        'estatus'
     ];
 }

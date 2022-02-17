@@ -36,7 +36,7 @@ class CursoPersonaController extends Controller
             $cursos = $this->cursos_impartidos_fecha($medio_anio, $fin_anio);
         }
         $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $cursos, 'semestre'=>$semestre]);
-        return $pdf->stream();
+        return $pdf->download('cursos_impartidos.pdf');
     }
 
     /**
@@ -83,7 +83,6 @@ class CursoPersonaController extends Controller
      */
     public function enrolarse_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
-        //Setear estado (En proceso, Aceptado, Rechazado) / Modelo, migracion
         try{
             $idPersona = $this->getIdPersona(Auth::user()->id);
             $enrolarse = new CursoPersona();
