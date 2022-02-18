@@ -27,7 +27,7 @@ class SolicitudController extends Controller
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
                         ->where('e.nomEst', '!=', 'Aceptado')
-                        ->persona($idPersona)
+                        ->persona($idPersona->idPer)
                         ->paginate(10);
         return ['solicitudes' => $solicitudes];
     }
@@ -71,8 +71,8 @@ class SolicitudController extends Controller
         try {
             $solicitud = new Solicitud();
             $solicitud->rutaSol = $request->rutaSol;
-            $solicitud->idPer = $idPersona;
-            $solicitud->idEst = $idEstatus;
+            $solicitud->idPer = $idPersona->idPer;
+            $solicitud->idEst = $idEstatus->idEst;
             $solicitud->fecha = $request->fecha;
             $solicitud->horainicio = $request->horainicio;
             $solicitud->horafin = $horafin;

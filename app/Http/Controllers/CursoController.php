@@ -16,9 +16,8 @@ class CursoController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
-        $cursos = Curso::select('curso.idCuro', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur', 'h.horIn', 'h.horFin')
-                        ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
+        if(!$request->ajax()) return redirect('/');                        
+        $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
                         ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(10);
         return ['cursos' => $cursos];
     }

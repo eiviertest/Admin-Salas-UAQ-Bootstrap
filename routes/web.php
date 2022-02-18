@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CursoPersonaController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 
@@ -31,9 +30,6 @@ Route::post('login', [LoginController::class, 'login']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::post('/enrolarse', [CursoPersonaController::class, 'enrolarse_curso']);
-    Route::post('/rechazar_persona_curso', [CursoPersonaController::class, 'rechazar_persona_curso']);
-    Route::post('/aceptar_persona_curso', [CursoPersonaController::class, 'aceptar_persona_curso']);
     //Ruta para cerrar sesión
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });

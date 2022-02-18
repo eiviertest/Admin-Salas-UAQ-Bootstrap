@@ -76,45 +76,60 @@ class CursoPersonaController extends Controller
     }
 
     /**
-     * Descargar las personas por curso
+     * Enviar solicitud para enrolarse a un curso
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function enrolarse_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
-        try{
-            $idPersona = $this->getIdPersona(Auth::user()->id);
-            $enrolarse = new CursoPersona();
-            $enrolarse->idCur = $request->idCur;
-            $enrolarse->idPer = $idPersona;
-            $enrolarse->estatus = 'En proceso';
-            $enrolarse->save();
-        }catch(exception $e){
-            return $e->getMessage();
-        }
+        $idPersona = $this->getIdPersona(Auth::user()->id);
+        $verificar = CursoPersona::select('idPer')->where('idPer', '=', $idPersona->idPer)->where('idCur', '=', $request->idCur)->first();
+        if(empty($verificar)) {
+            //Registrar
+            try{
+                $enrolarse = new CursoPersona();
+                $enrolarse->idCur = $request->idCur;
+                $enrolarse->idPer = $idPersona->idPer;
+                $enrolarse->estatus = 'En proceso';
+                $enrolarse->save();
+                return ['mensaje' => 'Usted se ha enrolado'];
+            }catch(exception $e){
+                return $e->getMessage();
+            }
+        }else{
+            return ['mensaje' => 'Usted ya se enrolo a este curso'];
+        }   
     }
 
     /**
-     * Descargar las personas por curso
+     * Aceptar persona al curso
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function aceptar_persona_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
-        try {
-            $curso_persona = CursoPersona::findOrFail($request->idPer);
-            $curso_persona->estatus = 'Aceptado';
-            $curso_persona->save();
-            return ['mensaje' => 'El usuario ha sido aceptado'];
-        } catch (exception $e) {
-            return $e->getMessage();
+        $personas_enroladas = CursoPersona::selectRaw('count(*) as total')->where('idCur', '=', $request->idCur)->where('estatus', '=', 'Aceptado')->get();
+        $cupo_maximo = Curso::select('cupCur')->where('idCur', '=', $request->idCur)->first();
+        if($personas_enroladas->total >= $cupo_maximo->cupCur) {
+            //Ya alcanzo el limite
+            return ['mensaje' => 'El cupo del curso fue alcanzado'];
+        }else{
+            //Aceptar
+            try {
+                $curso_persona = CursoPersona::findOrFail($request->idPer);
+                $curso_persona->estatus = 'Aceptado';
+                $curso_persona->save();
+                return ['mensaje' => 'El usuario ha sido aceptado'];
+            } catch (exception $e) {
+                return $e->getMessage();
+            }
         }
     }
 
     /**
-     * Descargar las personas por curso
+     * Rechazar persona al curso
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -129,5 +144,22 @@ class CursoPersonaController extends Controller
         } catch (exception $e) {
             return $e->getMessage();
         }
+    }
+
+    
+    /**
+     * Lista de solicitudes para enrolarse
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function lista_curso_persona(Request $request){
+        if(!$request->ajax()) return redirect('/');
+        $lista_curso_persona = CursoPersona::select('p.idPer', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+                        ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
+                        ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
+                        ->orderBy('curso_persona.estatus', 'ASC')
+                        ->get();
+        return $lista_curso_persona;
     }
 }
