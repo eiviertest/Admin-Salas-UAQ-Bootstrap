@@ -20,6 +20,17 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('inicio', require('./components/Inicio.vue').default);
+//Admin
+Vue.component('reportes', require('./components/Admin/Reportes.vue').default);
+Vue.component('ver-cursos', require('./components/Admin/VerCursos.vue').default);
+Vue.component('crear-curso', require('./components/Admin/CrearCurso.vue').default);
+Vue.component('crear-varios-cursos', require('./components/Admin/CrearVariosCursos.vue').default);
+Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);
+//User
+Vue.component('ver-cursos-user', require('./components/User/VerCursosUser.vue').default);
+Vue.component('mis-solicitudes', require('./components/User/MisSolicitudes.vue').default);
+Vue.component('solicitar-sala', require('./components/User/SolicitarSala.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,4 +40,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    data: {
+        menu: 0
+    }
 });

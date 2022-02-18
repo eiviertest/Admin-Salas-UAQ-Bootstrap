@@ -2,10 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <img src="{{URL::asset('img/logo.png')}}" width="200" height="200" 
+    <div class="row justify-content-center d-flex align-items-center">
+        <div class="col-md-6">
+            <br>
+            <img src="{{URL::asset('img/logo.png')}}" width="400" height="400" 
                 class="img-fluid rounded mx-auto d-block" alt="logo">
+        </div>
+        <div class="col-md-6">
+            <br>
             <div class="card">
                 <h4 class="card-header">{{ __('Inicar sesión') }}</h4>
 
@@ -55,6 +59,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
+                                <br>
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Iniciar sesión') }}
                                 </button>
@@ -64,6 +69,7 @@
                                         {{ __('Olvide mi contraseña') }}
                                     </a>
                                 @endif-->
+                                <p></p>
                             </div>
                         </div>
                     </form>

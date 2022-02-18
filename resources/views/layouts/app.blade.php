@@ -15,9 +15,13 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <!-- Fonts -->
+    <!-- Fonts 
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Overpass&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -26,7 +30,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('home') }}">
                 <img src=" {{URL::asset('img/logoNav.png')}} " width="40" height="40" 
                     class="d-inline-block align-top" alt="LogoNav">
                 </a>
@@ -37,7 +41,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        @guest
+                        @else
+                            @include('layouts.navAdmin')
+                            @include('layouts.navUser')
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -80,7 +88,7 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            @yield('contenido')
         </main>
     </div>
 </body>
