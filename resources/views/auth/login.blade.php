@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('contenido')
 <div class="container">
     <div class="row justify-content-center d-flex align-items-center">
         <div class="col-md-6">
