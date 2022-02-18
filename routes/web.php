@@ -15,9 +15,7 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 //Rutas registrarse
 Route::get('register', [RegisterController::class, 'mostrarFormulario'])->name('register');
