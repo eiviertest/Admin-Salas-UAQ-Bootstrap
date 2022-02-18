@@ -28,7 +28,10 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 //Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return view('contenido');
+})->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/enrolarse', [CursoPersonaController::class, 'enrolarse_curso']);

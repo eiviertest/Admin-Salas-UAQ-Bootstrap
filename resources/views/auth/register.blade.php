@@ -2,10 +2,13 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <img src="{{URL::asset('img/logo.png')}}" width="200" height="200" 
-                    class="img-fluid rounded mx-auto d-block" alt="logo">
+    <div class="row justify-content-center d-flex align-items-center">
+        <div class="col-md-6">
+            <br>
+            <img src="{{URL::asset('img/logo.png')}}" width="400" height="400" 
+                class="img-fluid rounded mx-auto d-block" alt="logo">
+        </div>
+        <div class="col-md-6">
             <div class="card">
                 <h4 class="card-header">{{ __('Registrarse') }}</h4>
 
