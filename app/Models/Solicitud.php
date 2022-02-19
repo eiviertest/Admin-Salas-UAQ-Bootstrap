@@ -15,6 +15,9 @@ class Solicitud extends Model
 
     protected $fillable = [
         'rutaSol',
+        'horaIni',
+        'horaFin',
+        'fecha',
         'idSal',
         'idPer',
         'idEst'

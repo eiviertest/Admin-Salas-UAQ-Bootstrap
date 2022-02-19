@@ -16,6 +16,9 @@ class CreateSolicitudsTable extends Migration
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idSol');
             $table->binary('rutaSol');
+            $table->time('horaIni')->comment('Hora de inicio');
+            $table->time('horaFin')->comment('Hora de fin');
+            $table->date('fecha')->comment('Fecha de solicitud');
             $table->unsignedBigInteger('idSal');
             $table->unsignedBigInteger('idEst');
             $table->unsignedBigInteger('idPer');
