@@ -59,18 +59,16 @@ class SolicitudController extends Controller
      */
     public function store(Request $request)
     {
-        // if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         //Formato Unix
         $hora_inicio = strtotime($request->horainicio);
         //Horas solicitadas.
         $horas_solicitadas = $request->horas_solicitadas;
         //Convertir horas a segundos
         $segundos = $horas_solicitadas * (60 * 60);
-        //Fecha de fin.
+        //Hora de fin.
         $hora_fin = date('H:i:s', $hora_inicio + $segundos);
-        $idPersona = $this->getIdPersona(4);
-        //return $idPersona;
-        //$idPersona = $this->getIdPersona(Auth::user()->id);
+        $idPersona = $this->getIdPersona(Auth::user()->id);
         $nombreEstatus = "En proceso";
         $idEstatus = $this->getIdEstatus($nombreEstatus);
         if(empty($idEstatus)) {
@@ -79,30 +77,37 @@ class SolicitudController extends Controller
             $estatus->save();
             $idEstatus = $estatus->idEst;
         }
-        $curso = HorarioCurso::select('c.idCur')
-                    ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
-                    ->where('c.idSala', '=', $request->idSala)
-                    ->where('c.fecInCur', '=', [date($request->fecha)])
-                    ->where('horario_curso.horIn', '>=', $request->horainicio)
-                    ->where('horario_curso.horIn', '<=', $hora_fin)
-                    // Verificar como meter esta condicion
-                    // ->where('horario_cursos.horFin', '>=', $hora_fin)
-                    ->get();
-        if(empty($curso)){
-            //Aqui dice que no puede leer nulo
-            try {
-                $solicitud = new Solicitud();
-                $solicitud->rutaSol = $request->rutaSol;
-                $solicitud->idSal = $request->idSala;
-                $solicitud->idPer = $idPersona->idPer;
-                $solicitud->idEst = $idEstatus->idEst;
-                $solicitud->fecha = $request->fecha;
-                $solicitud->horaIni = $request->horainicio;
-                $solicitud->horaFin = $hora_fin;
-                $solicitud->save();
-                return ['mensaje' => 'Ha sido guardado la solicitud'];
-            } catch (exception $e) {
-                return $e->getMessage();
+        $cursos_registrados = HorarioCurso::select('c.idCur')
+                            ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
+                            ->where('c.idSala', '=', $request->idSala)
+                            ->where('c.fecInCur', '=', [date($request->fecha)])
+                            ->where('horario_curso.horIn', '<=', $request->horainicio)
+                            ->where('horario_curso.horFin', '>', $request->horainicio)
+                            ->get();
+        if(count($cursos_registrados) == 0){
+            $solicitudes_registradas = Solicitud::select('idSol')
+                                        ->where('idSal', '=', $request->idSala)
+                                        ->where('fecha', '=', [date($request->fecha)])
+                                        ->where('horaIni', '<=', $request->horainicio)
+                                        ->where('horaFin', '>', $request->horainicio)
+                                        ->get();
+            if(count($solicitudes_registradas) == 0) {
+                try {
+                    $solicitud = new Solicitud();
+                    $solicitud->rutaSol = $request->rutaSol;
+                    $solicitud->idSal = $request->idSala;
+                    $solicitud->idPer = $idPersona->idPer;
+                    $solicitud->idEst = $idEstatus->idEst;
+                    $solicitud->fecha = $request->fecha;
+                    $solicitud->horaIni = $request->horainicio;
+                    $solicitud->horaFin = $hora_fin;
+                    $solicitud->save();
+                    return ['mensaje' => 'Ha sido guardado la solicitud'];
+                } catch (exception $e) {
+                    return $e->getMessage();
+                }
+            }else{
+                return ['mensaje' => 'Una solicitud se encuentra registrada'];
             }
         }else{
                 return ['mensaje' => 'Un curso se encuentra registrado'];
@@ -119,7 +124,7 @@ class SolicitudController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         try {
-            $solicitud = Solicitud::findOrFail($request->id);
+            $solicitud = Solicitud::findOrFail($request->idSol);
             $solicitud->idEst = $request->idEst;
             $solicitud->save();
             return ['mensaje' => 'Ha sido actualizada la solicitud'];
