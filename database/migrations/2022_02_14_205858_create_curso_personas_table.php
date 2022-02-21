@@ -14,7 +14,7 @@ class CreateCursoPersonasTable extends Migration
     public function up()
     {
         Schema::create('curso_persona', function (Blueprint $table) {
-            $table->primary(['idCur', 'idPer']);
+            $table->id('idPeridCur');
             $table->unsignedBigInteger('idCur');
             $table->unsignedBigInteger('idPer');
             $table->string('estatus', 30)->default('En proceso');

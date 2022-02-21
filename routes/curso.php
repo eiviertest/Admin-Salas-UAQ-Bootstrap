@@ -10,6 +10,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/curso/{id}', [CursoController::class, 'disable']);
     Route::get('/lista_curso_persona', [CursoPersonaController::class, 'lista_curso_persona']);
     Route::post('/enrolarse', [CursoPersonaController::class, 'enrolarse_curso']);
-    Route::post('/rechazar_persona_curso', [CursoPersonaController::class, 'rechazar_persona_curso']);
-    Route::post('/aceptar_persona_curso', [CursoPersonaController::class, 'aceptar_persona_curso']);
+    Route::put('/rechazar_persona_curso', [CursoPersonaController::class, 'rechazar_persona_curso']);
+    Route::put('/aceptar_persona_curso', [CursoPersonaController::class, 'aceptar_persona_curso']);
 });

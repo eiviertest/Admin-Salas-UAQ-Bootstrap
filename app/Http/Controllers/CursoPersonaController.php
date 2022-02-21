@@ -88,7 +88,9 @@ class CursoPersonaController extends Controller
         if(empty($verificar)) {
             //Registrar
             try{
+                $idPrimary = $idPersona->idPer.$request->idCur;
                 $enrolarse = new CursoPersona();
+                $enrolarse->idPeridCur = $idPrimary;
                 $enrolarse->idCur = $request->idCur;
                 $enrolarse->idPer = $idPersona->idPer;
                 $enrolarse->estatus = 'En proceso';
@@ -112,13 +114,13 @@ class CursoPersonaController extends Controller
         if(!$request->ajax()) return redirect('/');
         $personas_enroladas = CursoPersona::selectRaw('count(*) as total')->where('idCur', '=', $request->idCur)->where('estatus', '=', 'Aceptado')->get();
         $cupo_maximo = Curso::select('cupCur')->where('idCur', '=', $request->idCur)->first();
-        if($personas_enroladas->total >= $cupo_maximo->cupCur) {
+        if($personas_enroladas[0]->total >= $cupo_maximo->cupCur) {
             //Ya alcanzo el limite
             return ['mensaje' => 'El cupo del curso fue alcanzado'];
         }else{
             //Aceptar
             try {
-                $curso_persona = CursoPersona::findOrFail($request->idPer);
+                $curso_persona = CursoPersona::findOrFail($request->idPer.$request->idCur);
                 $curso_persona->estatus = 'Aceptado';
                 $curso_persona->save();
                 return ['mensaje' => 'El usuario ha sido aceptado'];
@@ -137,7 +139,7 @@ class CursoPersonaController extends Controller
     public function rechazar_persona_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
         try {
-            $curso_persona = CursoPersona::findOrFail($request->idPer);
+            $curso_persona = CursoPersona::findOrFail($request->idPer.$request->idCur);
             $curso_persona->estatus = 'Rechazado';
             $curso_persona->save();
             return ['mensaje' => 'El usuario ha sido rechazado'];

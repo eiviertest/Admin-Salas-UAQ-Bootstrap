@@ -11,7 +11,7 @@ class CursoPersona extends Model
 
     protected $table = 'curso_persona';
 
-    protected $primaryKey = 'idPer';
+    protected $primaryKey = 'idPeridCur';
 
     protected $fillable = [
         'idCur',

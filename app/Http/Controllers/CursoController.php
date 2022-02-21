@@ -16,7 +16,7 @@ class CursoController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');                        
+        if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
                         ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(10);
         return ['cursos' => $cursos];
@@ -50,22 +50,32 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $this->validarDatos($request);
-        try {
-            $curso = new Curso();
-            $curso->nomCur = $request->nomCur;
-            $curso->fecInCur = $request->fecInCur;
-            $curso->fecFinCur = $request->fecFinCur;
-            $curso->reqCur = $request->reqCur;
-            $curso->durCur = $request->durCur;
-            $curso->estado = 1;
-            $curso->cupCur = $request->cupCur;
-            $curso->idSala = $request->idSala;
-            $curso->save();
-            $idCurso = $curso->idCur;
-            $this->agregarHorarioCurso($request->horarios, $idCurso);
-            return ['mensaje' => 'Ha sido guardado el curso'];
-        } catch (exception $e) {
-            return $e->getMessage();
+        $cursos = Curso::select('curso.nomCur')
+                        ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
+                        ->whereBetween('curso.fecInCur', [$request->fecInCur, $request->fecFinCur])
+                        ->whereBetween('horIn', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']])
+                        ->where('idSala', '=', $request->idSala)
+                        ->get();
+        if(empty($cursos)){
+            try {
+                $curso = new Curso();
+                $curso->nomCur = $request->nomCur;
+                $curso->fecInCur = $request->fecInCur;
+                $curso->fecFinCur = $request->fecFinCur;
+                $curso->reqCur = $request->reqCur;
+                $curso->durCur = $request->durCur;
+                $curso->estado = 1;
+                $curso->cupCur = $request->cupCur;
+                $curso->idSala = $request->idSala;
+                $curso->save();
+                $idCurso = $curso->idCur;
+                $this->agregarHorarioCurso($request->horarios, $idCurso);
+                return ['mensaje' => 'Ha sido guardado el curso'];
+            } catch (exception $e) {
+                return $e->getMessage();
+            }
+        }else{
+            return ['mensaje' => "Ya hay un curso registrado"];
         }
     }
 

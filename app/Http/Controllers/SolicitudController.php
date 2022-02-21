@@ -21,8 +21,7 @@ class SolicitudController extends Controller
      */
     public function index(Request $request)
     {
-        //if(!$request->ajax()) return redirect('/');
-        return csrf_token();
+        if(!$request->ajax()) return redirect('/');
         $idPersona = $this->getIdPersona(Auth::user()->id);
         $solicitudes = Solicitud::select('s.nomSala as sala', 'solicitud.fecha as fecha', 'solicitud.hora as hora', 'e.nomEst as estado')
                         ->orderBy('solicitud.fecha', 'DESC')
@@ -81,17 +80,15 @@ class SolicitudController extends Controller
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
                             ->where('c.idSala', '=', $request->idSala)
                             ->where('c.fecInCur', '=', [date($request->fecha)])
-                            ->where('horario_curso.horIn', '<=', $request->horainicio)
-                            ->where('horario_curso.horFin', '>', $request->horainicio)
+                            ->whereBetween('horario_curso.horIn', [$request->horainicio, $hora_fin])
                             ->get();
-        if(count($cursos_registrados) == 0){
+        if(empty($cursos_registrados)){
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
                                         ->where('fecha', '=', [date($request->fecha)])
-                                        ->where('horaIni', '<=', $request->horainicio)
-                                        ->where('horaFin', '>', $request->horainicio)
+                                        ->whereBetween('horaIni', [$request->horainicio, $hora_fin])
                                         ->get();
-            if(count($solicitudes_registradas) == 0) {
+            if(empty($solicitudes_registradas)) {
                 try {
                     $solicitud = new Solicitud();
                     $solicitud->rutaSol = $request->rutaSol;
