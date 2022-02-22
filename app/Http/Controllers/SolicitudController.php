@@ -76,20 +76,29 @@ class SolicitudController extends Controller
             $estatus->save();
             $idEstatus = $estatus->idEst;
         }
-        $cursos_registrados = HorarioCurso::select('c.idCur')
+        $cursos_registrados = HorarioCurso::select('c.nomCur')
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
                             ->where('c.idSala', '=', $request->idSala)
-                            ->where('c.fecInCur', '=', [date($request->fecha)])
-                            ->whereBetween('horario_curso.horIn', [$request->horainicio, $hora_fin])
+                            ->where('c.fecInCur', '<=', [date($request->fecha)])
+                            ->where('c.fecFinCur', '>=', [date($request->fecha)])
+                            ->where(function ($query) use ($request, $hora_fin) {
+                                $query->whereBetween('horIn', [$request->horainicio, $hora_fin])
+                                    ->orWhereRaw('horFin between ? and ?', [$request->horainicio, $hora_fin]);
+                            })
                             ->get();
-        if(empty($cursos_registrados)){
+        if(count($cursos_registrados) == 0){
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
                                         ->where('fecha', '=', [date($request->fecha)])
-                                        ->whereBetween('horaIni', [$request->horainicio, $hora_fin])
+                                        ->where(function ($query) use ($request, $hora_fin) {
+                                            $query->whereBetween('horaIni', [$request->horainicio, $hora_fin])
+                                                ->orWhereRaw('horaFin between ? and ?', [$request->horainicio, $hora_fin])
+                                                ->orWhereRaw('horaIni <= ? and horaFin >= ?', [$request->horainicio, $hora_fin]);
+                                        })
                                         ->get();
-            if(empty($solicitudes_registradas)) {
+            if(count($solicitudes_registradas) == 0) {
                 try {
+                    $horaFinUnix = strtotime($hora_fin);
                     $solicitud = new Solicitud();
                     $solicitud->rutaSol = $request->rutaSol;
                     $solicitud->idSal = $request->idSala;
@@ -97,7 +106,7 @@ class SolicitudController extends Controller
                     $solicitud->idEst = $idEstatus->idEst;
                     $solicitud->fecha = $request->fecha;
                     $solicitud->horaIni = $request->horainicio;
-                    $solicitud->horaFin = $hora_fin;
+                    $solicitud->horaFin = date('H:i:s', $horaFinUnix - 1);
                     $solicitud->save();
                     return ['mensaje' => 'Ha sido guardado la solicitud'];
                 } catch (exception $e) {

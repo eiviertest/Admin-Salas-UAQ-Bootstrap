@@ -50,13 +50,30 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $this->validarDatos($request);
-        $cursos = Curso::select('curso.nomCur')
+        $cursos = Curso::select('curso.nomCur', 'horIn', 'horFin')
                         ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
-                        ->whereBetween('curso.fecInCur', [$request->fecInCur, $request->fecFinCur])
-                        ->whereBetween('horIn', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']])
+                        ->where(function ($query) use ($request) {
+                            $query->whereBetween('curso.fecInCur', [$request->fecInCur, $request->fecFinCur])
+                            ->orWhere(function ($query) use ($request) {
+                                $query->whereBetween('curso.fecFinCur', [$request->fecInCur, $request->fecFinCur]);
+                            })
+                            ->orWhere(function ($query) use ($request) {
+                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
+                                    ->where('curso.fecFinCur', '>=', $request->fecFinCur);
+                            })
+                            ->orWhere(function ($query) use ($request) {
+                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
+                                    ->where('curso.fecFinCur', '<=', $request->fecFinCur);
+                            })->get();
+                        })
+                        ->where(function ($query) use ($request) {
+                            $query->whereBetween('horIn', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']])
+                            ->orWhereRaw('horIn <= ? and horFin >= ?', [[$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]])
+                            ->orWhereRaw('horFin between ? and ?', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]);
+                        })
                         ->where('idSala', '=', $request->idSala)
                         ->get();
-        if(empty($cursos)){
+        if(count($cursos) == 0){
             try {
                 $curso = new Curso();
                 $curso->nomCur = $request->nomCur;
@@ -88,10 +105,11 @@ class CursoController extends Controller
     public function agregarHorarioCurso($horarios, $idCurso){
         try {
             foreach ($horarios as $horario) {
+                $horaFinUnix = strtotime($horario["horFin"]);
                 $horariocurso = new HorarioCurso();
                 $horariocurso->idCur = $idCurso;
                 $horariocurso->horIn = $horario["horIn"];
-                $horariocurso->horFin = $horario["horFin"];
+                $horariocurso->horFin = date('H:i:s', $horaFinUnix - 1);
                 $horariocurso->save();
             }
         } catch (exception $e) {
