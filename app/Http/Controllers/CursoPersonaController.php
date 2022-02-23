@@ -17,8 +17,7 @@ class CursoPersonaController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function cursos_impartidos(Request $request){
-        if(!$request->ajax()) return redirect('/');
+    public function cursos_impartidos(){
         $fecha_actual = Carbon::now()->format('m-d');
         $semestre = "";
         $total_cursos = 0;
@@ -35,8 +34,7 @@ class CursoPersonaController extends Controller
             $fin_anio = "12-31";
             $cursos = $this->cursos_impartidos_fecha($medio_anio, $fin_anio);
         }
-        $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $cursos, 'semestre'=>$semestre]);
-        return $pdf->download('cursos_impartidos.pdf');
+        return ['cursos' => $cursos, 'semestre' => $semestre];
     }
 
     /**
@@ -53,28 +51,37 @@ class CursoPersonaController extends Controller
         return $cursos;
     }
 
+    public function cursos_impartidos_pdf(){
+        $datos = $this->cursos_impartidos();
+        $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $datos['cursos'], 'semestre'=>$datos['semestre']]);
+        return $pdf->download('cursos_impartidos.pdf');
+    }
+
     /**
      * Descargar las personas por curso
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function concentrado_curso(Request $request){
-        if(!$request->ajax()) return redirect('/');
-        $idCurso = $request->idCur;
-        $personas = CursoPersona::select(DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
+    public function concentrado_curso($idCurso){
+        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
                     ->where('curso_persona.estatus', '=', 'Aceptado')
                     ->get();
+        return ['personas' => $personas];
+        
+    }
+
+    public function concentrado_curso_pdf($idCurso) {
+        $personas = $this->concentrado_curso($idCurso);
         $datos_curso = Curso::select('nomCur', 'fecInCur', 'fecFinCur', 'nomSala')
                             ->join('sala as s', 's.idSala', '=', 'curso.idSala')
                             ->where('idCur', '=', $idCurso)
                             ->first();
-        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, 'datos_curso' => $datos_curso]);
-        return $pdf->download('concentrado_curso.pdf');
+        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas['personas'], 'datos_curso' => $datos_curso]);
+        return $pdf->download('curso_detalle.pdf');
     }
-
     /**
      * Enviar solicitud para enrolarse a un curso
      *

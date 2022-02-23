@@ -5251,6 +5251,247 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _TablasReportes_TablaConcentradoCurso_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../TablasReportes/TablaConcentradoCurso.vue */ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue");
+/* harmony import */ var _TablasReportes_TablaCursosImpartidos_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../TablasReportes/TablaCursosImpartidos.vue */ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue");
+/* harmony import */ var _TablasReportes_TablaAreaSolicitudesDetalle_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../TablasReportes/TablaAreaSolicitudesDetalle.vue */ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    TablaConcentradoCurso: _TablasReportes_TablaConcentradoCurso_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    TablaCursosImpartidos: _TablasReportes_TablaCursosImpartidos_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TablaAreaSolicitudes: _TablasReportes_TablaAreaSolicitudesDetalle_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      cursos: [],
+      areas: [],
+      errores: [],
+      encabezados: [],
+      arrayData: [],
+      mostrarElementoArea: false,
+      mostrarElementoCurso: false,
+      mostrarElementoTablaConcentradoCurso: false,
+      mostrarElementoTablaCursosImpartidos: false,
+      mostrarElementoTablaSolicitudes: false,
+      btnDescargarInfo: false,
+      eleccion: 0,
+      idCurso: 0,
+      idArea: 0,
+      ruta: '',
+      id: ''
+    };
+  },
+  methods: {
+    getCursos: function getCursos() {
+      var me = this;
+      axios.get('/catalogo_curso').then(function (response) {
+        me.cursos = response.data.cursos;
+        me.mostrarElementoCurso = true;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    getAreas: function getAreas() {
+      var me = this;
+      axios.get('/catalogo_area').then(function (response) {
+        me.areas = response.data.areas;
+        me.mostrarElementoArea = true;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    concentradoCurso: function concentradoCurso(idCurso) {
+      var me = this;
+      axios.get('/concentrado_curso/' + idCurso).then(function (response) {
+        me.id = idCurso;
+        me.ruta = 'concentrado_curso_pdf';
+        me.arrayData = response.data.personas;
+        me.encabezados = [{
+          'id': 1,
+          'nombre': 'Nombre completo'
+        }, {
+          'id': 2,
+          'nombre': 'Área/Facultad/Institución'
+        }];
+        me.btnDescargarInfo = true;
+        me.mostrarElementoTablaConcentradoCurso = true;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    getCursosImpartidos: function getCursosImpartidos() {
+      var me = this;
+      axios.get('/cursos_impartidos').then(function (response) {
+        me.id = 0;
+        me.ruta = 'cursos_impartidos_pdf';
+        me.arrayData = response.data.cursos;
+        me.encabezados = [{
+          'id': 1,
+          'nombre': 'Nombre de curso'
+        }, {
+          'id': 2,
+          'nombre': 'Fecha de inicio'
+        }, {
+          'id': 3,
+          'nombre': 'Fecha de termino'
+        }, {
+          'id': 4,
+          'nombre': 'Cupo'
+        }, {
+          'id': 5,
+          'nombre': 'Sala'
+        }];
+        me.mostrarElementoTablaCursosImpartidos = true;
+        me.btnDescargarInfo = true;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    concentradoSolicitudes: function concentradoSolicitudes(idArea) {
+      var me = this;
+      axios.get('/area_solicitudes_detalle/' + idArea).then(function (response) {
+        me.id = idArea;
+        me.ruta = 'area_solicitudes_detalle_pdf';
+        me.arrayData = response.data.solicitudes;
+        me.encabezados = [{
+          'id': 1,
+          'nombre': 'Nombre completo'
+        }, {
+          'id': 2,
+          'nombre': 'Estado'
+        }, {
+          'id': 3,
+          'nombre': 'Nombre de sala'
+        }];
+        me.btnDescargarInfo = true;
+        me.mostrarElementoTablaSolicitudes = true;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    descargarInfo: function descargarInfo(ruta, id) {
+      window.open('/' + ruta + '/' + id, '_blank');
+    }
+  },
+  watch: {
+    eleccion: function eleccion(val) {
+      this.btnDescargarInfo = false;
+
+      if (val == 1) {
+        //Cursos impartidos
+        this.mostrarElementoTablaConcentradoCurso = false;
+        this.mostrarElementoTablaSolicitudes = false;
+        this.mostrarElementoArea = false;
+        this.mostrarElementoCurso = false;
+        this.idCurso = 0;
+        this.idArea = 0;
+        this.id = 0;
+        this.getCursosImpartidos();
+      } else if (val == 2) {
+        //Solicitudes por area
+        this.mostrarElementoTablaConcentradoCurso = false;
+        this.mostrarElementoTablaCursosImpartidos = false;
+        this.mostrarElementoCurso = false;
+        this.mostrarElementoCurso = false;
+        this.idCurso = 0;
+        this.id = 0;
+        this.getAreas();
+      } else if (val == 3) {
+        //Concentrado por curso
+        this.mostrarElementoTablaCursosImpartidos = false;
+        this.mostrarElementoTablaSolicitudes = false;
+        this.mostrarElementoArea = false;
+        this.idArea = 0;
+        this.id = 0;
+        this.getCursos();
+      } else {
+        console.log('Sin elección.');
+      }
+    },
+    idCurso: function idCurso(val) {
+      if (val > 0) {
+        this.concentradoCurso(val);
+      }
+    },
+    idArea: function idArea(val) {
+      if (val > 0) {
+        this.concentradoSolicitudes(val);
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -5281,6 +5522,130 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    encabezados: Array,
+    arrayData: Array
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    encabezados: Array,
+    arrayData: Array
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    encabezados: Array,
+    arrayData: Array
   }
 });
 
@@ -27942,15 +28307,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Reportes_vue_vue_type_template_id_2e14a9ed___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Reportes.vue?vue&type=template&id=2e14a9ed& */ "./resources/js/components/Admin/Reportes.vue?vue&type=template&id=2e14a9ed&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Reportes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Reportes.vue?vue&type=script&lang=js& */ "./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 ;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Reportes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Reportes_vue_vue_type_template_id_2e14a9ed___WEBPACK_IMPORTED_MODULE_0__.render,
   _Reportes_vue_vue_type_template_id_2e14a9ed___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -28080,6 +28447,123 @@ component.options.__file = "resources/js/components/Inicio.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa& */ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa&");
+/* harmony import */ var _TablaAreaSolicitudesDetalle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js& */ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TablaAreaSolicitudesDetalle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__.render,
+  _TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaConcentradoCurso.vue ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablaConcentradoCurso.vue?vue&type=template&id=51d21d69& */ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69&");
+/* harmony import */ var _TablaConcentradoCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablaConcentradoCurso.vue?vue&type=script&lang=js& */ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TablaConcentradoCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__.render,
+  _TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TablasReportes/TablaConcentradoCurso.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaCursosImpartidos.vue ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e& */ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e&");
+/* harmony import */ var _TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablaCursosImpartidos.vue?vue&type=script&lang=js& */ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__.render,
+  _TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TablasReportes/TablaCursosImpartidos.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/User/MisSolicitudes.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/User/MisSolicitudes.vue ***!
@@ -28191,6 +28675,22 @@ component.options.__file = "resources/js/components/User/VerCursosUser.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Reportes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Reportes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Reportes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -28204,6 +28704,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ExampleComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaAreaSolicitudesDetalle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaAreaSolicitudesDetalle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaConcentradoCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaConcentradoCurso.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaConcentradoCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaCursosImpartidos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -28322,6 +28870,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Inicio_vue_vue_type_template_id_2bdc2210___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Inicio_vue_vue_type_template_id_2bdc2210___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Inicio.vue?vue&type=template&id=2bdc2210& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Inicio.vue?vue&type=template&id=2bdc2210&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa&":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa& ***!
+  \***************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaAreaSolicitudesDetalle_vue_vue_type_template_id_f96a7dfa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69& ***!
+  \*********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaConcentradoCurso_vue_vue_type_template_id_51d21d69___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaConcentradoCurso.vue?vue&type=template&id=51d21d69& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e& ***!
+  \*********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_template_id_61d15e9e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e&");
 
 
 /***/ }),
@@ -28537,27 +29136,278 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm.btnDescargarInfo
+                ? _c("div", { staticClass: "col-md-6" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary justify-content-end",
+                        on: {
+                          click: function ($event) {
+                            return _vm.descargarInfo(_vm.ruta, _vm.id)
+                          },
+                        },
+                      },
+                      [_vm._v("Descargar información")]
+                    ),
+                  ])
+                : _vm._e(),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group row" }, [
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "form-control-label",
+                    attrs: { for: "text-input" },
+                  },
+                  [_vm._v("Reporte a generar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.eleccion,
+                        expression: "eleccion",
+                      },
+                    ],
+                    staticClass: "form-select",
+                    on: {
+                      change: function ($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function (o) {
+                            return o.selected
+                          })
+                          .map(function (o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.eleccion = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                    },
+                  },
+                  [
+                    _c(
+                      "option",
+                      { attrs: { value: "0", selected: "", disabled: "" } },
+                      [_vm._v("Seleccione una opción")]
+                    ),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "1" } }, [
+                      _vm._v("Cursos impartidos"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "2" } }, [
+                      _vm._v("Solicitud de sala por área"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "3" } }, [
+                      _vm._v("Concentrado por curso"),
+                    ]),
+                  ]
+                ),
+              ]),
+              _vm._v(" "),
+              _vm.mostrarElementoArea
+                ? _c("div", { staticClass: "col-md-3" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Área/Facultad/Institución")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.idArea,
+                            expression: "idArea",
+                          },
+                        ],
+                        staticClass: "form-select",
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.idArea = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "option",
+                          { attrs: { value: "0", selected: "", disabled: "" } },
+                          [_vm._v("Seleccione una área/facultad")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.areas, function (area) {
+                          return _c("option", {
+                            key: area.idArea,
+                            domProps: {
+                              value: area.idArea,
+                              textContent: _vm._s(area.nomArea),
+                            },
+                          })
+                        }),
+                      ],
+                      2
+                    ),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.mostrarElementoCurso
+                ? _c("div", { staticClass: "col-md-3" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Curso")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.idCurso,
+                            expression: "idCurso",
+                          },
+                        ],
+                        staticClass: "form-select",
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.idCurso = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "option",
+                          { attrs: { value: "0", selected: "", disabled: "" } },
+                          [_vm._v("Seleccione un curso")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.cursos, function (curso) {
+                          return _c("option", {
+                            key: curso.idCur,
+                            domProps: {
+                              value: curso.idCur,
+                              textContent: _vm._s(curso.nomCur),
+                            },
+                          })
+                        }),
+                      ],
+                      2
+                    ),
+                  ])
+                : _vm._e(),
+            ]),
+            _vm._v(" "),
+            _vm.mostrarElementoTablaConcentradoCurso
+              ? _c(
+                  "div",
+                  { staticClass: "row" },
+                  [
+                    _c("TablaConcentradoCurso", {
+                      attrs: {
+                        encabezados: _vm.encabezados,
+                        arrayData: _vm.arrayData,
+                      },
+                    }),
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.mostrarElementoTablaCursosImpartidos
+              ? _c(
+                  "div",
+                  { staticClass: "row" },
+                  [
+                    _c("TablaCursosImpartidos", {
+                      attrs: {
+                        encabezados: _vm.encabezados,
+                        arrayData: _vm.arrayData,
+                      },
+                    }),
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.mostrarElementoTablaSolicitudes
+              ? _c(
+                  "div",
+                  { staticClass: "row" },
+                  [
+                    _c("TablaAreaSolicitudes", {
+                      attrs: {
+                        encabezados: _vm.encabezados,
+                        arrayData: _vm.arrayData,
+                      },
+                    }),
+                  ],
+                  1
+                )
+              : _vm._e(),
+          ]),
+        ]),
+      ]),
+    ]),
+  ])
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("h4", { staticClass: "card-header" }, [_vm._v("Reportes")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    Usted se encuentra en Reportes!!\n                "
-              ),
-            ]),
-          ]),
-        ]),
-      ]),
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("h4", [_vm._v("Reportes")]),
     ])
   },
 ]
@@ -28701,6 +29551,179 @@ var staticRenderFns = [
     ])
   },
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa&":
+/*!******************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue?vue&type=template&id=f96a7dfa& ***!
+  \******************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("table", { staticClass: "table" }, [
+      _c("thead", [
+        _c(
+          "tr",
+          _vm._l(_vm.encabezados, function (encabezado) {
+            return _c("th", { key: encabezado.id }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(encabezado.nombre) +
+                  "   \n                "
+              ),
+            ])
+          }),
+          0
+        ),
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.arrayData, function (row) {
+          return _c("tr", { key: row.idSol }, [
+            _c("td", { domProps: { textContent: _vm._s(row.nombre) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.nomEst) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.nomSala) } }),
+          ])
+        }),
+        0
+      ),
+    ]),
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69&":
+/*!************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaConcentradoCurso.vue?vue&type=template&id=51d21d69& ***!
+  \************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("table", { staticClass: "table" }, [
+      _c("thead", [
+        _c(
+          "tr",
+          _vm._l(_vm.encabezados, function (encabezado) {
+            return _c("th", { key: encabezado.id }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(encabezado.nombre) +
+                  "   \n                "
+              ),
+            ])
+          }),
+          0
+        ),
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.arrayData, function (row) {
+          return _c("tr", { key: row.id }, [
+            _c("td", { domProps: { textContent: _vm._s(row.nombre) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.nomArea) } }),
+          ])
+        }),
+        0
+      ),
+    ]),
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e&":
+/*!************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=template&id=61d15e9e& ***!
+  \************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("table", { staticClass: "table" }, [
+      _c("thead", [
+        _c(
+          "tr",
+          _vm._l(_vm.encabezados, function (encabezado) {
+            return _c("th", { key: encabezado.id }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(encabezado.nombre) +
+                  "   \n                "
+              ),
+            ])
+          }),
+          0
+        ),
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.arrayData, function (row) {
+          return _c("tr", { key: row.id }, [
+            _c("td", { domProps: { textContent: _vm._s(row.nomCur) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.fecInCur) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.fecFinCur) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.cupCur) } }),
+            _vm._v(" "),
+            _c("td", { domProps: { textContent: _vm._s(row.nomSala) } }),
+          ])
+        }),
+        0
+      ),
+    ]),
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

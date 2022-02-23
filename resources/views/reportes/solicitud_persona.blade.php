@@ -9,12 +9,12 @@
 <body>
     <div>
         <h2>Detallado de solicitudes</h2>
+        <h3>Área: {{$area->nomArea}}</h3>
     </div>
     <table class="table table-bordered table-striped table-sm">
         <thead class="thead">
             <tr>
                 <th>Nombre de persona</th>
-                <th>Área/Institución/Facultad</th>
                 <th>Estado</th>
                 <th>Sala</th>
             </tr>
@@ -23,7 +23,6 @@
             @foreach ($solicitudes as $solicitud)
             <tr>
                 <td>{{$solicitud->nombre}}</td>
-                <td>{{$solicitud->nomArea}}</td>
                 <td>{{$solicitud->nomEst}}</td>
                 <td>{{$solicitud->nomSala}}</td>
             </tr>

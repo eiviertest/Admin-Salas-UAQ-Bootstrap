@@ -22,6 +22,13 @@ class CursoController extends Controller
         return ['cursos' => $cursos];
     }
 
+    public function catalogoCurso(Request $request){
+        if(!$request->ajax()) return redirect('/');   
+        $cursos = Curso::select('curso.idCur', 'curso.nomCur')
+                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->get();
+        return ['cursos' => $cursos];
+    }
+
     /**
      * Valida los datos de curso.
      *

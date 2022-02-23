@@ -20,6 +20,13 @@ class AreaController extends Controller
         return ['areas' => $areas];
     }
 
+    public function catalogo_area(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $areas = Area::select('idArea', 'nomArea')->orderBy('nomArea', 'ASC')->get();
+        return ['areas' => $areas];
+    }
+
     /**
      * Almacena una area/dependencia
      *

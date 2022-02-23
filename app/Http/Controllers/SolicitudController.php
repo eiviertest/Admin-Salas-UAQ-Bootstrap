@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Solicitud;
 use App\Models\Persona;
 use App\Models\Estatus;
+use App\Models\Area;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -139,16 +140,22 @@ class SolicitudController extends Controller
         }
     }
 
-    public function solicitud_persona(Request $request){
-        if(!$request->ajax()) return redirect('/');
-        $solicitudes = Solicitud::select(DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomArea', 'nomEst', 'nomSala')
+    public function area_solicitudes_detalle($idArea){
+        $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomEst', 'nomSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
                         ->join('sala as s', 's.idSala', '=', 'solicitud.idSal')
                         ->join('estatus as es', 'es.idEst', '=', 'solicitud.idEst')
+                        ->where('a.idArea', '=', $idArea)
                         ->orderBy('nomArea', 'ASC')
                         ->get();
-        $pdf = PDF::loadView('reportes.solicitud_persona', ['solicitudes    ' => $solicitudes]);
-        return $pdf->download('solicitud_persona.pdf');
+        return ['solicitudes' => $solicitudes];
+    }
+
+    public function area_solicitudes_detalle_pdf($idArea) {
+        $area = Area::select('nomArea')->where('idArea', '=', $idArea)->first();
+        $solicitudes = $this->area_solicitudes_detalle($idArea);
+        $pdf = PDF::loadView('reportes.solicitud_persona', ['solicitudes' => $solicitudes['solicitudes'], 'area' => $area]);
+        return $pdf->download('area_solicitudes_detalle.pdf');
     }
 }
