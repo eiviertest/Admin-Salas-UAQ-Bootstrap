@@ -11,7 +11,7 @@ class Solicitud extends Model
 
     protected $table = 'solicitud';
 
-    protected $primaryKey = 'idSolicitud';
+    protected $primaryKey = 'idSol';
 
     protected $fillable = [
         'rutaSol',

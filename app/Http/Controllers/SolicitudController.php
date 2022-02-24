@@ -31,7 +31,16 @@ class SolicitudController extends Controller
                         ->where('e.nomEst', '!=', 'Aceptado')
                         ->persona($idPersona->idPer)
                         ->paginate(10);
-        return ['solicitudes' => $solicitudes];
+        return [
+            'pagination' => [
+                'total' => $solicitudes->total(),
+                'current_page' => $solicitudes->currentPage(),
+                'per_page' => $solicitudes->perPage(),
+                'last_page' => $solicitudes->lastPage(),
+                'from' => $solicitudes->firstItem(),
+                'to' => $solicitudes->lastItem()
+            ],
+            'solicitudes' => $solicitudes];
     }
 
     /**
@@ -43,12 +52,21 @@ class SolicitudController extends Controller
     public function index_admin(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $solicitudes = Solicitud::select('s.nomSala as sala', 'solicitud.rutaSol', 'solicitud.fecha as fecha', 'solicitud.hora as hora', 'e.nomEst as estado')
+        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado')
                         ->orderBy('solicitud.fecha', 'DESC')
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
                         ->paginate(10);
-        return ['solicitudes' => $solicitudes];
+        return [
+            'pagination' => [
+                'total' => $solicitudes->total(),
+                'current_page' => $solicitudes->currentPage(),
+                'per_page' => $solicitudes->perPage(),
+                'last_page' => $solicitudes->lastPage(),
+                'from' => $solicitudes->firstItem(),
+                'to' => $solicitudes->lastItem()
+            ],
+            'solicitudes' => $solicitudes];
     }
 
     /**
