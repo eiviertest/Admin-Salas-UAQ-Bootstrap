@@ -164,11 +164,21 @@ class CursoPersonaController extends Controller
      */
     public function lista_curso_persona(Request $request){
         if(!$request->ajax()) return redirect('/');
-        $lista_curso_persona = CursoPersona::select('p.idPer', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+        $lista_curso_persona = CursoPersona::select('p.idPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
                         ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
+                        ->join('area as a', 'a.idArea', '=', 'p.idArea')
                         ->orderBy('curso_persona.estatus', 'ASC')
-                        ->get();
-        return $lista_curso_persona;
+                        ->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $lista_curso_persona->total(),
+                'current_page' => $lista_curso_persona->currentPage(),
+                'per_page' => $lista_curso_persona->perPage(),
+                'last_page' => $lista_curso_persona->lastPage(),
+                'from' => $lista_curso_persona->firstItem(),
+                'to' => $lista_curso_persona->lastItem()
+            ], 
+            'lista_cursos_persona' => $lista_curso_persona];
     }
 }
