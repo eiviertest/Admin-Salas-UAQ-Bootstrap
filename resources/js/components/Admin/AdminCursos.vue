@@ -3,10 +3,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Enrolarse a Cursos</h4>
+                    <h4 class="card-header">Administrar Cursos</h4>
 
                     <div class="card-body">
-                        Aqui se muestran todos los cursos a los que se puede enrolar un Usuario
+                        Aqui se mostrarán todos los cursos registrados en el sistema, con sus respectivas opciones!
                     </div>
                 </div>
             </div>

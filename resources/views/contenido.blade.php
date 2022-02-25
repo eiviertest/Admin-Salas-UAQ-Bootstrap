@@ -13,24 +13,30 @@
         <reportes/>
     </template>
     <template v-if="menu == 2">
-        <ver-cursos/>
+        <admin-cursos/>
     </template>
     <template v-if="menu == 3">
         <crear-curso/>
     </template>
     <template v-if="menu == 4">
+        <solicitud-curso-persona/>
+    </template>
+    <template v-if="menu == 5">
         <solicitudes-admin/>
     </template>
     <!-- Fin Views Admin -->
     <!-- Views User -->
-    <template v-if="menu == 5">
-        <ver-cursos-user/>
-    </template>
     <template v-if="menu == 6">
-        <mis-solicitudes/>
+        <solicitar-sala/>
     </template>
     <template v-if="menu == 7">
-        <solicitar-sala/>
+        <mis-solicitudes/>
+    </template>
+    <template v-if="menu == 8">
+        <ver-cursos-user/>
+    </template>
+    <template v-if="menu == 9">
+        <asistencia-cursos/>
     </template>
     <!-- Fin Views User -->
 @endsection

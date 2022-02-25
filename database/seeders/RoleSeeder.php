@@ -23,11 +23,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Admin_Reportes'])->assignRole($roleAdmin);
         Permission::create(['name' => 'Admin_Cursos'])->assignRole($roleAdmin);
         Permission::create(['name' => 'Admin_Cursos_Crear'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'Admin_Cursos_Asistencia'])->assignRole($roleAdmin);
         Permission::create(['name' => 'Admin_Solicitudes'])->assignRole($roleAdmin);
 
         //Permisos User
         Permission::create(['name' => 'User_Home'])->assignRole($roleUser);
         Permission::create(['name' => 'User_Cursos'])->assignRole($roleUser);
+        Permission::create(['name' => 'User_Cursos_Asistencia'])->assignRole($roleUser);
         Permission::create(['name' => 'User_Salas_Solicitar'])->assignRole($roleUser);
         Permission::create(['name' => 'User_Solicitudes_Ver'])->assignRole($roleUser); 
     }

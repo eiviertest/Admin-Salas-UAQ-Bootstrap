@@ -3,10 +3,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Enrolarse a Cursos</h4>
+                    <h4 class="card-header">Mis Asistencias</h4>
 
                     <div class="card-body">
-                        Aqui se muestran todos los cursos a los que se puede enrolar un Usuario
+                        Aqui se puede ver el estado en el que se encuentra la solicitud de enrolamiento a un Curso.
                     </div>
                 </div>
             </div>

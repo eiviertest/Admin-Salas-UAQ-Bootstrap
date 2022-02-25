@@ -17,6 +17,9 @@
             @can('Admin_Cursos_Crear')
                 <a @click="menu=3" class="dropdown-item" href="#">Crear Cursos</a>
             @endcan
+            @can('Admin_Cursos_Asistencia')
+                <a @click="menu=4" class="dropdown-item" href="#">Asistencia a Cursos</a>
+            @endcan
         </div>
     </li>
     <li class="nav-item dropdown">
@@ -26,7 +29,7 @@
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             @can('Admin_Solicitudes')
-                <a @click="menu=4" class="dropdown-item" href="#">Ver Solicitudes</a>
+                <a @click="menu=5" class="dropdown-item" href="#">Ver Solicitudes</a>
             @endcan
         </div>
     </li>
@@ -41,16 +44,25 @@
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             @can('User_Salas_Solicitar')
-                <a @click="menu=7" class="dropdown-item" href="#">Solicitar Sala</a>
+                <a @click="menu=6" class="dropdown-item" href="#">Solicitar Sala</a>
             @endcan
             @can('User_Solicitudes_Ver')
-                <a @click="menu=6" class="dropdown-item" href="#">Mis Solicitudes</a>
+                <a @click="menu=7" class="dropdown-item" href="#">Mis Solicitudes</a>
             @endcan
         </div>
     </li>
-    <li class="nav-item">
-        @can('User_Cursos')
-            <a @click="menu=5" class="nav-link" href="#">Enrolarse A Cursos</a>
-        @endcan
+    <li class="nav-item dropdown">
+        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+            Cursos
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @can('User_Cursos')
+                <a @click="menu=8" class="dropdown-item" href="#">Enrolarse A Cursos</a>
+            @endcan
+            @can('User_Cursos_Asistencia')
+                <a @click="menu=9" class="dropdown-item" href="#">Mis Asistencias</a>
+            @endcan
+        </div>
     </li>
 @endcan

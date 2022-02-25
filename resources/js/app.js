@@ -19,15 +19,16 @@ window.Vue = require('vue').default;
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('inicio', require('./components/Inicio.vue').default);
 //Admin
 Vue.component('reportes', require('./components/Admin/Reportes.vue').default);
-Vue.component('ver-cursos', require('./components/Admin/Cursos.vue').default);
+Vue.component('admin-cursos', require('./components/Admin/AdminCursos.vue').default);
 Vue.component('crear-curso', require('./components/Admin/CrearCursos.vue').default);
+Vue.component('solicitud-curso-persona', require('./components/Admin/SolicitudCursoPersona').default);
 Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);
 //User
 Vue.component('ver-cursos-user', require('./components/User/EnrolarseACursos.vue').default);
+Vue.component('asistencia-cursos', require('./components/User/AsistenciaCursos.vue').default);
 Vue.component('mis-solicitudes', require('./components/User/MisSolicitudes.vue').default);
 Vue.component('solicitar-sala', require('./components/User/SolicitarSala.vue').default);
 
