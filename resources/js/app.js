@@ -23,12 +23,11 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('inicio', require('./components/Inicio.vue').default);
 //Admin
 Vue.component('reportes', require('./components/Admin/Reportes.vue').default);
-Vue.component('ver-cursos', require('./components/Admin/VerCursos.vue').default);
-Vue.component('crear-curso', require('./components/Admin/CrearCurso.vue').default);
-Vue.component('crear-varios-cursos', require('./components/Admin/CrearVariosCursos.vue').default);
+Vue.component('ver-cursos', require('./components/Admin/Cursos.vue').default);
+Vue.component('crear-curso', require('./components/Admin/CrearCursos.vue').default);
 Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);
 //User
-Vue.component('ver-cursos-user', require('./components/User/VerCursosUser.vue').default);
+Vue.component('ver-cursos-user', require('./components/User/EnrolarseACursos.vue').default);
 Vue.component('mis-solicitudes', require('./components/User/MisSolicitudes.vue').default);
 Vue.component('solicitar-sala', require('./components/User/SolicitarSala.vue').default);
 

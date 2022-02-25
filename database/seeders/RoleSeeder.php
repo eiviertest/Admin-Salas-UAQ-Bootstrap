@@ -21,14 +21,13 @@ class RoleSeeder extends Seeder
         //Permisos Admin
         Permission::create(['name' => 'Admin_Home'])->assignRole($roleAdmin);
         Permission::create(['name' => 'Admin_Reportes'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'Admin_Cursos_Ver'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'Admin_Cursos'])->assignRole($roleAdmin);
         Permission::create(['name' => 'Admin_Cursos_Crear'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'Admin_Cursos_CrearVarios'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'Admin_Solicitudes_Ver'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'Admin_Solicitudes'])->assignRole($roleAdmin);
 
         //Permisos User
         Permission::create(['name' => 'User_Home'])->assignRole($roleUser);
-        Permission::create(['name' => 'User_Cursos_Ver'])->assignRole($roleUser);
+        Permission::create(['name' => 'User_Cursos'])->assignRole($roleUser);
         Permission::create(['name' => 'User_Salas_Solicitar'])->assignRole($roleUser);
         Permission::create(['name' => 'User_Solicitudes_Ver'])->assignRole($roleUser); 
     }

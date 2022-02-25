@@ -3,10 +3,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Crear Varios Cursos</h4>
+                    <h4 class="card-header">Administrar Cursos</h4>
 
                     <div class="card-body">
-                        Usted se encuentra en Crear Varios Cursos!
+                        Usted se encuentra en Administrar Cursos!
                     </div>
                 </div>
             </div>
