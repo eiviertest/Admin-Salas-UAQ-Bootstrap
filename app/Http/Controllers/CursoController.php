@@ -97,6 +97,7 @@ class CursoController extends Controller
                 $curso->fecFinCur = $request->fecFinCur;
                 $curso->reqCur = $request->reqCur;
                 $curso->durCur = $request->durCur;
+                $curso->durCur = $request->instructor;
                 $curso->estado = 1;
                 $curso->cupCur = $request->cupCur;
                 $curso->idSala = $request->idSala;
