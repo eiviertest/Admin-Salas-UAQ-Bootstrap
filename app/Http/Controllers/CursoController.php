@@ -16,9 +16,25 @@ class CursoController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');                        
+        if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
                         ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $cursos->total(),
+                'current_page' => $cursos->currentPage(),
+                'per_page' => $cursos->perPage(),
+                'last_page' => $cursos->lastPage(),
+                'from' => $cursos->firstItem(),
+                'to' => $cursos->lastItem()
+            ],
+            'cursos' => $cursos];
+    }
+
+    public function catalogoCurso(Request $request){
+        if(!$request->ajax()) return redirect('/');   
+        $cursos = Curso::select('curso.idCur', 'curso.nomCur')
+                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->get();
         return ['cursos' => $cursos];
     }
 
@@ -50,22 +66,50 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $this->validarDatos($request);
-        try {
-            $curso = new Curso();
-            $curso->nomCur = $request->nomCur;
-            $curso->fecInCur = $request->fecInCur;
-            $curso->fecFinCur = $request->fecFinCur;
-            $curso->reqCur = $request->reqCur;
-            $curso->durCur = $request->durCur;
-            $curso->estado = 1;
-            $curso->cupCur = $request->cupCur;
-            $curso->idSala = $request->idSala;
-            $curso->save();
-            $idCurso = $curso->idCur;
-            $this->agregarHorarioCurso($request->horarios, $idCurso);
-            return ['mensaje' => 'Ha sido guardado el curso'];
-        } catch (exception $e) {
-            return $e->getMessage();
+        $cursos = Curso::select('curso.nomCur', 'horIn', 'horFin')
+                        ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
+                        ->where(function ($query) use ($request) {
+                            $query->whereBetween('curso.fecInCur', [$request->fecInCur, $request->fecFinCur])
+                            ->orWhere(function ($query) use ($request) {
+                                $query->whereBetween('curso.fecFinCur', [$request->fecInCur, $request->fecFinCur]);
+                            })
+                            ->orWhere(function ($query) use ($request) {
+                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
+                                    ->where('curso.fecFinCur', '>=', $request->fecFinCur);
+                            })
+                            ->orWhere(function ($query) use ($request) {
+                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
+                                    ->where('curso.fecFinCur', '<=', $request->fecFinCur);
+                            })->get();
+                        })
+                        ->where(function ($query) use ($request) {
+                            $query->whereBetween('horIn', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']])
+                            ->orWhereRaw('horIn <= ? and horFin >= ?', [[$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]])
+                            ->orWhereRaw('horFin between ? and ?', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]);
+                        })
+                        ->where('idSala', '=', $request->idSala)
+                        ->get();
+        if(count($cursos) == 0){
+            try {
+                $curso = new Curso();
+                $curso->nomCur = $request->nomCur;
+                $curso->fecInCur = $request->fecInCur;
+                $curso->fecFinCur = $request->fecFinCur;
+                $curso->reqCur = $request->reqCur;
+                $curso->durCur = $request->durCur;
+                $curso->durCur = $request->instructor;
+                $curso->estado = 1;
+                $curso->cupCur = $request->cupCur;
+                $curso->idSala = $request->idSala;
+                $curso->save();
+                $idCurso = $curso->idCur;
+                $this->agregarHorarioCurso($request->horarios, $idCurso);
+                return ['mensaje' => 'Ha sido guardado el curso'];
+            } catch (exception $e) {
+                return $e->getMessage();
+            }
+        }else{
+            return ['mensaje' => "Ya hay un curso registrado"];
         }
     }
 
@@ -78,10 +122,11 @@ class CursoController extends Controller
     public function agregarHorarioCurso($horarios, $idCurso){
         try {
             foreach ($horarios as $horario) {
+                $horaFinUnix = strtotime($horario["horFin"]);
                 $horariocurso = new HorarioCurso();
                 $horariocurso->idCur = $idCurso;
                 $horariocurso->horIn = $horario["horIn"];
-                $horariocurso->horFin = $horario["horFin"];
+                $horariocurso->horFin = date('H:i:s', $horaFinUnix - 1);
                 $horariocurso->save();
             }
         } catch (exception $e) {

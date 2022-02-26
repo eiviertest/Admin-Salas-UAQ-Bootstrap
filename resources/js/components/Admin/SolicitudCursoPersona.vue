@@ -3,29 +3,27 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Solicitudes de salas</h4>
+                    <h4 class="card-header">Solicitudes para enrolarse a curso</h4>
                     <div class="card-body">
                         <table class="table">
                             <thead> 
                                 <tr>
-                                    <th scope="col">Sala</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Hora de inicio</th>
-                                    <th scope="col">Hora de finalización</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Área/Facultad/Institución</th>
+                                    <th scope="col">Curso</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="solicitud in solicitudes" :key="solicitud.idSol"> 
-                                    <td v-text="solicitud.sala"></td>
-                                    <td v-text="solicitud.fecha"></td>
-                                    <td v-text="solicitud.horaIni"></td>
-                                    <td v-text="solicitud.horaFin"></td>
-                                    <td v-text="solicitud.estado"></td>
-                                    <td v-if="solicitud.estado == 'En proceso'">
-                                        <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar</button>
-                                        <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar</button>
+                                <tr v-for="curso_persona in lista_cursos_persona" :key="curso_persona.idPer.toString() + curso_persona.idCur.toString()"> 
+                                    <td v-text="curso_persona.nombre"></td>
+                                    <td v-text="curso_persona.nomArea"></td>
+                                    <td v-text="curso_persona.nomCur"></td>
+                                    <td v-text="curso_persona.estatus"></td>
+                                    <td v-if="curso_persona.estatus == 'En proceso'">
+                                        <button class="btn btn-primary" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar</button>
+                                        <button class="btn btn-danger" v-on:click="rechazarUsuario(curso_persona.idPer, curso_persona.idCur)">Rechazar</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -53,7 +51,7 @@
 export default {
     data() {
         return {
-            solicitudes: [],
+            lista_cursos_persona: [],
             errores: [],
             pagination: {
                 'total': 0, 
@@ -94,42 +92,42 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
-            me.getSolicitudes(page);
+            me.getListaCursoPersona(page);
         },
-        getSolicitudes(page) {
+        getListaCursoPersona(page) {
             let me = this;
-            axios.get('/solicitud_admin?page=' + page).then(function (response) {
-                me.solicitudes = response.data.solicitudes.data;
+            axios.get('/lista_curso_persona?page=' + page).then(function (response) {
+                me.lista_cursos_persona = response.data.lista_cursos_persona.data;
                 me.pagination = response.data.pagination;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
-        aceptarSolicitud(idSol){
+        aceptarUsuario(idPer, idCur){
             let me = this;
-            axios.put('/solicitud',{
-                    'idSol': idSol,
-                    'idEst': 2
+            axios.put('/aceptar_persona_curso',{
+                    'idPer': idPer,
+                    'idCur': idCur
                 }).then(function (response) {
-                    me.getSolicitudes(1);
+                    me.getListaCursoPersona(1);
                 }).catch( function (error) {
                     me.errores = error.data;
             });
         },
-        rechazarSolicitud(idSol){
+        rechazarUsuario(idPer, idCur){
             let me = this;
-            axios.put('/solicitud',{
-                    'idSol': idSol,
-                    'idEst': 3,
+            axios.put('/rechazar_persona_curso',{
+                    'idPer': idPer,
+                    'idCur': idCur,
                 }).then(function (response) {
-                    me.getSolicitudes(1);
+                    me.getListaCursoPersona(1);
                 }).catch( function (error) {
                     me.errores = error.data;
             });
         }
     },
     mounted() {
-        this.getSolicitudes(1);
+        this.getListaCursoPersona(1);
     }
 }
 </script>

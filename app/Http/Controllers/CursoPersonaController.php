@@ -17,8 +17,7 @@ class CursoPersonaController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function cursos_impartidos(Request $request){
-        if(!$request->ajax()) return redirect('/');
+    public function cursos_impartidos(){
         $fecha_actual = Carbon::now()->format('m-d');
         $semestre = "";
         $total_cursos = 0;
@@ -35,8 +34,7 @@ class CursoPersonaController extends Controller
             $fin_anio = "12-31";
             $cursos = $this->cursos_impartidos_fecha($medio_anio, $fin_anio);
         }
-        $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $cursos, 'semestre'=>$semestre]);
-        return $pdf->download('cursos_impartidos.pdf');
+        return ['cursos' => $cursos, 'semestre' => $semestre];
     }
 
     /**
@@ -53,28 +51,37 @@ class CursoPersonaController extends Controller
         return $cursos;
     }
 
+    public function cursos_impartidos_pdf(){
+        $datos = $this->cursos_impartidos();
+        $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $datos['cursos'], 'semestre'=>$datos['semestre']]);
+        return $pdf->download('cursos_impartidos.pdf');
+    }
+
     /**
      * Descargar las personas por curso
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function concentrado_curso(Request $request){
-        if(!$request->ajax()) return redirect('/');
-        $idCurso = $request->idCur;
-        $personas = CursoPersona::select(DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
+    public function concentrado_curso($idCurso){
+        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
                     ->where('curso_persona.estatus', '=', 'Aceptado')
                     ->get();
+        return ['personas' => $personas];
+        
+    }
+
+    public function concentrado_curso_pdf($idCurso) {
+        $personas = $this->concentrado_curso($idCurso);
         $datos_curso = Curso::select('nomCur', 'fecInCur', 'fecFinCur', 'nomSala')
                             ->join('sala as s', 's.idSala', '=', 'curso.idSala')
                             ->where('idCur', '=', $idCurso)
                             ->first();
-        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas, 'datos_curso' => $datos_curso]);
-        return $pdf->download('concentrado_curso.pdf');
+        $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas['personas'], 'datos_curso' => $datos_curso]);
+        return $pdf->download('curso_detalle.pdf');
     }
-
     /**
      * Enviar solicitud para enrolarse a un curso
      *
@@ -88,7 +95,9 @@ class CursoPersonaController extends Controller
         if(empty($verificar)) {
             //Registrar
             try{
+                $idPrimary = $idPersona->idPer.$request->idCur;
                 $enrolarse = new CursoPersona();
+                $enrolarse->idPeridCur = $idPrimary;
                 $enrolarse->idCur = $request->idCur;
                 $enrolarse->idPer = $idPersona->idPer;
                 $enrolarse->estatus = 'En proceso';
@@ -112,13 +121,13 @@ class CursoPersonaController extends Controller
         if(!$request->ajax()) return redirect('/');
         $personas_enroladas = CursoPersona::selectRaw('count(*) as total')->where('idCur', '=', $request->idCur)->where('estatus', '=', 'Aceptado')->get();
         $cupo_maximo = Curso::select('cupCur')->where('idCur', '=', $request->idCur)->first();
-        if($personas_enroladas->total >= $cupo_maximo->cupCur) {
+        if($personas_enroladas[0]->total >= $cupo_maximo->cupCur) {
             //Ya alcanzo el limite
             return ['mensaje' => 'El cupo del curso fue alcanzado'];
         }else{
             //Aceptar
             try {
-                $curso_persona = CursoPersona::findOrFail($request->idPer);
+                $curso_persona = CursoPersona::findOrFail($request->idPer.$request->idCur);
                 $curso_persona->estatus = 'Aceptado';
                 $curso_persona->save();
                 return ['mensaje' => 'El usuario ha sido aceptado'];
@@ -137,7 +146,7 @@ class CursoPersonaController extends Controller
     public function rechazar_persona_curso(Request $request){
         if(!$request->ajax()) return redirect('/');
         try {
-            $curso_persona = CursoPersona::findOrFail($request->idPer);
+            $curso_persona = CursoPersona::findOrFail($request->idPer.$request->idCur);
             $curso_persona->estatus = 'Rechazado';
             $curso_persona->save();
             return ['mensaje' => 'El usuario ha sido rechazado'];
@@ -155,11 +164,21 @@ class CursoPersonaController extends Controller
      */
     public function lista_curso_persona(Request $request){
         if(!$request->ajax()) return redirect('/');
-        $lista_curso_persona = CursoPersona::select('p.idPer', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+        $lista_curso_persona = CursoPersona::select('p.idPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
                         ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
+                        ->join('area as a', 'a.idArea', '=', 'p.idArea')
                         ->orderBy('curso_persona.estatus', 'ASC')
-                        ->get();
-        return $lista_curso_persona;
+                        ->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $lista_curso_persona->total(),
+                'current_page' => $lista_curso_persona->currentPage(),
+                'per_page' => $lista_curso_persona->perPage(),
+                'last_page' => $lista_curso_persona->lastPage(),
+                'from' => $lista_curso_persona->firstItem(),
+                'to' => $lista_curso_persona->lastItem()
+            ], 
+            'lista_cursos_persona' => $lista_curso_persona];
     }
 }

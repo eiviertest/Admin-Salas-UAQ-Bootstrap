@@ -17,16 +17,23 @@ class AreaController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $areas = Area::select('idArea as ide', 'nomArea as nombre')->orderBy('nomArea', 'ASC')->paginate(10);
-        return 
-        [ 'pagination' => [
-            'total' => $areas->total(),
-            'current_page' => $areas->currentPage(),
-            'per_page' => $areas->perPage(),
-            'last_page' => $areas->lastPage(),
-            'from' => $areas->firstItem(),
-            'to' => $areas->lastItem()
-        ],
+        return [
+            'pagination' => [
+                'total' => $areas->total(),
+                'current_page' => $areas->currentPage(),
+                'per_page' => $areas->perPage(),
+                'last_page' => $areas->lastPage(),
+                'from' => $areas->firstItem(),
+                'to' => $areas->lastItem()
+            ],
             'areas' => $areas];
+    }
+
+    public function catalogo_area(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $areas = Area::select('idArea', 'nomArea')->orderBy('nomArea', 'ASC')->get();
+        return ['areas' => $areas];
     }
 
     /**

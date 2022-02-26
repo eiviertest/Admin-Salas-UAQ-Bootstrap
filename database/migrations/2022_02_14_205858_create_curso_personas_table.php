@@ -14,10 +14,11 @@ class CreateCursoPersonasTable extends Migration
     public function up()
     {
         Schema::create('curso_persona', function (Blueprint $table) {
-            $table->primary(['idCur', 'idPer']);
+            $table->id('idPeridCur');
             $table->unsignedBigInteger('idCur');
             $table->unsignedBigInteger('idPer');
             $table->string('estatus', 30)->default('En proceso');
+            $table->string('instructor');
             $table->foreign('idCur')->references('idCur')->on('curso');
             $table->foreign('idPer')->references('idPer')->on('persona');
             $table->timestamps();

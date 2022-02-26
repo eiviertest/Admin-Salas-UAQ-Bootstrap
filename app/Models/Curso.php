@@ -15,6 +15,7 @@ class Curso extends Model
 
     protected $fillable = [
         'nomCur',
+        'instructor',
         'fecInCur',
         'fecFinCur',
         'reqCur',

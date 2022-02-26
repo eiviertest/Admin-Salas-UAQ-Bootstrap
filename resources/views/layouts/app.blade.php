@@ -30,9 +30,9 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}">
-                <img src=" {{URL::asset('img/logoNav.png')}} " width="40" height="40" 
-                    class="d-inline-block align-top" alt="LogoNav">
+                <a @click="menu=0" class="navbar-brand" href="#">
+                    <img src=" {{URL::asset('img/logoNav.png')}} " width="40" height="40" 
+                        class="d-inline-block align-top" alt="LogoNav">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -42,9 +42,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @guest
+
                         @else
-                            @include('layouts.navAdmin')
-                            @include('layouts.navUser')
+                            @include('layouts.nav')
                         @endguest
                     </ul>
 
@@ -66,7 +66,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->email }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
