@@ -19,6 +19,12 @@
     <template v-if="menu == 5">
         <solicitudes-admin/>
     </template>
+    <template v-if="menu == 9">
+        <areas/>
+    </template>
+    <template v-if="menu == 10">
+        <salas/>
+    </template>
     <!-- Fin Views Admin -->
     <!-- Views User -->
     <template v-if="menu == 6">

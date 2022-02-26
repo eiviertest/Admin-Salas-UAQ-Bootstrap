@@ -4,6 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import Vue from 'vue';
+
 require('./bootstrap');
 
 window.Vue = require('vue').default;
@@ -27,6 +29,13 @@ Vue.component('ver-cursos', require('./components/Admin/VerCursos.vue').default)
 Vue.component('crear-curso', require('./components/Admin/CrearCurso.vue').default);
 Vue.component('crear-varios-cursos', require('./components/Admin/CrearVariosCursos.vue').default);
 Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);
+Vue.component('areas', require('./components/Admin/Areas.vue').default);
+Vue.component('salas', require('./components/Admin/Salas.vue').default);
+// CRUD
+Vue.component('crear', require('./components/CRUDArea/Crear.vue').default);
+Vue.component('editar', require('./components/CRUDArea/Editar.vue').default);
+Vue.component('mostrar', require('./components/CRUDArea/Mostrar.vue').default);
+Vue.component('mostrar-salas', require('./components/CRUDSalas/MostrarSalas.vue').default);
 //User
 Vue.component('ver-cursos-user', require('./components/User/VerCursosUser.vue').default);
 Vue.component('mis-solicitudes', require('./components/User/MisSolicitudes.vue').default);

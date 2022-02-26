@@ -22,3 +22,13 @@
         <a @click="menu=5" class="dropdown-item" href="#">Ver Solicitudes</a>
     </div>
 </li>
+<li class="nav-item dropdown">
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+        Catalagos
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a @click="menu=9" class="dropdown-item" href="#">Areas</a>
+        <a @click="menu=10" class="dropdown-item" href="#">Salas</a>
+    </div>
+</li>
