@@ -43,14 +43,13 @@ class CursoController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function validarDatos(Request $request) {
-        $request->validate([
+    public function validarDatos($curso) {
+        $curso->validate([
             'nomCur' => 'required|string|max:200|unique:curso',
             'fecInCur' => 'required|date',
             'fecFinCur' => 'required|date',
             'reqCur' => 'required|string|max:100',
-            'durCur' => 'required|int|max:40',
-            'cupCur' => 'required|int|max:10',
+            'cupCur' => 'required|int|max:15',
             'idSala' => 'required|int',
             'horarios' => 'required|array|min:1'
         ]);
@@ -65,51 +64,59 @@ class CursoController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $this->validarDatos($request);
+        $this->validarDatos($request->curso);
+        $fecha_inicio = $request->curso['fecInCur'];
+        $fecha_fin = $request->curso['fecFinCur'];
+        $horario = $request->curso['horarios'];
         $cursos = Curso::select('curso.nomCur', 'horIn', 'horFin')
                         ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
-                        ->where(function ($query) use ($request) {
-                            $query->whereBetween('curso.fecInCur', [$request->fecInCur, $request->fecFinCur])
-                            ->orWhere(function ($query) use ($request) {
-                                $query->whereBetween('curso.fecFinCur', [$request->fecInCur, $request->fecFinCur]);
+                        ->where(function ($query) use ($fecha_inicio, $fecha_fin) {
+                            $query->whereBetween('curso.fecInCur', [$fecha_inicio, $fecha_fin])
+                            ->orWhere(function ($query) use ($fecha_inicio, $fecha_fin) {
+                                $query->whereBetween('curso.fecFinCur', [$fecha_inicio, $fecha_fin]);
                             })
-                            ->orWhere(function ($query) use ($request) {
-                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
-                                    ->where('curso.fecFinCur', '>=', $request->fecFinCur);
+                            ->orWhere(function ($query) use ($fecha_inicio, $fecha_fin) {
+                                $query->where('curso.fecInCur', '<=', $fecha_inicio)
+                                    ->where('curso.fecFinCur', '>=', $fecha_fin);
                             })
-                            ->orWhere(function ($query) use ($request) {
-                                $query->where('curso.fecInCur', '<=', $request->fecInCur)
-                                    ->where('curso.fecFinCur', '<=', $request->fecFinCur);
+                            ->orWhere(function ($query) use ($fecha_inicio, $fecha_fin) {
+                                $query->where('curso.fecInCur', '<=', $fecha_inicio)
+                                    ->where('curso.fecFinCur', '<=', $fecha_fin);
                             })->get();
                         })
                         ->where(function ($query) use ($request) {
-                            $query->whereBetween('horIn', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']])
-                            ->orWhereRaw('horIn <= ? and horFin >= ?', [[$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]])
-                            ->orWhereRaw('horFin between ? and ?', [$request->horarios[0]['horIn'], $request->horarios[0]['horFin']]);
+                            $query->whereBetween('horIn', [$horario[0]['horIn'], $horario[0]['horFin']])
+                            ->orWhereRaw('horIn <= ? and horFin >= ?', [$horario[0]['horIn'], $horario[0]['horFin']])
+                            ->orWhereRaw('horFin between ? and ?', [$horario[0]['horIn'], $horario[0]['horFin']]);
                         })
                         ->where('idSala', '=', $request->idSala)
                         ->get();
         if(count($cursos) == 0){
             try {
+                $durCur = $fecha_inicio->diff($fecha_fin);
                 $curso = new Curso();
-                $curso->nomCur = $request->nomCur;
-                $curso->fecInCur = $request->fecInCur;
-                $curso->fecFinCur = $request->fecFinCur;
-                $curso->reqCur = $request->reqCur;
-                $curso->durCur = $request->durCur;
-                $curso->durCur = $request->instructor;
+                $curso->nomCur = $request->curso['nomCur'];
+                $curso->fecInCur = $fecha_inicio;
+                $curso->fecFinCur = $fecha_fin;
+                $curso->reqCur = $request->curso['reqCur'];
+                $curso->durCur = $durCur->days;
+                $curso->durCur = $request->curso['instructor'];
                 $curso->estado = 1;
-                $curso->cupCur = $request->cupCur;
-                $curso->idSala = $request->idSala;
+                $curso->cupCur = $request->curso['cupCur'];
+                $curso->idSala = $request->curso['idSala'];
                 $curso->save();
                 $idCurso = $curso->idCur;
-                $this->agregarHorarioCurso($request->horarios, $idCurso);
-                return ['mensaje' => 'Ha sido guardado el curso'];
+                $this->agregarHorarioCurso($horario, $idCurso);
+                return [
+                    'code' => 1,
+                    'mensaje' => 'Ha sido guardado el curso'];
             } catch (exception $e) {
                 return $e->getMessage();
             }
         }else{
-            return ['mensaje' => "Ya hay un curso registrado"];
+            return [
+                'code' => 2,
+                'mensaje' => "Ya hay un curso registrado"];
         }
     }
 

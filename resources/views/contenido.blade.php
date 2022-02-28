@@ -24,7 +24,7 @@
     <template v-if="menu == 5">
         <solicitudes-admin/>
     </template>
-    <template v-if="menu == 9">
+    <template v-if="menu == 11">
         <areas/>
     </template>
     <template v-if="menu == 10">

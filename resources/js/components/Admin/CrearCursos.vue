@@ -7,9 +7,9 @@
                         <div class="col-md-8">
                             <h4 class="">Administrar Cursos</h4>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-center">
+                        <!-- <div class="col-md-4 d-flex justify-content-center">
                             <button type="button" class="btn btn-primary" disabled>Carga Masiva</button>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="card-body">
@@ -53,6 +53,10 @@
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Hora de fin</label>
                                     <input required type="time" v-model="horario[0]['horaFin']" class="form-control" :min="horario[0]['horaIni']" max="18:00">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-control-label" for="text-input">Cupo límite</label>
+                                    <input required v-model="curso.cupCur" type="number" max="15" min="0" class="form-control" placeholder="Cupo del curso">
                                 </div>
                             </div>
                             <br>

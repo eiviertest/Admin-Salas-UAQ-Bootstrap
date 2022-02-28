@@ -40,7 +40,7 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a @click="menu=9" class="dropdown-item" href="#">Areas</a>
+            <a @click="menu=11" class="dropdown-item" href="#">Areas</a>
             <a @click="menu=10" class="dropdown-item" href="#">Salas</a>
         </div>
     </li>
