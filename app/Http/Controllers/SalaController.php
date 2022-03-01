@@ -29,6 +29,13 @@ class SalaController extends Controller
             'salas' => $salas];
     }
 
+    public function catalogoSalas(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $salas = Sala::select('idSala', 'nomSala')->orderBy('nomSala', 'ASC')->get();
+        return ['salas' => $salas];
+    }
+
     /**
      * Store a newly created resource in storage.
      *

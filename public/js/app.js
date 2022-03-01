@@ -5262,8 +5262,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5337,24 +5372,82 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      curso: _defineProperty({
-        'nombre': '',
+      curso: {
+        'nomCur': '',
         'instructor': '',
         'requisitos': '',
+        'cupolimite': '',
+        'fecInCur': '',
+        'fecFinCur': '',
         'sala': 0,
-        'fechaInCur': ''
-      }, "fechaInCur", ''),
-      horario: [{
+        'horarios': []
+      },
+      horario: {
         'horaIni': '',
         'horaFin': ''
-      }],
-      salas: []
+      },
+      salas: [],
+      errores: {},
+      successCurso: false,
+      cursoExistente: false
     };
   },
   methods: {
-    registrarCurso: function registrarCurso() {}
+    registrarCurso: function registrarCurso() {
+      me.cursoExistente = false;
+      me.successCurso = false;
+      var me = this;
+      me.curso.horarios = [];
+      me.curso.horarios.push({
+        'horIn': me.horario.horaIni,
+        'horFin': me.horario.horaFin
+      });
+      axios.post('/curso', {
+        "curso": me.curso
+      }).then(function (response) {
+        if (response.data.code == 1) {
+          me.errores = {};
+          me.successCurso = true;
+          me.resetVariables();
+        } else {
+          me.errores = {};
+          me.cursoExistente = true;
+        }
+      })["catch"](function (error) {
+        if (error.response.status == 422) {
+          me.errores = error.response.data.errors;
+          me.curso.horarios = [];
+        }
+      });
+    },
+    resetVariables: function resetVariables() {
+      this.curso = {
+        'nomCur': '',
+        'instructor': '',
+        'requisitos': '',
+        'cupolimite': '',
+        'fecInCur': '',
+        'fecFinCur': '',
+        'sala': 0,
+        'horarios': []
+      };
+      this.horario = {
+        'horaIni': '',
+        'horaFin': ''
+      };
+    },
+    getSalas: function getSalas() {
+      var me = this;
+      axios.get('/catalogoSalas').then(function (response) {
+        me.salas = response.data.salas;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.getSalas();
+  }
 });
 
 /***/ }),
@@ -30300,11 +30393,47 @@ var render = function () {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _vm.successCurso
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "alert alert-success",
+                    attrs: { role: "alert" },
+                  },
+                  [
+                    _vm._v(
+                      "\n                        El curso se ha creado con éxito.\n                    "
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.cursoExistente
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "alert alert-warning",
+                    attrs: { role: "alert" },
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Un curso ya se encuentra registrado.\n                    "
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
             _c(
               "form",
               {
                 staticClass: "form-horizontal",
                 attrs: { method: "post", enctype: "multipart/form-data" },
+                on: {
+                  submit: function ($event) {
+                    $event.preventDefault()
+                    return _vm.registrarCurso()
+                  },
+                },
               },
               [
                 _c("div", { staticClass: "row form-group" }, [
@@ -30323,26 +30452,36 @@ var render = function () {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.curso.nombre,
-                          expression: "curso.nombre",
+                          value: _vm.curso.nomCur,
+                          expression: "curso.nomCur",
                         },
                       ],
                       staticClass: "form-control",
                       attrs: {
                         required: "",
+                        name: "nomCur",
+                        id: "nomCur",
                         type: "text",
                         placeholder: "Nombre de curso",
                       },
-                      domProps: { value: _vm.curso.nombre },
+                      domProps: { value: _vm.curso.nomCur },
                       on: {
                         input: function ($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.curso, "nombre", $event.target.value)
+                          _vm.$set(_vm.curso, "nomCur", $event.target.value)
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.nomCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.nomCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
@@ -30380,6 +30519,14 @@ var render = function () {
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.instructor"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.instructor"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
@@ -30417,6 +30564,14 @@ var render = function () {
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.requisitos"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.requisitos"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                 ]),
                 _vm._v(" "),
@@ -30443,6 +30598,7 @@ var render = function () {
                           },
                         ],
                         staticClass: "form-select",
+                        attrs: { required: "" },
                         on: {
                           change: function ($event) {
                             var $$selectedVal = Array.prototype.filter
@@ -30482,6 +30638,14 @@ var render = function () {
                       ],
                       2
                     ),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.sala"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.sala"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
@@ -30515,6 +30679,14 @@ var render = function () {
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.fecInCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.fecInCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
@@ -30552,6 +30724,14 @@ var render = function () {
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.fecFinCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.fecFinCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                 ]),
                 _vm._v(" "),
@@ -30571,26 +30751,30 @@ var render = function () {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.horario[0]["horaIni"],
-                          expression: "horario[0]['horaIni']",
+                          value: _vm.horario.horaIni,
+                          expression: "horario.horaIni",
                         },
                       ],
                       staticClass: "form-control",
-                      attrs: { required: "", type: "time" },
-                      domProps: { value: _vm.horario[0]["horaIni"] },
+                      attrs: { required: "", type: "time", min: "08:00" },
+                      domProps: { value: _vm.horario.horaIni },
                       on: {
                         input: function ($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(
-                            _vm.horario[0],
-                            "horaIni",
-                            $event.target.value
-                          )
+                          _vm.$set(_vm.horario, "horaIni", $event.target.value)
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.horarios"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.horarios"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
@@ -30608,53 +30792,88 @@ var render = function () {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.horario[0]["horaFin"],
-                          expression: "horario[0]['horaFin']",
+                          value: _vm.horario.horaFin,
+                          expression: "horario.horaFin",
                         },
                       ],
                       staticClass: "form-control",
                       attrs: {
                         required: "",
                         type: "time",
-                        min: _vm.horario[0]["horaIni"],
+                        min: _vm.horario.horaIni,
                         max: "18:00",
                       },
-                      domProps: { value: _vm.horario[0]["horaFin"] },
+                      domProps: { value: _vm.horario.horaFin },
                       on: {
                         input: function ($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(
-                            _vm.horario[0],
-                            "horaFin",
-                            $event.target.value
-                          )
+                          _vm.$set(_vm.horario, "horaFin", $event.target.value)
                         },
                       },
                     }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.horarios"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.horarios"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Cupo límite")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.cupolimite,
+                          expression: "curso.cupolimite",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        type: "number",
+                        max: "15",
+                        min: "0",
+                        placeholder: "Cupo del curso",
+                      },
+                      domProps: { value: _vm.curso.cupolimite },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "cupolimite", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.cupolimite"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.cupolimite"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]),
                 ]),
                 _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
-                _c("div", { staticClass: "row form-group" }, [
-                  _c("div", { staticClass: "col-md-3" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function ($event) {
-                            return _vm.registrarCurso()
-                          },
-                        },
-                      },
-                      [_vm._v("Registrar curso")]
-                    ),
-                  ]),
-                ]),
+                _vm._m(1),
               ]
             ),
           ]),
@@ -30672,15 +30891,18 @@ var staticRenderFns = [
       _c("div", { staticClass: "col-md-8" }, [
         _c("h4", {}, [_vm._v("Administrar Cursos")]),
       ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-4 d-flex justify-content-center" }, [
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row form-group" }, [
+      _c("div", { staticClass: "col-md-3" }, [
         _c(
           "button",
-          {
-            staticClass: "btn btn-primary",
-            attrs: { type: "button", disabled: "" },
-          },
-          [_vm._v("Carga Masiva")]
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [_vm._v("Registrar curso")]
         ),
       ]),
     ])

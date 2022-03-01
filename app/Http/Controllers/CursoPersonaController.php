@@ -102,12 +102,16 @@ class CursoPersonaController extends Controller
                 $enrolarse->idPer = $idPersona->idPer;
                 $enrolarse->estatus = 'En proceso';
                 $enrolarse->save();
-                return ['mensaje' => 'Usted se ha enrolado'];
+                return [
+                    'code' => 1,
+                    'mensaje' => 'Usted se ha enrolado'];
             }catch(exception $e){
                 return $e->getMessage();
             }
         }else{
-            return ['mensaje' => 'Usted ya se enrolo a este curso'];
+            return [
+                'code' => 2,
+                'mensaje' => 'Usted ya se enrolo a este curso'];
         }   
     }
 

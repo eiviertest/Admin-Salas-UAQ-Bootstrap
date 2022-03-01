@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Curso;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CursoController extends Controller
 {
@@ -43,15 +44,16 @@ class CursoController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function validarDatos($curso) {
-        $curso->validate([
-            'nomCur' => 'required|string|max:200|unique:curso',
-            'fecInCur' => 'required|date',
-            'fecFinCur' => 'required|date',
-            'reqCur' => 'required|string|max:100',
-            'cupCur' => 'required|int|max:15',
-            'idSala' => 'required|int',
-            'horarios' => 'required|array|min:1'
+    public function validarDatos($request) {
+        $request->validate([
+            'curso.nomCur' => 'required|string|max:200|unique:curso',
+            'curso.fecInCur' => 'required|date',
+            'curso.fecFinCur' => 'required|date',
+            'curso.requisitos' => 'required|string|max:100',
+            'curso.instructor' => 'required|string|max:255',
+            'curso.cupolimite' => 'required|int|max:15',
+            'curso.sala' => 'required|int|exists:sala,idSala',
+            'curso.horarios' => 'required|array|min:1'
         ]);
     }
 
@@ -64,9 +66,10 @@ class CursoController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $this->validarDatos($request->curso);
-        $fecha_inicio = $request->curso['fecInCur'];
-        $fecha_fin = $request->curso['fecFinCur'];
+        $this->validarDatos($request);
+        $fecha_inicio = Carbon::createFromFormat('Y-m-d', $request->curso['fecInCur']);
+        $fecha_fin = Carbon::createFromFormat('Y-m-d', $request->curso['fecFinCur']);
+        $durCur = $fecha_inicio->diffInDays($fecha_fin);
         $horario = $request->curso['horarios'];
         $cursos = Curso::select('curso.nomCur', 'horIn', 'horFin')
                         ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
@@ -84,12 +87,12 @@ class CursoController extends Controller
                                     ->where('curso.fecFinCur', '<=', $fecha_fin);
                             })->get();
                         })
-                        ->where(function ($query) use ($request) {
+                        ->where(function ($query) use ($horario) {
                             $query->whereBetween('horIn', [$horario[0]['horIn'], $horario[0]['horFin']])
                             ->orWhereRaw('horIn <= ? and horFin >= ?', [$horario[0]['horIn'], $horario[0]['horFin']])
                             ->orWhereRaw('horFin between ? and ?', [$horario[0]['horIn'], $horario[0]['horFin']]);
                         })
-                        ->where('idSala', '=', $request->idSala)
+                        ->where('idSala', '=', $request->curso['sala'])
                         ->get();
         if(count($cursos) == 0){
             try {
@@ -98,12 +101,12 @@ class CursoController extends Controller
                 $curso->nomCur = $request->curso['nomCur'];
                 $curso->fecInCur = $fecha_inicio;
                 $curso->fecFinCur = $fecha_fin;
-                $curso->reqCur = $request->curso['reqCur'];
+                $curso->reqCur = $request->curso['requisitos'];
                 $curso->durCur = $durCur->days;
-                $curso->durCur = $request->curso['instructor'];
+                $curso->instructor = $request->curso['instructor'];
                 $curso->estado = 1;
-                $curso->cupCur = $request->curso['cupCur'];
-                $curso->idSala = $request->curso['idSala'];
+                $curso->cupCur = $request->curso['cupolimite'];
+                $curso->idSala = $request->curso['sala'];
                 $curso->save();
                 $idCurso = $curso->idCur;
                 $this->agregarHorarioCurso($horario, $idCurso);
