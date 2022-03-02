@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Curso;
+use Illuminate\Support\Facades\DB;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -17,9 +18,14 @@ class CursoController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');   
+        if(!$request->ajax()) return redirect('/');
+        $idPersona = $this->getIdPersona(Auth::user()->id);
+        $idPer = $idPersona->idPer;
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
-                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(10);
+                        ->whereNotExists(function ($query) {
+                            $query->select(DB::raw(1))->from('curso_persona')->whereColumn('curso_persona.idCur', 'curso.idCur');
+                        })
+                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(12);
         return [
             'pagination' => [
                 'total' => $cursos->total(),
