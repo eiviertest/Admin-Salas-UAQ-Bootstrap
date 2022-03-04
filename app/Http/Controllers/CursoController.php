@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CursoController extends Controller
 {
@@ -25,7 +26,7 @@ class CursoController extends Controller
                         ->whereNotExists(function ($query) {
                             $query->select(DB::raw(1))->from('curso_persona')->whereColumn('curso_persona.idCur', 'curso.idCur');
                         })
-                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(12);
+                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(9);
         return [
             'pagination' => [
                 'total' => $cursos->total(),
