@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class CursoController extends Controller
 {
     /**
-     * Lista los cursos activos
+     * Lista los cursos a los cuales el usuario no se ha enrolado
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -38,6 +38,35 @@ class CursoController extends Controller
             'cursos' => $cursos];
     }
 
+    /**
+     * Lista los cursos activos para administrador
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function index_admin(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur', 'curso.estado')
+                        ->orderBy('nomCur', 'ASC')->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $cursos->total(),
+                'current_page' => $cursos->currentPage(),
+                'per_page' => $cursos->perPage(),
+                'last_page' => $cursos->lastPage(),
+                'from' => $cursos->firstItem(),
+                'to' => $cursos->lastItem()
+            ],
+            'cursos' => $cursos];
+    }
+
+    /**
+     * Retorna todos los cursos activos sin paginacion
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function catalogoCurso(Request $request){
         if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur')
@@ -129,6 +158,12 @@ class CursoController extends Controller
         }
     }
 
+    public function getDataCurso(Request $request, $idCurso){
+        if(!$request->ajax()) return redirect('/');
+        $curso = Curso::findOrFail($idCurso);
+        return $curso;
+    }
+
     /**
      * Agregar horario(s) a un curso
      *¿
@@ -160,10 +195,12 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         try {
-            $curso = Curso::findOrFail($request->id);
+            $curso = Curso::findOrFail($request->idCur);
             $curso->estado = 0;
             $curso->save();
-            return ['mensaje' => 'Ha sido eliminado el curso'];
+            return [
+                'code' => 1,
+                'mensaje' => 'Ha sido eliminado el curso'];
         } catch (exception $e) {
             return $e->getMessage();
         }

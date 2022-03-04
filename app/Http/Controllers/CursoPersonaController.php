@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 class CursoPersonaController extends Controller
 {   
     /**
-     * Descargar los cursos por semestre
+     * Lista los cursos de un semestre
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @return array cursos y semestre
      */
     public function cursos_impartidos(){
         $fecha_actual = Carbon::now()->format('m-d');
@@ -38,7 +38,7 @@ class CursoPersonaController extends Controller
     }
 
     /**
-     * Descargar los cursos por semestre
+     * Consigue los cursos de un semestre
      *
      * @param date fecha_inicio fecha_fin
      * @return array Cursos
@@ -51,6 +51,11 @@ class CursoPersonaController extends Controller
         return $cursos;
     }
 
+    /**
+     * Descargar los cursos por semestre
+     *
+     * @return PDF
+     */
     public function cursos_impartidos_pdf(){
         $datos = $this->cursos_impartidos();
         $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $datos['cursos'], 'semestre'=>$datos['semestre']]);
@@ -58,9 +63,10 @@ class CursoPersonaController extends Controller
     }
 
     /**
-     * Descargar las personas por curso
+     * Lista las personas aceptadas de un curso
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param int $idCurso
+     * @return array personas
      */
     public function concentrado_curso($idCurso){
         $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
@@ -73,6 +79,13 @@ class CursoPersonaController extends Controller
         
     }
 
+    /**
+     * Descargar a PDF los detalles de un curso
+     *
+     * @param  int $idCurso
+     * @return PDF
+     * 
+     */
     public function concentrado_curso_pdf($idCurso) {
         $personas = $this->concentrado_curso($idCurso);
         $datos_curso = Curso::select('nomCur', 'fecInCur', 'fecFinCur', 'nomSala')
@@ -82,6 +95,7 @@ class CursoPersonaController extends Controller
         $pdf = PDF::loadView('reportes.concentrado_curso', ['personas'=>$personas['personas'], 'datos_curso' => $datos_curso]);
         return $pdf->download('curso_detalle.pdf');
     }
+
     /**
      * Enviar solicitud para enrolarse a un curso
      *
@@ -127,14 +141,18 @@ class CursoPersonaController extends Controller
         $cupo_maximo = Curso::select('cupCur')->where('idCur', '=', $request->idCur)->first();
         if($personas_enroladas[0]->total >= $cupo_maximo->cupCur) {
             //Ya alcanzo el limite
-            return ['mensaje' => 'El cupo del curso fue alcanzado'];
+            return [
+                'code' => 2,
+                'mensaje' => 'El cupo del curso fue alcanzado'];
         }else{
             //Aceptar
             try {
                 $curso_persona = CursoPersona::findOrFail($request->idPer.$request->idCur);
                 $curso_persona->estatus = 'Aceptado';
                 $curso_persona->save();
-                return ['mensaje' => 'El usuario ha sido aceptado'];
+                return [
+                    'code' => 1,
+                    'mensaje' => 'El usuario ha sido aceptado'];
             } catch (exception $e) {
                 return $e->getMessage();
             }
@@ -161,7 +179,7 @@ class CursoPersonaController extends Controller
 
     
     /**
-     * Lista de solicitudes para enrolarse
+     * Lista las solicitudes de enrolarse a un curso
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -184,5 +202,33 @@ class CursoPersonaController extends Controller
                 'to' => $lista_curso_persona->lastItem()
             ], 
             'lista_cursos_persona' => $lista_curso_persona];
+    }
+
+    
+    /**
+     * Lista los cursos de una persona
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function mis_cursos_persona(Request $request){
+        if(!$request->ajax()) return redirect('/');
+        $idPersona = $this->getIdPersona(Auth::user()->id);
+        $mis_cursos_persona = CursoPersona::select('c.nomCur', 'curso_persona.estatus', 'c.idCur', 'c.fecInCur', 'c.fecFinCur', 'h.horIn', 'h.horFin')
+                        ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
+                        ->join('horario_curso as h', 'c.idCur', '=', 'h.idCur')
+                        ->where('curso_persona.idPer', '=', $idPersona->idPer)
+                        ->orderBy('curso_persona.estatus', 'ASC')
+                        ->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $mis_cursos_persona->total(),
+                'current_page' => $mis_cursos_persona->currentPage(),
+                'per_page' => $mis_cursos_persona->perPage(),
+                'last_page' => $mis_cursos_persona->lastPage(),
+                'from' => $mis_cursos_persona->firstItem(),
+                'to' => $mis_cursos_persona->lastItem()
+            ], 
+            'mis_cursos_persona' => $mis_cursos_persona];
     }
 }

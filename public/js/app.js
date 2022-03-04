@@ -5262,6 +5262,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _RUCurso_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RUCurso.vue */ "./resources/js/components/Admin/RUCurso.vue");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -5369,9 +5372,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    RUCurso: _RUCurso_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
-    return {
+    var _ref;
+
+    return _ref = {
       curso: {
         'nomCur': '',
         'instructor': '',
@@ -5389,10 +5437,57 @@ __webpack_require__.r(__webpack_exports__);
       salas: [],
       errores: {},
       successCurso: false,
-      cursoExistente: false
-    };
+      cursoExistente: false,
+      mostrar: false,
+      cursos: [{
+        'datos': 'datos'
+      }]
+    }, _defineProperty(_ref, "errores", []), _defineProperty(_ref, "pagination", {
+      'total': 0,
+      'current_page': 0,
+      'per_page': 0,
+      'last_page': 0,
+      'from': 0,
+      'to': 0
+    }), _defineProperty(_ref, "offset", 2), _defineProperty(_ref, "modalRUCurso", false), _defineProperty(_ref, "accion", ''), _defineProperty(_ref, "idCurso", 0), _ref;
+  },
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    }
   },
   methods: {
+    cambiarPagina: function cambiarPagina(page) {
+      var me = this;
+      me.pagination.current_page = page;
+      me.getCursos(page);
+    },
     registrarCurso: function registrarCurso() {
       me.cursoExistente = false;
       me.successCurso = false;
@@ -5443,10 +5538,43 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         me.errores = error.data;
       });
+    },
+    getCursos: function getCursos(page) {
+      var me = this;
+      axios.get('/curso_admin?page=' + page).then(function (response) {
+        me.cursos = response.data.cursos.data;
+        me.pagination = response.data.pagination;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    editarCurso: function editarCurso(idCurso) {
+      this.modalRUCurso = true;
+      this.accion = "Actualizar curso";
+      this.idCurso = idCurso;
+    },
+    verDetalle: function verDetalle(idCurso) {
+      this.modalRUCurso = true;
+      this.accion = "Ver Datos del Curso";
+      this.idCurso = idCurso;
+    },
+    disableCurso: function disableCurso(idCurso) {
+      var me = this;
+      axios.put('/curso', {
+        'idCur': idCurso
+      }).then(function (response) {
+        if (response.data.code == 1) {
+          console.log('Todo bien');
+          me.getCursos(1);
+        }
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
     }
   },
   mounted: function mounted() {
     this.getSalas();
+    this.getCursos(1);
   }
 });
 
@@ -5601,6 +5729,66 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.getSolicitudes(1);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "RU-Cuso",
+  props: {
+    accion: String,
+    idCurso: Number
+  },
+  data: function data() {
+    return {
+      curso: {}
+    };
+  },
+  methods: {
+    getDataCurso: function getDataCurso(idCurso) {
+      var me = this;
+      axios.get('/getDataCurso/' + idCurso).then(function (response) {
+        me.curso = response.data.curso;
+      });
+    },
+    closeModal: function closeModal() {
+      this.$emit('closeModal');
+    }
+  },
+  mounted: function mounted() {
+    this.getDataCurso(this.idCurso);
   }
 });
 
@@ -29206,6 +29394,45 @@ component.options.__file = "resources/js/components/Admin/MostrarSolicitudes.vue
 
 /***/ }),
 
+/***/ "./resources/js/components/Admin/RUCurso.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/Admin/RUCurso.vue ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RUCurso.vue?vue&type=template&id=4e637f04& */ "./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04&");
+/* harmony import */ var _RUCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RUCurso.vue?vue&type=script&lang=js& */ "./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RUCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__.render,
+  _RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Admin/RUCurso.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Admin/Reportes.vue":
 /*!****************************************************!*\
   !*** ./resources/js/components/Admin/Reportes.vue ***!
@@ -29811,6 +30038,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RUCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RUCurso.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RUCurso_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************!*\
   !*** ./resources/js/components/Admin/Reportes.vue?vue&type=script&lang=js& ***!
@@ -30019,6 +30262,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MostrarSolicitudes_vue_vue_type_template_id_0598a1bd___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MostrarSolicitudes_vue_vue_type_template_id_0598a1bd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./MostrarSolicitudes.vue?vue&type=template&id=0598a1bd& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/MostrarSolicitudes.vue?vue&type=template&id=0598a1bd&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04& ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RUCurso_vue_vue_type_template_id_4e637f04___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RUCurso.vue?vue&type=template&id=4e637f04& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04&");
 
 
 /***/ }),
@@ -30390,493 +30650,761 @@ var render = function () {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "row card-header" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4 d-flex justify-content-left" }, [
+              !_vm.cursos.length
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                    },
+                    [_vm._v("Carga Masiva")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              !_vm.mostrar
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          _vm.mostrar = !_vm.mostrar
+                        },
+                      },
+                    },
+                    [_vm._v("Ver Cursos Registrados")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.mostrar
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          _vm.mostrar = !_vm.mostrar
+                        },
+                      },
+                    },
+                    [_vm._v("Registrar curso")]
+                  )
+                : _vm._e(),
+            ]),
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _vm.successCurso
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "alert alert-success",
-                    attrs: { role: "alert" },
-                  },
-                  [
-                    _vm._v(
-                      "\n                        El curso se ha creado con éxito.\n                    "
-                    ),
-                  ]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.cursoExistente
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "alert alert-warning",
-                    attrs: { role: "alert" },
-                  },
-                  [
-                    _vm._v(
-                      "\n                        Un curso ya se encuentra registrado.\n                    "
-                    ),
-                  ]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _c(
-              "form",
-              {
-                staticClass: "form-horizontal",
-                attrs: { method: "post", enctype: "multipart/form-data" },
-                on: {
-                  submit: function ($event) {
-                    $event.preventDefault()
-                    return _vm.registrarCurso()
-                  },
-                },
-              },
-              [
-                _c("div", { staticClass: "row form-group" }, [
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Nombre de curso")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.nomCur,
-                          expression: "curso.nomCur",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        name: "nomCur",
-                        id: "nomCur",
-                        type: "text",
-                        placeholder: "Nombre de curso",
-                      },
-                      domProps: { value: _vm.curso.nomCur },
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _vm.successCurso
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-success",
+                      attrs: { role: "alert" },
+                    },
+                    [
+                      _vm._v(
+                        "\n                        El curso se ha creado con éxito.\n                    "
+                      ),
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.cursoExistente
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-warning",
+                      attrs: { role: "alert" },
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Un curso ya se encuentra registrado.\n                    "
+                      ),
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              !_vm.mostrar
+                ? _c(
+                    "form",
+                    {
+                      staticClass: "form-horizontal",
+                      attrs: { method: "post", enctype: "multipart/form-data" },
                       on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "nomCur", $event.target.value)
+                        submit: function ($event) {
+                          $event.preventDefault()
+                          return _vm.registrarCurso()
                         },
                       },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.nomCur"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.nomCur"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Instructor del curso")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.instructor,
-                          expression: "curso.instructor",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        type: "text",
-                        placeholder: "Nombre del instructor",
-                      },
-                      domProps: { value: _vm.curso.instructor },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "instructor", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.instructor"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.instructor"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Requisitos")]
-                    ),
-                    _vm._v(" "),
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.requisitos,
-                          expression: "curso.requisitos",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        type: "text",
-                        placeholder: "Requisitos del curso",
-                      },
-                      domProps: { value: _vm.curso.requisitos },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "requisitos", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.requisitos"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.requisitos"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "row form-group" }, [
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Sala")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "select",
-                      {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.curso.sala,
-                            expression: "curso.sala",
-                          },
-                        ],
-                        staticClass: "form-select",
-                        attrs: { required: "" },
-                        on: {
-                          change: function ($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function (o) {
-                                return o.selected
-                              })
-                              .map(function (o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.curso,
-                              "sala",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          },
-                        },
-                      },
-                      [
-                        _c(
-                          "option",
-                          { attrs: { value: "0", selected: "", disabled: "" } },
-                          [_vm._v("Seleccione una sala")]
-                        ),
-                        _vm._v(" "),
-                        _vm._l(_vm.salas, function (sala) {
-                          return _c("option", {
-                            key: sala.idSala,
-                            domProps: {
-                              value: sala.idSala,
-                              textContent: _vm._s(sala.nomSala),
+                    },
+                    [
+                      _c("div", { staticClass: "row form-group" }, [
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
                             },
-                          })
+                            [_vm._v("Nombre de curso")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.nomCur,
+                                expression: "curso.nomCur",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              name: "nomCur",
+                              id: "nomCur",
+                              type: "text",
+                              placeholder: "Nombre de curso",
+                            },
+                            domProps: { value: _vm.curso.nomCur },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "nomCur",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.nomCur"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.nomCur"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Instructor del curso")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.instructor,
+                                expression: "curso.instructor",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              placeholder: "Nombre del instructor",
+                            },
+                            domProps: { value: _vm.curso.instructor },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "instructor",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.instructor"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.instructor"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Requisitos")]
+                          ),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.requisitos,
+                                expression: "curso.requisitos",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              placeholder: "Requisitos del curso",
+                            },
+                            domProps: { value: _vm.curso.requisitos },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "requisitos",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.requisitos"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.requisitos"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row form-group" }, [
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Sala")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.curso.sala,
+                                  expression: "curso.sala",
+                                },
+                              ],
+                              staticClass: "form-select",
+                              attrs: { required: "" },
+                              on: {
+                                change: function ($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function (o) {
+                                      return o.selected
+                                    })
+                                    .map(function (o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.curso,
+                                    "sala",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                },
+                              },
+                            },
+                            [
+                              _c(
+                                "option",
+                                {
+                                  attrs: {
+                                    value: "0",
+                                    selected: "",
+                                    disabled: "",
+                                  },
+                                },
+                                [_vm._v("Seleccione una sala")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.salas, function (sala) {
+                                return _c("option", {
+                                  key: sala.idSala,
+                                  domProps: {
+                                    value: sala.idSala,
+                                    textContent: _vm._s(sala.nomSala),
+                                  },
+                                })
+                              }),
+                            ],
+                            2
+                          ),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.sala"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(_vm._s(_vm.errores["curso.sala"][0])),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Fecha de inicio")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.fecInCur,
+                                expression: "curso.fecInCur",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: { required: "", type: "date" },
+                            domProps: { value: _vm.curso.fecInCur },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "fecInCur",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.fecInCur"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.fecInCur"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Fecha de finalización")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.fecFinCur,
+                                expression: "curso.fecFinCur",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "date",
+                              min: _vm.curso.fecInCur,
+                            },
+                            domProps: { value: _vm.curso.fecFinCur },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "fecFinCur",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.fecFinCur"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.fecFinCur"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row form-group" }, [
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Hora de inicio")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.horario.horaIni,
+                                expression: "horario.horaIni",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: { required: "", type: "time", min: "08:00" },
+                            domProps: { value: _vm.horario.horaIni },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.horario,
+                                  "horaIni",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.horarios"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.horarios"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Hora de fin")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.horario.horaFin,
+                                expression: "horario.horaFin",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "time",
+                              min: _vm.horario.horaIni,
+                              max: "18:00",
+                            },
+                            domProps: { value: _vm.horario.horaFin },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.horario,
+                                  "horaFin",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.horarios"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.horarios"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-control-label",
+                              attrs: { for: "text-input" },
+                            },
+                            [_vm._v("Cupo límite")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.curso.cupolimite,
+                                expression: "curso.cupolimite",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "number",
+                              max: "15",
+                              min: "0",
+                              placeholder: "Cupo del curso",
+                            },
+                            domProps: { value: _vm.curso.cupolimite },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.curso,
+                                  "cupolimite",
+                                  $event.target.value
+                                )
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.errores && _vm.errores["curso.cupolimite"]
+                            ? _c("span", { staticClass: "is-invalid" }, [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.cupolimite"][0])
+                                  ),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("br"),
+                      _vm._v(" "),
+                      _vm._m(1),
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.mostrar
+                ? _c("table", { staticClass: "table" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.cursos, function (curso) {
+                        return _c("tr", { key: curso.idCur }, [
+                          _c("td", {
+                            domProps: { textContent: _vm._s(curso.nomCur) },
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(curso.fecInCur) },
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(curso.fecFinCur) },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              on: {
+                                click: function ($event) {
+                                  return _vm.verDetalle(curso.idCur)
+                                },
+                              },
+                            },
+                            [
+                              _c("a", { attrs: { href: "#" } }, [
+                                _vm._v("Ver detalles"),
+                              ]),
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("td", [
+                            (curso.estado |= 0)
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-warning",
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.disableCurso(curso.idCur)
+                                      },
+                                    },
+                                  },
+                                  [_vm._v("Deshabilitar")]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.editarCurso(curso.idCur)
+                                  },
+                                },
+                              },
+                              [_vm._v("Actualizar")]
+                            ),
+                          ]),
+                        ])
+                      }),
+                      0
+                    ),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.mostrar
+                ? _c("nav", [
+                    _c(
+                      "ul",
+                      { staticClass: "pagination" },
+                      [
+                        _vm.pagination.current_page > 1
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function ($event) {
+                                      $event.preventDefault()
+                                      return _vm.cambiarPagina(
+                                        _vm.pagination.current_page - 1
+                                      )
+                                    },
+                                  },
+                                },
+                                [_vm._v("Anterior")]
+                              ),
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm._l(_vm.pagesNumber, function (page) {
+                          return _c(
+                            "li",
+                            {
+                              key: page,
+                              staticClass: "page-item",
+                              class: [page == _vm.isActived ? "active" : ""],
+                            },
+                            [
+                              _c("a", {
+                                staticClass: "page-link",
+                                attrs: { href: "#" },
+                                domProps: { textContent: _vm._s(page) },
+                                on: {
+                                  click: function ($event) {
+                                    $event.preventDefault()
+                                    return _vm.cambiarPagina(page)
+                                  },
+                                },
+                              }),
+                            ]
+                          )
                         }),
+                        _vm._v(" "),
+                        _vm.pagination.current_page < _vm.pagination.last_page
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.cambiarPagina(
+                                        _vm.pagination.current_page + 1
+                                      )
+                                    },
+                                  },
+                                },
+                                [_vm._v("Siguiente")]
+                              ),
+                            ])
+                          : _vm._e(),
                       ],
                       2
                     ),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.sala"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.sala"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.modalRUCurso
+                ? _c("RUCurso", {
+                    attrs: { idCurso: _vm.idCurso, accion: _vm.accion },
+                    on: {
+                      closeModal: function ($event) {
+                        _vm.modalRUCurso = false
                       },
-                      [_vm._v("Fecha de inicio")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.fecInCur,
-                          expression: "curso.fecInCur",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: { required: "", type: "date" },
-                      domProps: { value: _vm.curso.fecInCur },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "fecInCur", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.fecInCur"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.fecInCur"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Fecha de finalización")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.fecFinCur,
-                          expression: "curso.fecFinCur",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        type: "date",
-                        min: _vm.curso.fecInCur,
-                      },
-                      domProps: { value: _vm.curso.fecFinCur },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "fecFinCur", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.fecFinCur"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.fecFinCur"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "row form-group" }, [
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Hora de inicio")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.horario.horaIni,
-                          expression: "horario.horaIni",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: { required: "", type: "time", min: "08:00" },
-                      domProps: { value: _vm.horario.horaIni },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.horario, "horaIni", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.horarios"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.horarios"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Hora de fin")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.horario.horaFin,
-                          expression: "horario.horaFin",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        type: "time",
-                        min: _vm.horario.horaIni,
-                        max: "18:00",
-                      },
-                      domProps: { value: _vm.horario.horaFin },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.horario, "horaFin", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.horarios"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.horarios"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-4" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "form-control-label",
-                        attrs: { for: "text-input" },
-                      },
-                      [_vm._v("Cupo límite")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.curso.cupolimite,
-                          expression: "curso.cupolimite",
-                        },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        required: "",
-                        type: "number",
-                        max: "15",
-                        min: "0",
-                        placeholder: "Cupo del curso",
-                      },
-                      domProps: { value: _vm.curso.cupolimite },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.curso, "cupolimite", $event.target.value)
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _vm.errores && _vm.errores["curso.cupolimite"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["curso.cupolimite"][0])),
-                          ]),
-                        ])
-                      : _vm._e(),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(" "),
-                _vm._m(1),
-              ]
-            ),
-          ]),
+                    },
+                  })
+                : _vm._e(),
+            ],
+            1
+          ),
         ]),
       ]),
     ]),
@@ -30887,10 +31415,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row card-header" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("h4", {}, [_vm._v("Administrar Cursos")]),
-      ]),
+    return _c("div", { staticClass: "col-md-8" }, [
+      _c("h4", {}, [_vm._v("Administrar Cursos")]),
     ])
   },
   function () {
@@ -30904,6 +31430,24 @@ var staticRenderFns = [
           { staticClass: "btn btn-primary", attrs: { type: "submit" } },
           [_vm._v("Registrar curso")]
         ),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre del curso")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Fecha de inicio")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Fecha de fin")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Más detalles")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Acción")]),
       ]),
     ])
   },
@@ -31099,6 +31643,90 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Acción")]),
       ]),
+    ])
+  },
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/RUCurso.vue?vue&type=template&id=4e637f04& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal",
+      staticStyle: { display: "block" },
+      attrs: { id: "myModalUpdate" },
+    },
+    [
+      _c("div", { staticClass: "modal-dialog" }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _c("div", { staticClass: "modal-header" }, [
+            _c("h4", { staticClass: "modal-title" }, [
+              _vm._v(_vm._s(_vm.accion)),
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "close btn btn-danger",
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: {
+                  click: function ($event) {
+                    return _vm.closeModal()
+                  },
+                },
+              },
+              [_vm._v("X")]
+            ),
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-danger",
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: {
+                  click: function ($event) {
+                    return _vm.closeModal()
+                  },
+                },
+              },
+              [_vm._v("Close")]
+            ),
+          ]),
+        ]),
+      ]),
+    ]
+  )
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("form", { attrs: { method: "put" } }),
     ])
   },
 ]
