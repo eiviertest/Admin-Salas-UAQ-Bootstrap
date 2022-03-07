@@ -3,22 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Curso;
+use Illuminate\Support\Facades\DB;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CursoController extends Controller
 {
     /**
-     * Lista los cursos activos
+     * Lista los cursos a los cuales el usuario no se ha enrolado
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');   
+        if(!$request->ajax()) return redirect('/');
+        $idPersona = $this->getIdPersona(Auth::user()->id);
+        $idPer = $idPersona->idPer;
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
-                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(10);
+                        ->whereNotExists(function ($query) {
+                            $query->select(DB::raw(1))->from('curso_persona')->whereColumn('curso_persona.idCur', 'curso.idCur');
+                        })
+                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(9);
         return [
             'pagination' => [
                 'total' => $cursos->total(),
@@ -31,6 +39,35 @@ class CursoController extends Controller
             'cursos' => $cursos];
     }
 
+    /**
+     * Lista los cursos activos para administrador
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function index_admin(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur', 'curso.estado')
+                        ->orderBy('nomCur', 'ASC')->paginate(10);
+        return [
+            'pagination' => [
+                'total' => $cursos->total(),
+                'current_page' => $cursos->currentPage(),
+                'per_page' => $cursos->perPage(),
+                'last_page' => $cursos->lastPage(),
+                'from' => $cursos->firstItem(),
+                'to' => $cursos->lastItem()
+            ],
+            'cursos' => $cursos];
+    }
+
+    /**
+     * Retorna todos los cursos activos sin paginacion
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function catalogoCurso(Request $request){
         if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur')
@@ -43,15 +80,16 @@ class CursoController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function validarDatos($curso) {
-        $curso->validate([
-            'nomCur' => 'required|string|max:200|unique:curso',
-            'fecInCur' => 'required|date',
-            'fecFinCur' => 'required|date',
-            'reqCur' => 'required|string|max:100',
-            'cupCur' => 'required|int|max:15',
-            'idSala' => 'required|int',
-            'horarios' => 'required|array|min:1'
+    public function validarDatos($request) {
+        $request->validate([
+            'curso.nomCur' => 'required|string|max:200|unique:curso',
+            'curso.fecInCur' => 'required|date',
+            'curso.fecFinCur' => 'required|date',
+            'curso.requisitos' => 'required|string|max:100',
+            'curso.instructor' => 'required|string|max:255',
+            'curso.cupolimite' => 'required|int|max:15',
+            'curso.sala' => 'required|int|exists:sala,idSala',
+            'curso.horarios' => 'required|array|min:1'
         ]);
     }
 
@@ -64,9 +102,10 @@ class CursoController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $this->validarDatos($request->curso);
-        $fecha_inicio = $request->curso['fecInCur'];
-        $fecha_fin = $request->curso['fecFinCur'];
+        $this->validarDatos($request);
+        $fecha_inicio = Carbon::createFromFormat('Y-m-d', $request->curso['fecInCur']);
+        $fecha_fin = Carbon::createFromFormat('Y-m-d', $request->curso['fecFinCur']);
+        $durCur = $fecha_inicio->diffInDays($fecha_fin);
         $horario = $request->curso['horarios'];
         $cursos = Curso::select('curso.nomCur', 'horIn', 'horFin')
                         ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
@@ -84,12 +123,12 @@ class CursoController extends Controller
                                     ->where('curso.fecFinCur', '<=', $fecha_fin);
                             })->get();
                         })
-                        ->where(function ($query) use ($request) {
+                        ->where(function ($query) use ($horario) {
                             $query->whereBetween('horIn', [$horario[0]['horIn'], $horario[0]['horFin']])
                             ->orWhereRaw('horIn <= ? and horFin >= ?', [$horario[0]['horIn'], $horario[0]['horFin']])
                             ->orWhereRaw('horFin between ? and ?', [$horario[0]['horIn'], $horario[0]['horFin']]);
                         })
-                        ->where('idSala', '=', $request->idSala)
+                        ->where('idSala', '=', $request->curso['sala'])
                         ->get();
         if(count($cursos) == 0){
             try {
@@ -98,12 +137,12 @@ class CursoController extends Controller
                 $curso->nomCur = $request->curso['nomCur'];
                 $curso->fecInCur = $fecha_inicio;
                 $curso->fecFinCur = $fecha_fin;
-                $curso->reqCur = $request->curso['reqCur'];
+                $curso->reqCur = $request->curso['requisitos'];
                 $curso->durCur = $durCur->days;
-                $curso->durCur = $request->curso['instructor'];
+                $curso->instructor = $request->curso['instructor'];
                 $curso->estado = 1;
-                $curso->cupCur = $request->curso['cupCur'];
-                $curso->idSala = $request->curso['idSala'];
+                $curso->cupCur = $request->curso['cupolimite'];
+                $curso->idSala = $request->curso['sala'];
                 $curso->save();
                 $idCurso = $curso->idCur;
                 $this->agregarHorarioCurso($horario, $idCurso);
@@ -118,6 +157,12 @@ class CursoController extends Controller
                 'code' => 2,
                 'mensaje' => "Ya hay un curso registrado"];
         }
+    }
+
+    public function getDataCurso(Request $request, $idCurso){
+        if(!$request->ajax()) return redirect('/');
+        $curso = Curso::findOrFail($idCurso);
+        return $curso;
     }
 
     /**
@@ -151,10 +196,12 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         try {
-            $curso = Curso::findOrFail($request->id);
+            $curso = Curso::findOrFail($request->idCur);
             $curso->estado = 0;
             $curso->save();
-            return ['mensaje' => 'Ha sido eliminado el curso'];
+            return [
+                'code' => 1,
+                'mensaje' => 'Ha sido eliminado el curso'];
         } catch (exception $e) {
             return $e->getMessage();
         }
