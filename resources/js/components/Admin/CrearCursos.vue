@@ -39,21 +39,21 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Requisitos</label>
-                                    <textarea required v-model="curso.requisitos" type="text" class="form-control" placeholder="Requisitos del curso"></textarea>
-                                    <span class="is-invalid" v-if="errores && errores['curso.requisitos']">
-                                        <strong>{{ errores['curso.requisitos'][0] }}</strong>
+                                    <textarea required v-model="curso.reqCur" type="text" class="form-control" placeholder="Requisitos del curso"></textarea>
+                                    <span class="is-invalid" v-if="errores && errores['curso.reqCur']">
+                                        <strong>{{ errores['curso.reqCur'][0] }}</strong>
                                     </span>
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Sala</label>
-                                    <select required class="form-select" v-model="curso.sala">
+                                    <select required class="form-select" v-model="curso.idSala">
                                         <option value="0" selected disabled>Seleccione una sala</option>
                                         <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
                                     </select>
-                                    <span class="is-invalid" v-if="errores && errores['curso.sala']">
-                                        <strong>{{ errores['curso.sala'][0] }}</strong>
+                                    <span class="is-invalid" v-if="errores && errores['curso.idSala']">
+                                        <strong>{{ errores['curso.idSala'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
@@ -74,23 +74,23 @@
                             <div class="row form-group">
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Hora de inicio</label>
-                                    <input required type="time" v-model="horario.horaIni" class="form-control" min="08:00">
-                                    <span class="is-invalid" v-if="errores && errores['curso.horarios']">
-                                        <strong>{{ errores['curso.horarios'][0] }}</strong>
+                                    <input required type="time" step="3600" v-model="horario.horaIni" class="form-control" min="08:00" max="18:00">
+                                    <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
+                                        <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Hora de fin</label>
-                                    <input required type="time" v-model="horario.horaFin" class="form-control" :min="horario.horaIni" max="18:00">
-                                    <span class="is-invalid" v-if="errores && errores['curso.horarios']">
-                                        <strong>{{ errores['curso.horarios'][0] }}</strong>
+                                    <input required type="time" step="3600" v-model="horario.horaFin" class="form-control" :min="horario.horaIni" max="18:00">
+                                    <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
+                                        <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-control-label" for="text-input">Cupo límite</label>
-                                    <input required v-model="curso.cupolimite" type="number" max="15" min="0" class="form-control" placeholder="Cupo del curso">
-                                    <span class="is-invalid" v-if="errores && errores['curso.cupolimite']">
-                                        <strong>{{ errores['curso.cupolimite'][0] }}</strong>
+                                    <input required v-model="curso.cupCur" type="number" max="15" min="0" class="form-control" placeholder="Cupo del curso">
+                                    <span class="is-invalid" v-if="errores && errores['curso.cupCur']">
+                                        <strong>{{ errores['curso.cupCur'][0] }}</strong>
                                     </span>
                                 </div>
                             </div>
@@ -117,9 +117,12 @@
                                     <td v-text="curso.fecInCur"></td>
                                     <td v-text="curso.fecFinCur"></td>
                                     <td v-on:click="verDetalle(curso.idCur)"><a href="#">Ver detalles</a></td>
-                                    <td>
-                                        <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)" v-if="curso.estado |= 0">Deshabilitar</button>
+                                    <td v-if="curso.estado |= 0">
+                                        <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)">Deshabilitar</button>
                                         <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar</button>
+                                    </td>
+                                    <td v-else>
+                                        <label class="form-control-label">Sin acción disponible</label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -137,7 +140,7 @@
                                 </li>
                             </ul>
                         </nav>
-                        <RUCurso v-if="modalRUCurso" :idCurso="idCurso" :accion="accion" @closeModal="modalRUCurso = false"></RUCurso>
+                        <RUCurso v-if="modalRUCurso" :idCurso="idCurso" :accion="accion" @closeModal="modalRUCurso = false" :salas="salas" @sucessUpdate="getCursos(1)"></RUCurso>
                     </div>
                 </div>
             </div>
@@ -156,12 +159,12 @@ export default {
             curso:{
                 'nomCur': '',
                 'instructor': '',
-                'requisitos': '',
-                'cupolimite': '',
+                'reqCur': '',
+                'cupCur': '',
                 'fecInCur': '',
                 'fecFinCur': '',
-                'sala': 0,
-                'horarios': []
+                'idSala': 0,
+                'horarioscurso': []
             },
             horario: {
                 'horaIni': '',
@@ -223,11 +226,11 @@ export default {
             me.getCursos(page);
         },
         registrarCurso(){
+            let me = this;
             me.cursoExistente = false;
             me.successCurso = false;
-            let me = this;
-            me.curso.horarios = [];
-            me.curso.horarios.push({
+            me.curso.horarioscurso = [];
+            me.curso.horarioscurso.push({
                 'horIn': me.horario.horaIni,
                 'horFin': me.horario.horaFin
             });
@@ -251,11 +254,11 @@ export default {
             this.curso = {
                 'nomCur': '',
                 'instructor': '',
-                'requisitos': '',
-                'cupolimite': '',
+                'reqCur': '',
+                'cupCur': '',
                 'fecInCur': '',
                 'fecFinCur': '',
-                'sala': 0,
+                'idSala': 0,
                 'horarios': []
             };
             this.horario = {

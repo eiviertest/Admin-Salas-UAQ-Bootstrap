@@ -5411,6 +5411,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -5423,12 +5426,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       curso: {
         'nomCur': '',
         'instructor': '',
-        'requisitos': '',
-        'cupolimite': '',
+        'reqCur': '',
+        'cupCur': '',
         'fecInCur': '',
         'fecFinCur': '',
-        'sala': 0,
-        'horarios': []
+        'idSala': 0,
+        'horarioscurso': []
       },
       horario: {
         'horaIni': '',
@@ -5489,11 +5492,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       me.getCursos(page);
     },
     registrarCurso: function registrarCurso() {
+      var me = this;
       me.cursoExistente = false;
       me.successCurso = false;
-      var me = this;
-      me.curso.horarios = [];
-      me.curso.horarios.push({
+      me.curso.horarioscurso = [];
+      me.curso.horarioscurso.push({
         'horIn': me.horario.horaIni,
         'horFin': me.horario.horaFin
       });
@@ -5519,11 +5522,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.curso = {
         'nomCur': '',
         'instructor': '',
-        'requisitos': '',
-        'cupolimite': '',
+        'reqCur': '',
+        'cupCur': '',
         'fecInCur': '',
         'fecFinCur': '',
-        'sala': 0,
+        'idSala': 0,
         'horarios': []
       };
       this.horario = {
@@ -5765,22 +5768,115 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RU-Cuso",
   props: {
     accion: String,
-    idCurso: Number
+    idCurso: Number,
+    salas: Array
   },
   data: function data() {
     return {
-      curso: {}
+      curso: {},
+      errores: []
     };
   },
   methods: {
     getDataCurso: function getDataCurso(idCurso) {
       var me = this;
       axios.get('/getDataCurso/' + idCurso).then(function (response) {
-        me.curso = response.data.curso;
+        me.curso = response.data; // console.log(response.data.horarioscurso);
+
+        console.log(me.curso.horarioscurso[0].horIn);
+      });
+    },
+    updateCurso: function updateCurso() {
+      var me = this;
+      axios.put('/update_curso', {
+        "curso": me.curso
+      }).then(function (response) {
+        me.$emit('sucessUpdate');
+        me.closeModal();
+      })["catch"](function (error) {
+        console.log(error);
       });
     },
     closeModal: function closeModal() {
@@ -6692,6 +6788,143 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     encabezados: Array,
     arrayData: Array
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      listaCursos: [],
+      errores: [],
+      pagination: {
+        'total': 0,
+        'current_page': 0,
+        'per_page': 0,
+        'last_page': 0,
+        'from': 0,
+        'to': 0
+      },
+      offset: 2
+    };
+  },
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    }
+  },
+  methods: {
+    cambiarPagina: function cambiarPagina(page) {
+      var me = this;
+      me.pagination.current_page = page;
+      me.getCursos(page);
+    },
+    getCursos: function getCursos(page) {
+      var me = this;
+      axios.get('/curso?page=' + page).then(function (response) {
+        me.listaCursos = response.data.cursos.data;
+        me.pagination = response.data.pagination;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    enrolarseCurso: function enrolarseCurso(idCur) {
+      var me = this;
+      axios.post('/enrolarse', {
+        'idCur': idCur
+      }).then(function (response) {
+        if (response.data.code == 2) {
+          console.log('usted ya está enrolado');
+        } else {
+          console.log('usted se enrolo');
+          me.getCursos(1);
+        }
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getCursos(1);
   }
 });
 
@@ -29907,15 +30140,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _EnrolarseACursos_vue_vue_type_template_id_4da41e18___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EnrolarseACursos.vue?vue&type=template&id=4da41e18& */ "./resources/js/components/User/EnrolarseACursos.vue?vue&type=template&id=4da41e18&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _EnrolarseACursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EnrolarseACursos.vue?vue&type=script&lang=js& */ "./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 ;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _EnrolarseACursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _EnrolarseACursos_vue_vue_type_template_id_4da41e18___WEBPACK_IMPORTED_MODULE_0__.render,
   _EnrolarseACursos_vue_vue_type_template_id_4da41e18___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -30195,6 +30430,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TablaCursosImpartidos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TablasReportes/TablaCursosImpartidos.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablaCursosImpartidos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolarseACursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./EnrolarseACursos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/EnrolarseACursos.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnrolarseACursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -30867,8 +31118,8 @@ var render = function () {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.curso.requisitos,
-                                expression: "curso.requisitos",
+                                value: _vm.curso.reqCur,
+                                expression: "curso.reqCur",
                               },
                             ],
                             staticClass: "form-control",
@@ -30877,7 +31128,7 @@ var render = function () {
                               type: "text",
                               placeholder: "Requisitos del curso",
                             },
-                            domProps: { value: _vm.curso.requisitos },
+                            domProps: { value: _vm.curso.reqCur },
                             on: {
                               input: function ($event) {
                                 if ($event.target.composing) {
@@ -30885,18 +31136,18 @@ var render = function () {
                                 }
                                 _vm.$set(
                                   _vm.curso,
-                                  "requisitos",
+                                  "reqCur",
                                   $event.target.value
                                 )
                               },
                             },
                           }),
                           _vm._v(" "),
-                          _vm.errores && _vm.errores["curso.requisitos"]
+                          _vm.errores && _vm.errores["curso.reqCur"]
                             ? _c("span", { staticClass: "is-invalid" }, [
                                 _c("strong", [
                                   _vm._v(
-                                    _vm._s(_vm.errores["curso.requisitos"][0])
+                                    _vm._s(_vm.errores["curso.reqCur"][0])
                                   ),
                                 ]),
                               ])
@@ -30922,8 +31173,8 @@ var render = function () {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.curso.sala,
-                                  expression: "curso.sala",
+                                  value: _vm.curso.idSala,
+                                  expression: "curso.idSala",
                                 },
                               ],
                               staticClass: "form-select",
@@ -30941,7 +31192,7 @@ var render = function () {
                                     })
                                   _vm.$set(
                                     _vm.curso,
-                                    "sala",
+                                    "idSala",
                                     $event.target.multiple
                                       ? $$selectedVal
                                       : $$selectedVal[0]
@@ -30975,10 +31226,12 @@ var render = function () {
                             2
                           ),
                           _vm._v(" "),
-                          _vm.errores && _vm.errores["curso.sala"]
+                          _vm.errores && _vm.errores["curso.idSala"]
                             ? _c("span", { staticClass: "is-invalid" }, [
                                 _c("strong", [
-                                  _vm._v(_vm._s(_vm.errores["curso.sala"][0])),
+                                  _vm._v(
+                                    _vm._s(_vm.errores["curso.idSala"][0])
+                                  ),
                                 ]),
                               ])
                             : _vm._e(),
@@ -31104,7 +31357,13 @@ var render = function () {
                               },
                             ],
                             staticClass: "form-control",
-                            attrs: { required: "", type: "time", min: "08:00" },
+                            attrs: {
+                              required: "",
+                              type: "time",
+                              step: "3600",
+                              min: "08:00",
+                              max: "18:00",
+                            },
                             domProps: { value: _vm.horario.horaIni },
                             on: {
                               input: function ($event) {
@@ -31120,11 +31379,13 @@ var render = function () {
                             },
                           }),
                           _vm._v(" "),
-                          _vm.errores && _vm.errores["curso.horarios"]
+                          _vm.errores && _vm.errores["curso.horarioscurso"]
                             ? _c("span", { staticClass: "is-invalid" }, [
                                 _c("strong", [
                                   _vm._v(
-                                    _vm._s(_vm.errores["curso.horarios"][0])
+                                    _vm._s(
+                                      _vm.errores["curso.horarioscurso"][0]
+                                    )
                                   ),
                                 ]),
                               ])
@@ -31154,6 +31415,7 @@ var render = function () {
                             attrs: {
                               required: "",
                               type: "time",
+                              step: "3600",
                               min: _vm.horario.horaIni,
                               max: "18:00",
                             },
@@ -31172,11 +31434,13 @@ var render = function () {
                             },
                           }),
                           _vm._v(" "),
-                          _vm.errores && _vm.errores["curso.horarios"]
+                          _vm.errores && _vm.errores["curso.horarioscurso"]
                             ? _c("span", { staticClass: "is-invalid" }, [
                                 _c("strong", [
                                   _vm._v(
-                                    _vm._s(_vm.errores["curso.horarios"][0])
+                                    _vm._s(
+                                      _vm.errores["curso.horarioscurso"][0]
+                                    )
                                   ),
                                 ]),
                               ])
@@ -31198,8 +31462,8 @@ var render = function () {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.curso.cupolimite,
-                                expression: "curso.cupolimite",
+                                value: _vm.curso.cupCur,
+                                expression: "curso.cupCur",
                               },
                             ],
                             staticClass: "form-control",
@@ -31210,7 +31474,7 @@ var render = function () {
                               min: "0",
                               placeholder: "Cupo del curso",
                             },
-                            domProps: { value: _vm.curso.cupolimite },
+                            domProps: { value: _vm.curso.cupCur },
                             on: {
                               input: function ($event) {
                                 if ($event.target.composing) {
@@ -31218,18 +31482,18 @@ var render = function () {
                                 }
                                 _vm.$set(
                                   _vm.curso,
-                                  "cupolimite",
+                                  "cupCur",
                                   $event.target.value
                                 )
                               },
                             },
                           }),
                           _vm._v(" "),
-                          _vm.errores && _vm.errores["curso.cupolimite"]
+                          _vm.errores && _vm.errores["curso.cupCur"]
                             ? _c("span", { staticClass: "is-invalid" }, [
                                 _c("strong", [
                                   _vm._v(
-                                    _vm._s(_vm.errores["curso.cupolimite"][0])
+                                    _vm._s(_vm.errores["curso.cupCur"][0])
                                   ),
                                 ]),
                               ])
@@ -31280,9 +31544,9 @@ var render = function () {
                             ]
                           ),
                           _vm._v(" "),
-                          _c("td", [
-                            (curso.estado |= 0)
-                              ? _c(
+                          (curso.estado |= 0)
+                            ? _c("td", [
+                                _c(
                                   "button",
                                   {
                                     staticClass: "btn btn-warning",
@@ -31293,22 +31557,28 @@ var render = function () {
                                     },
                                   },
                                   [_vm._v("Deshabilitar")]
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-danger",
-                                on: {
-                                  click: function ($event) {
-                                    return _vm.editarCurso(curso.idCur)
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger",
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.editarCurso(curso.idCur)
+                                      },
+                                    },
                                   },
-                                },
-                              },
-                              [_vm._v("Actualizar")]
-                            ),
-                          ]),
+                                  [_vm._v("Actualizar")]
+                                ),
+                              ])
+                            : _c("td", [
+                                _c(
+                                  "label",
+                                  { staticClass: "form-control-label" },
+                                  [_vm._v("Sin acción disponible")]
+                                ),
+                              ]),
                         ])
                       }),
                       0
@@ -31394,10 +31664,17 @@ var render = function () {
               _vm._v(" "),
               _vm.modalRUCurso
                 ? _c("RUCurso", {
-                    attrs: { idCurso: _vm.idCurso, accion: _vm.accion },
+                    attrs: {
+                      idCurso: _vm.idCurso,
+                      accion: _vm.accion,
+                      salas: _vm.salas,
+                    },
                     on: {
                       closeModal: function ($event) {
                         _vm.modalRUCurso = false
+                      },
+                      sucessUpdate: function ($event) {
+                        return _vm.getCursos(1)
                       },
                     },
                   })
@@ -31698,7 +31975,508 @@ var render = function () {
             ),
           ]),
           _vm._v(" "),
-          _vm._m(0),
+          _c("div", { staticClass: "modal-body" }, [
+            _c(
+              "form",
+              {
+                attrs: { method: "put" },
+                on: {
+                  submit: function ($event) {
+                    $event.preventDefault()
+                    return _vm.updateCurso()
+                  },
+                },
+              },
+              [
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Nombre de curso")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.nomCur,
+                          expression: "curso.nomCur",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: "",
+                        required: "",
+                        name: "nomCur",
+                        id: "nomCur",
+                        type: "text",
+                        placeholder: "Nombre de curso",
+                      },
+                      domProps: { value: _vm.curso.nomCur },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "nomCur", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.nomCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.nomCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Instructor del curso")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.instructor,
+                          expression: "curso.instructor",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: "",
+                        required: "",
+                        type: "text",
+                        placeholder: "Nombre del instructor",
+                      },
+                      domProps: { value: _vm.curso.instructor },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "instructor", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.instructor"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.instructor"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Requisitos")]
+                    ),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.reqCur,
+                          expression: "curso.reqCur",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: "",
+                        required: "",
+                        type: "text",
+                        placeholder: "Requisitos del curso",
+                      },
+                      domProps: { value: _vm.curso.reqCur },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "reqCur", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.reqCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.reqCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Sala")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.curso.idSala,
+                            expression: "curso.idSala",
+                          },
+                        ],
+                        staticClass: "form-select",
+                        attrs: { disabled: "", required: "" },
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.curso,
+                              "idSala",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "option",
+                          { attrs: { value: "0", selected: "", disabled: "" } },
+                          [_vm._v("Seleccione una sala")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.salas, function (sala) {
+                          return _c("option", {
+                            key: sala.idSala,
+                            domProps: {
+                              value: sala.idSala,
+                              textContent: _vm._s(sala.nomSala),
+                            },
+                          })
+                        }),
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.idSala"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.idSala"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Fecha de inicio")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.fecInCur,
+                          expression: "curso.fecInCur",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: _vm.accion == "Ver Datos del Curso",
+                        required: "",
+                        type: "date",
+                      },
+                      domProps: { value: _vm.curso.fecInCur },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "fecInCur", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.fecInCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.fecInCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Fecha de finalización")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.fecFinCur,
+                          expression: "curso.fecFinCur",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: _vm.accion == "Ver Datos del Curso",
+                        required: "",
+                        type: "date",
+                        min: _vm.curso.fecInCur,
+                      },
+                      domProps: { value: _vm.curso.fecFinCur },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "fecFinCur", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["curso.fecFinCur"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["curso.fecFinCur"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c(
+                    "div",
+                    { staticClass: "col" },
+                    [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "form-control-label",
+                          attrs: { for: "text-input" },
+                        },
+                        [_vm._v("Hora de inicio")]
+                      ),
+                      _vm._v(" "),
+                      _vm._l(_vm.curso.horarioscurso, function (horario) {
+                        return _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: horario.horIn,
+                              expression: "horario.horIn",
+                            },
+                          ],
+                          key: horario.idHor,
+                          staticClass: "form-control",
+                          attrs: {
+                            disabled: _vm.accion == "Ver Datos del Curso",
+                            step: "3600",
+                            required: "",
+                            type: "time",
+                            min: "08:00",
+                            max: "18:00",
+                          },
+                          domProps: { value: horario.horIn },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(horario, "horIn", $event.target.value)
+                            },
+                          },
+                        })
+                      }),
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col" },
+                    [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "form-control-label",
+                          attrs: { for: "text-input" },
+                        },
+                        [_vm._v("Hora de fin")]
+                      ),
+                      _vm._v(" "),
+                      _vm._l(_vm.curso.horarioscurso, function (horario) {
+                        return _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: horario.horFin,
+                              expression: "horario.horFin",
+                            },
+                          ],
+                          key: horario.idHor,
+                          staticClass: "form-control",
+                          attrs: {
+                            disabled: _vm.accion == "Ver Datos del Curso",
+                            step: "3600",
+                            required: "",
+                            type: "time",
+                            min: horario.horIn,
+                            max: "18:00",
+                          },
+                          domProps: { value: horario.horFin },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(horario, "horFin", $event.target.value)
+                            },
+                          },
+                        })
+                      }),
+                    ],
+                    2
+                  ),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Cupo límite")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.curso.cupCur,
+                          expression: "curso.cupCur",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        disabled: "",
+                        required: "",
+                        name: "cupCur",
+                        id: "cupCur",
+                        type: "text",
+                        placeholder: "Cupo límite",
+                      },
+                      domProps: { value: _vm.curso.cupCur },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.curso, "cupCur", $event.target.value)
+                        },
+                      },
+                    }),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Estado")]
+                    ),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _vm.curso.estado == 1
+                      ? _c("a", { staticClass: "btn btn-success" }, [
+                          _vm._v("Habilitado"),
+                        ])
+                      : _c("a", { staticClass: "btn btn-warning" }, [
+                          _vm._v("Deshabilitado"),
+                        ]),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("br"),
+                  _vm._v(" "),
+                  _vm.accion == "Actualizar curso"
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "submit" },
+                        },
+                        [_vm._v("Actualizar")]
+                      )
+                    : _vm._e(),
+                ]),
+              ]
+            ),
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-footer" }, [
             _c(
@@ -31720,16 +32498,7 @@ var render = function () {
     ]
   )
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-body" }, [
-      _c("form", { attrs: { method: "put" } }),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -33126,32 +33895,147 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("h4", { staticClass: "card-header" }, [
-              _vm._v("Enrolarse a Cursos"),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    Aqui se muestran todos los cursos a los que se puede enrolar un Usuario\n                "
-              ),
-            ]),
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card text-center" }, [
+          _c("h4", { staticClass: "card-header" }, [
+            _vm._v("Enrolarse a Cursos"),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              [
+                _vm._l(_vm.listaCursos, function (curso) {
+                  return _c(
+                    "div",
+                    {
+                      key: curso.idCur,
+                      staticClass:
+                        "card col-md-3 m-5 border-info text-white bg-dark",
+                    },
+                    [
+                      _c("div", { staticClass: "card-header" }, [
+                        _vm._v(_vm._s(curso.nomCur) + " "),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "card-body" }, [
+                        _c("label", [_vm._v(" Requisitos: ")]),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v(_vm._s(curso.reqCur) + " ")]),
+                        _vm._v(" "),
+                        _c("label", [_vm._v(" Fecha Inicio: ")]),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v(_vm._s(curso.fecInCur))]),
+                        _vm._v(" "),
+                        _c("label", [_vm._v(" Fecha Termino: ")]),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v(_vm._s(curso.fecFinCur))]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "card-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            on: {
+                              click: function ($event) {
+                                return _vm.enrolarseCurso(curso.idCur)
+                              },
+                            },
+                          },
+                          [_vm._v(" Enrolarse a Curso ")]
+                        ),
+                      ]),
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _c("nav", [
+                  _c(
+                    "ul",
+                    { staticClass: "pagination" },
+                    [
+                      _vm.pagination.current_page > 1
+                        ? _c("li", { staticClass: "page-item" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "page-link",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function ($event) {
+                                    $event.preventDefault()
+                                    return _vm.cambiarPagina(
+                                      _vm.pagination.current_page - 1
+                                    )
+                                  },
+                                },
+                              },
+                              [_vm._v("Anterior")]
+                            ),
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm._l(_vm.pagesNumber, function (page) {
+                        return _c(
+                          "li",
+                          {
+                            key: page,
+                            staticClass: "page-item",
+                            class: [page == _vm.isActived ? "active" : ""],
+                          },
+                          [
+                            _c("a", {
+                              staticClass: "page-link",
+                              attrs: { href: "#" },
+                              domProps: { textContent: _vm._s(page) },
+                              on: {
+                                click: function ($event) {
+                                  $event.preventDefault()
+                                  return _vm.cambiarPagina(page)
+                                },
+                              },
+                            }),
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm.pagination.current_page < _vm.pagination.last_page
+                        ? _c("li", { staticClass: "page-item" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "page-link",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.cambiarPagina(
+                                      _vm.pagination.current_page + 1
+                                    )
+                                  },
+                                },
+                              },
+                              [_vm._v("Siguiente")]
+                            ),
+                          ])
+                        : _vm._e(),
+                    ],
+                    2
+                  ),
+                ]),
+              ],
+              2
+            ),
           ]),
         ]),
       ]),
-    ])
-  },
-]
+    ]),
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

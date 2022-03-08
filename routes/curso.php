@@ -9,6 +9,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/curso_admin', [CursoController::class, 'index_admin']);
     Route::get('/getDataCurso/{idCurso}', [CursoController::class, 'getDataCurso']);
     Route::post('/curso', [CursoController::class, 'store']);
+    Route::put('/update_curso', [CursoController::class, 'update']);
     Route::put('/curso', [CursoController::class, 'disable']);
     Route::get('/catalogo_curso', [CursoController::class, 'catalogoCurso']);
     Route::get('/lista_curso_persona', [CursoPersonaController::class, 'lista_curso_persona']);

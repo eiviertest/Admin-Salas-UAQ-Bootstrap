@@ -34,6 +34,6 @@ class Curso extends Model
     }
 
     public function personas() {
-        return $this->belongsToMany(Persona::clas, 'curso_persona');
+        return $this->belongsToMany(Persona::class, 'curso_persona');
     }
 }
