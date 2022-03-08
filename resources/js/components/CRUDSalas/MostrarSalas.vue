@@ -4,8 +4,8 @@
             <!-- TABLA PARA MOSTRAR LOS REGISTROS -->
             
                 <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="bg-primary text-white cabecera"> 
+                    <table class="table table-hover">
+                        <thead class="cabecera"> 
                             <tr>
                             <th> Identificador </th>
                             <th> Nombre </th>

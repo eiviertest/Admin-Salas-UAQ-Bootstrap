@@ -24,11 +24,10 @@ class SolicitudController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $idPersona = $this->getIdPersona(Auth::user()->id);
-        $solicitudes = Solicitud::select('s.nomSala as sala', 'solicitud.fecha as fecha', 'solicitud.hora as hora', 'e.nomEst as estado')
-                        ->orderBy('solicitud.fecha', 'DESC')
+        $solicitudes = Solicitud::select('s.nomSala as sala', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado')
+                        ->orderBy('e.nomEst', 'ASC')
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
-                        ->where('e.nomEst', '!=', 'Aceptado')
                         ->persona($idPersona->idPer)
                         ->paginate(10);
         return [
