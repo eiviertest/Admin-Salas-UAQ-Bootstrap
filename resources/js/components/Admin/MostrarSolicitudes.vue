@@ -5,6 +5,11 @@
                 <div class="card">
                     <h4 class="card-header">Solicitudes de salas</h4>
                     <div class="card-body">
+                        <div class="vld-parent">
+                            <loading :active.sync="isLoading"
+                                    :can-cancel="false"
+                                    :is-full-page="true"/>
+                        </div>
                         <table class="table">
                             <thead> 
                                 <tr>
@@ -50,7 +55,13 @@
     </div>
 </template>
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
+    components: {
+        Loading
+    },
     data() {
         return {
             solicitudes: [],
@@ -64,6 +75,7 @@ export default {
                 'to': 0
             },
             offset: 2,
+            isLoading: true
         }
     },
     computed: {
@@ -94,6 +106,7 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getSolicitudes(page);
         },
         getSolicitudes(page) {
@@ -101,12 +114,14 @@ export default {
             axios.get('/solicitud_admin?page=' + page).then(function (response) {
                 me.solicitudes = response.data.solicitudes.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         aceptarSolicitud(idSol){
             let me = this;
+            me.isLoading = true;
             axios.put('/solicitud',{
                     'idSol': idSol,
                     'idEst': 2
@@ -118,6 +133,7 @@ export default {
         },
         rechazarSolicitud(idSol){
             let me = this;
+            me.isLoading = true;
             axios.put('/solicitud',{
                     'idSol': idSol,
                     'idEst': 3,
