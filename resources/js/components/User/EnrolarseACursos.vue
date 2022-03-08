@@ -5,6 +5,11 @@
                 <div class="card text-center">
                     <h4 class="card-header">Enrolarse a Cursos</h4>
                         <div class="card-body">
+                            <div class="vld-parent">
+                                <loading :active.sync="isLoading"
+                                        :can-cancel="false"
+                                        :is-full-page="true"/>
+                            </div>
                             <div class="row">
                                 <div class="card col-md-3 m-5 border-info text-white bg-dark" v-for="curso in listaCursos" :key="curso.idCur" >
                                         <div class="card-header"><h5>{{curso.nomCur}}</h5> </div>
@@ -40,6 +45,9 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
     data() {
         return {
@@ -53,8 +61,12 @@ export default {
                 'from': 0,
                 'to': 0
             },
-            offset: 2
+            offset: 2,
+            isLoading: true,
         }
+    },
+    components: {
+        Loading
     },
     computed: {
         isActived: function(){
@@ -84,19 +96,22 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getCursos(page);
         },
         getCursos(page) {
             let me = this;
             axios.get('/curso?page=' + page).then(function (response) {
                 me.listaCursos = response.data.cursos.data;
-                 me.pagination = response.data.pagination;
+                me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         enrolarseCurso(idCur){
             let me = this;
+            me.isLoading = true;
             axios.post('/enrolarse',{'idCur':idCur}).then(function (response){
                 if(response.data.code==2){
                     console.log('usted ya está enrolado');

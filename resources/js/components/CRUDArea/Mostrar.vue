@@ -4,7 +4,12 @@
             <div class="col-lg-12 mb-2">
                 <button type="button" class="btn btn-info" @click="mostrarModalCreate()"> Nuevo Registro </button>
                 <crear v-if="showModelCreate" @close="closeModalCreate()" @sucessCreate="getArea(1);closeModalCreate()"> </crear>
-            </div>  
+            </div> 
+            <div class="vld-parent">
+                        <loading :active.sync="isLoading"
+                                :can-cancel="false"
+                                :is-full-page="true"/>      
+            </div> 
             <div class="col-12">
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -49,6 +54,8 @@
 
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default({
     name: "mostrarAreas",
@@ -66,8 +73,12 @@ export default({
                 'to': 0
             },
             offset: 2,
-            dataArea: {}
+            dataArea: {},
+            isLoading : true,
         }
+    },
+    components: {
+        Loading
     },
     computed: {
         isActived: function(){
@@ -97,6 +108,7 @@ export default({
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getArea(page);
         },
         getArea(page) {
@@ -104,12 +116,14 @@ export default({
             axios.get('/area?page=' + page).then(function (response) {
                 me.areas = response.data.areas.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         borrarRegistro(ide){
            let  me = this;
+           me.isLoading = true;
            if (confirm("¿Esta seguro de eliminar el registro?")){
                console.log(ide);
                axios.delete('/area/'+ide)
