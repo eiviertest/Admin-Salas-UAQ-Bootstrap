@@ -5,6 +5,11 @@
                 <div class="card">
                     <h4 class="card-header">Solicitudes para enrolarse a curso</h4>
                     <div class="card-body">
+                    <div class="vld-parent">
+                        <loading :active.sync="isLoading"
+                                :can-cancel="false"
+                                :is-full-page="true"/>
+                    </div>
                         <table class="table">
                             <thead> 
                                 <tr>
@@ -24,6 +29,9 @@
                                     <td v-if="curso_persona.estatus == 'En proceso'">
                                         <button class="btn btn-primary" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar</button>
                                         <button class="btn btn-danger" v-on:click="rechazarUsuario(curso_persona.idPer, curso_persona.idCur)">Rechazar</button>
+                                    </td>
+                                    <td v-else>
+                                        <label class="form-control-label">Sin acción disponible</label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -48,6 +56,9 @@
     </div>
 </template>
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
     data() {
         return {
@@ -62,7 +73,11 @@ export default {
                 'to': 0
             },
             offset: 2,
+            isLoading: true,
         }
+    },
+    components: {
+        Loading
     },
     computed: {
         isActived: function(){
@@ -92,6 +107,7 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getListaCursoPersona(page);
         },
         getListaCursoPersona(page) {
@@ -99,12 +115,14 @@ export default {
             axios.get('/lista_curso_persona?page=' + page).then(function (response) {
                 me.lista_cursos_persona = response.data.lista_cursos_persona.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         aceptarUsuario(idPer, idCur){
             let me = this;
+            me.isLoading = true;
             axios.put('/aceptar_persona_curso',{
                     'idPer': idPer,
                     'idCur': idCur
@@ -116,6 +134,7 @@ export default {
         },
         rechazarUsuario(idPer, idCur){
             let me = this;
+            me.isLoading = true;
             axios.put('/rechazar_persona_curso',{
                     'idPer': idPer,
                     'idCur': idCur,
@@ -128,6 +147,7 @@ export default {
     },
     mounted() {
         this.getListaCursoPersona(1);
+        
     }
 }
 </script>
