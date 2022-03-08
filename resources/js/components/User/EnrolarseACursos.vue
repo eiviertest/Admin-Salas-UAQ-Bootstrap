@@ -7,14 +7,14 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="card col-md-3 m-5 border-info text-white bg-dark" v-for="curso in listaCursos" :key="curso.idCur" >
-                                        <div class="card-header">{{curso.nomCur}} </div>
+                                        <div class="card-header"><h5>{{curso.nomCur}}</h5> </div>
                                         <div class="card-body"> 
                                             <label> Requisitos: </label> 
-                                            <h5>{{curso.reqCur}} </h5>
-                                            <label> Fecha Inicio: </label>
-                                            <h5>{{curso.fecInCur}}</h5>
+                                            <h6>{{curso.reqCur}} </h6>
+                                            <label>Fecha Inicio: </label>
+                                            <h6>{{curso.fecInCur}}</h6>
                                             <label> Fecha Termino: </label>
-                                            <h5>{{curso.fecFinCur}}</h5>
+                                            <h6>{{curso.fecFinCur}}</h6>
                                         </div>
                                         <div class="card-footer" ><button class="btn btn-primary" @click="enrolarseCurso(curso.idCur)"> Enrolarse a Curso </button></div>
                                 </div>
