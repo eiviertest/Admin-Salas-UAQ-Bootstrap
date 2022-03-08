@@ -24,7 +24,6 @@ window.Vue = require('vue').default;
 Vue.component('inicio', require('./components/Inicio.vue').default);
 //Admin
 Vue.component('reportes', require('./components/Admin/Reportes.vue').default);
-Vue.component('admin-cursos', require('./components/Admin/AdminCursos.vue').default);
 Vue.component('crear-curso', require('./components/Admin/CrearCursos.vue').default);
 Vue.component('solicitud-curso-persona', require('./components/Admin/SolicitudCursoPersona').default);
 Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);

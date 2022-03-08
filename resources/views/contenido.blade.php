@@ -12,9 +12,6 @@
     <template v-if="menu == 1">
         <reportes/>
     </template>
-    <template v-if="menu == 2">
-        <admin-cursos/>
-    </template>
     <template v-if="menu == 3">
         <crear-curso/>
     </template>

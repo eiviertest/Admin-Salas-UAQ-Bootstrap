@@ -5263,6 +5263,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _RUCurso_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RUCurso.vue */ "./resources/js/components/Admin/RUCurso.vue");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
@@ -5414,10 +5417,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    RUCurso: _RUCurso_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    RUCurso: _RUCurso_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Loading: (vue_loading_overlay__WEBPACK_IMPORTED_MODULE_1___default())
   },
   data: function data() {
     var _ref;
@@ -5452,7 +5463,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       'last_page': 0,
       'from': 0,
       'to': 0
-    }), _defineProperty(_ref, "offset", 2), _defineProperty(_ref, "modalRUCurso", false), _defineProperty(_ref, "accion", ''), _defineProperty(_ref, "idCurso", 0), _ref;
+    }), _defineProperty(_ref, "offset", 2), _defineProperty(_ref, "modalRUCurso", false), _defineProperty(_ref, "accion", ''), _defineProperty(_ref, "idCurso", 0), _defineProperty(_ref, "isLoading", true), _ref;
   },
   computed: {
     isActived: function isActived() {
@@ -5489,10 +5500,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     cambiarPagina: function cambiarPagina(page) {
       var me = this;
       me.pagination.current_page = page;
+      me.isLoading = true;
       me.getCursos(page);
     },
     registrarCurso: function registrarCurso() {
       var me = this;
+      me.isLoading = true;
       me.cursoExistente = false;
       me.successCurso = false;
       me.curso.horarioscurso = [];
@@ -5506,6 +5519,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (response.data.code == 1) {
           me.errores = {};
           me.successCurso = true;
+          me.getCursos(1);
           me.resetVariables();
         } else {
           me.errores = {};
@@ -5536,8 +5550,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getSalas: function getSalas() {
       var me = this;
+      me.isLoading = true;
       axios.get('/catalogoSalas').then(function (response) {
         me.salas = response.data.salas;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
@@ -5547,6 +5563,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       axios.get('/curso_admin?page=' + page).then(function (response) {
         me.cursos = response.data.cursos.data;
         me.pagination = response.data.pagination;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
@@ -5563,11 +5580,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     disableCurso: function disableCurso(idCurso) {
       var me = this;
+      me.isLoading = true;
       axios.put('/curso', {
         'idCur': idCurso
       }).then(function (response) {
         if (response.data.code == 1) {
-          console.log('Todo bien');
           me.getCursos(1);
         }
       })["catch"](function (error) {
@@ -5748,6 +5765,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 //
 //
 //
@@ -5846,7 +5866,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    Loading: (vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0___default())
+  },
   name: "RU-Cuso",
   props: {
     accion: String,
@@ -5856,20 +5886,21 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       curso: {},
-      errores: []
+      errores: [],
+      isLoading: true
     };
   },
   methods: {
     getDataCurso: function getDataCurso(idCurso) {
       var me = this;
       axios.get('/getDataCurso/' + idCurso).then(function (response) {
-        me.curso = response.data; // console.log(response.data.horarioscurso);
-
-        console.log(me.curso.horarioscurso[0].horIn);
+        me.curso = response.data;
+        me.isLoading = false;
       });
     },
     updateCurso: function updateCurso() {
       var me = this;
+      me.isLoading = true;
       axios.put('/update_curso', {
         "curso": me.curso
       }).then(function (response) {
@@ -7112,7 +7143,6 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('inicio', (__webpack_require__(/*! ./components/Inicio.vue */ "./resources/js/components/Inicio.vue")["default"])); //Admin
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('reportes', (__webpack_require__(/*! ./components/Admin/Reportes.vue */ "./resources/js/components/Admin/Reportes.vue")["default"]));
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('admin-cursos', (__webpack_require__(/*! ./components/Admin/AdminCursos.vue */ "./resources/js/components/Admin/AdminCursos.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('crear-curso', (__webpack_require__(/*! ./components/Admin/CrearCursos.vue */ "./resources/js/components/Admin/CrearCursos.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('solicitud-curso-persona', (__webpack_require__(/*! ./components/Admin/SolicitudCursoPersona */ "./resources/js/components/Admin/SolicitudCursoPersona.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('solicitudes-admin', (__webpack_require__(/*! ./components/Admin/MostrarSolicitudes.vue */ "./resources/js/components/Admin/MostrarSolicitudes.vue")["default"]));
@@ -30034,43 +30064,6 @@ module.exports = function (list, options) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Admin/AdminCursos.vue":
-/*!*******************************************************!*\
-  !*** ./resources/js/components/Admin/AdminCursos.vue ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminCursos.vue?vue&type=template&id=bf96c26a& */ "./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-var script = {}
-
-
-/* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
-  _AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__.render,
-  _AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/Admin/AdminCursos.vue"
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
-
-/***/ }),
-
 /***/ "./resources/js/components/Admin/Areas.vue":
 /*!*************************************************!*\
   !*** ./resources/js/components/Admin/Areas.vue ***!
@@ -31026,23 +31019,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a&":
-/*!**************************************************************************************!*\
-  !*** ./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a& ***!
-  \**************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminCursos_vue_vue_type_template_id_bf96c26a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AdminCursos.vue?vue&type=template&id=bf96c26a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a&");
-
-
-/***/ }),
-
 /***/ "./resources/js/components/Admin/Areas.vue?vue&type=template&id=2d465a8b&":
 /*!********************************************************************************!*\
   !*** ./resources/js/components/Admin/Areas.vue?vue&type=template&id=2d465a8b& ***!
@@ -31366,54 +31342,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a&":
-/*!*****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/AdminCursos.vue?vue&type=template&id=bf96c26a& ***!
-  \*****************************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
-/* harmony export */ });
-var render = function () {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("h4", { staticClass: "card-header" }, [
-              _vm._v("Administrar Cursos"),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    Aqui se mostrarán todos los cursos registrados en el sistema, con sus respectivas opciones!\n                "
-              ),
-            ]),
-          ]),
-        ]),
-      ]),
-    ])
-  },
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Areas.vue?vue&type=template&id=2d465a8b&":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Areas.vue?vue&type=template&id=2d465a8b& ***!
@@ -31531,6 +31459,26 @@ var render = function () {
             "div",
             { staticClass: "card-body" },
             [
+              _c(
+                "div",
+                { staticClass: "vld-parent" },
+                [
+                  _c("loading", {
+                    attrs: {
+                      active: _vm.isLoading,
+                      "can-cancel": false,
+                      "is-full-page": true,
+                    },
+                    on: {
+                      "update:active": function ($event) {
+                        _vm.isLoading = $event
+                      },
+                    },
+                  }),
+                ],
+                1
+              ),
+              _vm._v(" "),
               _vm.successCurso
                 ? _c(
                     "div",
@@ -32553,6 +32501,26 @@ var render = function () {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
+            _c(
+              "div",
+              { staticClass: "vld-parent" },
+              [
+                _c("loading", {
+                  attrs: {
+                    active: _vm.isLoading,
+                    "can-cancel": false,
+                    "is-full-page": true,
+                  },
+                  on: {
+                    "update:active": function ($event) {
+                      _vm.isLoading = $event
+                    },
+                  },
+                }),
+              ],
+              1
+            ),
+            _vm._v(" "),
             _c(
               "form",
               {

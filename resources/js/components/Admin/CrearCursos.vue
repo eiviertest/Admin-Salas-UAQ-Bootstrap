@@ -15,6 +15,11 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="vld-parent">
+                            <loading :active.sync="isLoading"
+                                    :can-cancel="false"
+                                    :is-full-page="true"/>
+                        </div>
                         <div class="alert alert-success" role="alert" v-if="successCurso">
                             El curso se ha creado con éxito.
                         </div>
@@ -149,10 +154,13 @@
 </template>
 <script>
 import RUCurso from './RUCurso.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     components: {
-        RUCurso
+        RUCurso,
+        Loading
     },
     data(){
         return{
@@ -192,7 +200,8 @@ export default {
             offset: 2,
             modalRUCurso: false,
             accion: '',
-            idCurso: 0
+            idCurso: 0,
+            isLoading: true,
         }
     },
     computed: {
@@ -223,10 +232,12 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getCursos(page);
         },
         registrarCurso(){
             let me = this;
+            me.isLoading = true;
             me.cursoExistente = false;
             me.successCurso = false;
             me.curso.horarioscurso = [];
@@ -238,6 +249,7 @@ export default {
                 if(response.data.code == 1) {
                     me.errores = {};
                     me.successCurso = true;
+                    me.getCursos(1);
                     me.resetVariables();
                 }else{
                     me.errores = {};
@@ -268,8 +280,10 @@ export default {
         },
         getSalas(){
             let me = this;
+            me.isLoading = true;
             axios.get('/catalogoSalas').then(response=>{
                 me.salas = response.data.salas;
+                me.isLoading = false;
             })
             .catch(error=>{
                 me.errores = error.data;
@@ -280,6 +294,7 @@ export default {
             axios.get('/curso_admin?page=' + page).then(response=>{
                 me.cursos = response.data.cursos.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             })
             .catch(error=>{
                 me.errores = error.data;
@@ -297,11 +312,11 @@ export default {
         },
         disableCurso(idCurso){
             let me = this;
+            me.isLoading = true;
             axios.put('/curso',{
                     'idCur': idCurso,
                 }).then(function (response) {
                     if(response.data.code == 1) {
-                        console.log('Todo bien');
                         me.getCursos(1);
                     }
                 }).catch( function (error) {

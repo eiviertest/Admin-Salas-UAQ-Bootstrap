@@ -7,6 +7,11 @@
                     <button type="button" class="close btn btn-danger" @click="closeModal()" data-dismiss="modal">X</button>
                 </div>
                 <div class="modal-body">
+                    <div class="vld-parent">
+                        <loading :active.sync="isLoading"
+                                :can-cancel="false"
+                                :is-full-page="true"/>
+                    </div>
                     <form method="put" @submit.prevent="updateCurso()">
                         <div class="row form-group">
                             <div class="col">
@@ -97,8 +102,13 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default({
+    components: {
+        Loading
+    },
     name:"RU-Cuso",
     props: { 
         accion: String,
@@ -108,7 +118,8 @@ export default({
     data(){
         return{
             curso: {},
-            errores: []
+            errores: [],
+            isLoading: true
         }
     },
     methods:{
@@ -116,12 +127,12 @@ export default({
             let me = this;
             axios.get('/getDataCurso/' + idCurso).then(response=>{
                 me.curso = response.data;
-                // console.log(response.data.horarioscurso);
-                console.log(me.curso.horarioscurso[0].horIn);
+                me.isLoading = false;
             })
         },
         updateCurso(){
         let me = this;
+        me.isLoading = true;
         axios.put('/update_curso',{"curso": me.curso})
                 .then(response=>{
                     me.$emit('sucessUpdate');
