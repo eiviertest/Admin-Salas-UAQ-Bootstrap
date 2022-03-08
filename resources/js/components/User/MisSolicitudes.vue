@@ -5,6 +5,11 @@
                 <div class="card">
                     <h4 class="card-header">Mis Solicitudes</h4>
                     <div class="card-body">
+                        <div class="vld-parent">
+                        <loading :active.sync="isLoading"
+                                :can-cancel="false"
+                                :is-full-page="true"/>
+                        </div>
                         <table class="table table-hover">
                             <thead> 
                                 <tr>
@@ -46,6 +51,9 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default{
     data(){
         return{
@@ -60,8 +68,11 @@ export default{
                 'to': 0
             },
             offset: 2,
-
+            isLoading: true,
         }
+    },
+    components: {
+        Loading
     },
     computed: {
         isActived: function(){
@@ -91,6 +102,7 @@ export default{
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getSolicitudes(page);
         },
         getSolicitudes(page) {
@@ -98,6 +110,7 @@ export default{
             axios.get('/solicitud?page=' + page).then(function (response) {
                 me.solicitudes = response.data.solicitudes.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
@@ -106,6 +119,5 @@ export default{
     mounted() {
         this.getSolicitudes(1);
     }
-
 }
 </script>

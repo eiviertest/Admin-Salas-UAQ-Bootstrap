@@ -5,6 +5,11 @@
                 <div class="card text-center">
                     <h4 class="card-header">Mis Asistencias</h4>
                     <div class="card-body">
+                        <div class="vld-parent">
+                            <loading :active.sync="isLoading"
+                                    :can-cancel="false"
+                                    :is-full-page="true"/>
+                        </div>
                         <div class="row">
                                 <div class="card col-md-3 m-5 text-dark bg-light" v-for="lista in listaCursosEnrolado" :key="lista.nomCur">
                                         <div class="card-header bg-success text-white"><h5>{{lista.nomCur}}</h5></div>
@@ -47,6 +52,9 @@
 
 
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
     data() {
         return {
@@ -60,8 +68,12 @@ export default {
                 'from': 0,
                 'to': 0
             },
-            offset: 2
+            offset: 2,
+            isLoading: true,
         }
+    },
+    components: {
+        Loading
     },
     computed: {
         isActived: function(){
@@ -91,6 +103,7 @@ export default {
         cambiarPagina(page){
             let me = this;
             me.pagination.current_page = page;
+            me.isLoading = true;
             me.getCursosEnrolados(page);
         },
         getCursosEnrolados(page) {
@@ -98,6 +111,7 @@ export default {
             axios.get('/mis_cursos_persona?page='+ page).then(function (response) {
                 me.listaCursosEnrolado = response.data.mis_cursos_persona.data;
                 me.pagination = response.data.pagination;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
