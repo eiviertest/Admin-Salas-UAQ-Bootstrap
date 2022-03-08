@@ -2,14 +2,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 mb-2">
-                <button type="button" class="btn btn-outline-info" @click="mostrarModalCreate()"> Nuevo Registro </button>
+                <button type="button" class="btn btn-info" @click="mostrarModalCreate()"> Nuevo Registro </button>
                 <crear v-if="showModelCreate" @close="closeModalCreate()" @sucessCreate="getArea(1);closeModalCreate()"> </crear>
             </div>  
-            
             <div class="col-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="bg-primary text-white cabecera"> 
+                    <table class="table table-hover">
+                        <thead class="cabecera"> 
                             <tr>
                             <th> Identificador </th>
                             <th> Nombre </th>
