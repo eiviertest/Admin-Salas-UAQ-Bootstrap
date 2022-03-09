@@ -6905,6 +6905,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return _defineProperty({
@@ -6913,7 +6920,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'fecha': '',
         'horaIni': '',
         'horaFin': '',
-        'rutaSol': ''
+        'rutaSol': null
       },
       salas: [],
       errores: {}
@@ -6928,11 +6935,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.errores = error.data;
       });
     },
+    seleccionarArchivo: function seleccionarArchivo(e) {
+      this.solicitud.rutaSol = e.target.files[0];
+      console.log(this.solicitud);
+    },
     registrarSolicitud: function registrarSolicitud() {
       var me = this;
-      axios.post('/solicitud', {
-        "solicitud": me.solicitud
-      }).then(function (response) {
+      var solicitudForm = new FormData();
+
+      for (var key in this.solicitud) {
+        solicitudForm.append(key, this.solicitud[key]);
+      }
+
+      console.log(solicitudForm);
+      axios.post('/solicitud', solicitudForm).then(function (response) {
         if (response.data.code == 1) {
           me.errores = {};
           me.successSolicitud = true;
@@ -33786,7 +33802,7 @@ var render = function () {
                         staticClass: "form-control-label",
                         attrs: { for: "text-input" },
                       },
-                      [_vm._v("Hora de inicio")]
+                      [_vm._v("Hora de inicio: *")]
                     ),
                     _vm._v(" "),
                     _c("input", {
@@ -33836,7 +33852,7 @@ var render = function () {
                         staticClass: "form-control-label",
                         attrs: { for: "text-input" },
                       },
-                      [_vm._v("Hora de fin")]
+                      [_vm._v("Hora de Fin: *")]
                     ),
                     _vm._v(" "),
                     _c("input", {
@@ -33877,6 +33893,22 @@ var render = function () {
                           ]),
                         ])
                       : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("label", { staticClass: "form-control-label" }, [
+                      _vm._v("Formato de Solicitud: *"),
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "file" },
+                      on: { change: _vm.seleccionarArchivo },
+                    }),
                   ]),
                 ]),
                 _vm._v(" "),

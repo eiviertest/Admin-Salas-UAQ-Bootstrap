@@ -29,18 +29,25 @@
                             <br>
                             <div class="form-group row">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de inicio</label>
+                                    <label class="form-control-label" for="text-input">Hora de inicio: *</label>
                                     <input required type="time" v-model="solicitud.horaIni" class="form-control" min="08:00" max="17:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaIni']">
                                         <strong>{{ errores['solicitud.horaIni'][0] }}</strong>
                                     </span> 
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de fin</label>
+                                    <label class="form-control-label" for="text-input">Hora de Fin: *</label>
                                     <input required type="time" v-model="solicitud.horaFin" class="form-control" :min="solicitud.horaIni" max="18:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaFin']">
                                         <strong>{{ errores['solicitud.horaFin'][0] }}</strong>
                                     </span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row form-group">
+                                <div class="col-md-4">
+                                    <label class="form-control-label">Formato de Solicitud: *</label>
+                                    <input class="form-control" type="file" @change="seleccionarArchivo">
                                 </div>
                             </div>
                             <br>
@@ -66,7 +73,7 @@ export default {
                 'fecha': '',
                 'horaIni': '',
                 'horaFin': '',
-                'rutaSol': ''
+                'rutaSol': null
             },
             salas: [],
             errores: {},
@@ -84,9 +91,18 @@ export default {
                 me.errores = error.data;
             })
         },
+        seleccionarArchivo(e){
+            this.solicitud.rutaSol = e.target.files[0];
+            console.log(this.solicitud);
+        },
         registrarSolicitud(){
             let me = this;
-            axios.post('/solicitud',{"solicitud": me.solicitud}).then(response=>{
+            let solicitudForm = new FormData();
+            for(let key in this.solicitud){
+                solicitudForm.append(key, this.solicitud[key]);
+            }
+            console.log(solicitudForm);
+            axios.post('/solicitud',solicitudForm).then(response=>{
                 if(response.data.code == 1) {
                     me.errores = {};
                     me.successSolicitud = true;
