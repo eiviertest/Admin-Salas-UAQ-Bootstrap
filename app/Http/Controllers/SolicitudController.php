@@ -129,8 +129,9 @@ class SolicitudController extends Controller
                     $horaFinUnix = strtotime($hora_fin);
                     $solicitud = new Solicitud();
                     if($request->hasFile(key:'rutaSol')){
-                        $solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
-                        //$request->rutaSol->getClientOriginalName();
+                        //$solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
+                        $solicitud->rutaSol = time() . '_' . $request->file(key:'rutaSol')->getClientOriginalName();
+                        $request->file(key:'rutaSol')->storeAs(path:'formatosSol', name:$solicitud->rutaSol); 
                     }else{
                         $solicitud->rutaSol = null;
                     }
@@ -142,15 +143,21 @@ class SolicitudController extends Controller
                     $solicitud->horaIni = $request->horaIni;
                     $solicitud->horaFin = $request->horaFin;
                     $solicitud->save();
-                    return ['mensaje' => 'Ha sido guardada la solicitud'];
+                    return [
+                        'code' => 1,
+                        'mensaje' => 'Ha sido guardada la solicitud'];
                 } catch (exception $e) {
                     return $e->getMessage();
                 }
             }else{
-                return ['mensaje' => 'Una solicitud se encuentra registrada'];
+                return [
+                    'code' => 2,
+                    'mensaje' => 'Una solicitud se encuentra registrada'];
             }
         }else{
-                return ['mensaje' => 'Un curso se encuentra registrado'];
+                return [
+                    'code' => 2,
+                    'mensaje' => 'Un curso se encuentra registrado'];
         }    
     }
 

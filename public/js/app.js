@@ -6912,9 +6912,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
-    return _defineProperty({
+    var _ref;
+
+    return _ref = {
       solicitud: {
         'idSala': 0,
         'fecha': '',
@@ -6924,7 +6948,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       },
       salas: [],
       errores: {}
-    }, "errores", []);
+    }, _defineProperty(_ref, "errores", []), _defineProperty(_ref, "errorFile", false), _defineProperty(_ref, "errorSelect", false), _defineProperty(_ref, "errorForm", false), _ref;
   },
   methods: {
     getSalas: function getSalas() {
@@ -6935,44 +6959,67 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.errores = error.data;
       });
     },
+    verificarDatos: function verificarDatos() {
+      this.errorSelect = false;
+
+      if (this.solicitud.idSala == 0) {
+        this.errorSelect = true;
+        this.errorForm = true;
+      } else {
+        if (this.errorFile == true) {
+          this.errorForm = true;
+        } else {
+          this.errorForm = false;
+        }
+      }
+    },
     seleccionarArchivo: function seleccionarArchivo(e) {
-      this.solicitud.rutaSol = e.target.files[0];
-      console.log(this.solicitud);
+      this.errorFile = false, console.log(e.target.files[0].type);
+
+      if (e.target.files[0].type == 'application/pdf') {
+        console.log('Es un PDF');
+        this.solicitud.rutaSol = e.target.files[0];
+      } else {
+        this.errorFile = true;
+        console.log('Selecciona Un PDF webonzo');
+      }
     },
     registrarSolicitud: function registrarSolicitud() {
-      var me = this;
-      var solicitudForm = new FormData();
+      this.errorForm = false;
+      this.verificarDatos();
 
-      for (var key in this.solicitud) {
-        solicitudForm.append(key, this.solicitud[key]);
+      if (this.errorForm == false) {
+        var me = this;
+        var solicitudForm = new FormData();
+
+        for (var key in this.solicitud) {
+          solicitudForm.append(key, this.solicitud[key]);
+        }
+
+        console.log(solicitudForm);
+        axios.post('/solicitud', solicitudForm).then(function (response) {
+          if (response.data.code == 1) {
+            me.errores = {};
+            me.resetVariables();
+          } else {
+            me.errores = {};
+          }
+        })["catch"](function (error) {
+          if (error.response.status == 422) {
+            me.errores = error.response.data.errors;
+          }
+        });
       }
-
-      console.log(solicitudForm);
-      axios.post('/solicitud', solicitudForm).then(function (response) {
-        if (response.data.code == 1) {
-          me.errores = {};
-          me.successSolicitud = true;
-          me.resetVariables();
-        } else {
-          me.errores = {};
-          me.cursoExistente = true;
-        }
-      })["catch"](function (error) {
-        if (error.response.status == 422) {
-          me.errores = error.response.data.errors;
-          console.log(me.errores);
-          me.solicitud.horaIni = '';
-          me.solicitud.horaFin = '';
-        }
-      });
     },
     resetVariables: function resetVariables() {
       this.solicitud = {
         'idSala': 0,
         'fecha': '',
         'horaIni': '',
-        'horaFin': ''
+        'horaFin': '',
+        'rutaSol': null
       };
+      document.getElementById("inputFormSol").value = null;
     }
   },
   mounted: function mounted() {
@@ -33664,6 +33711,47 @@ var render = function () {
         _c("div", { staticClass: "card" }, [
           _c("h4", { staticClass: "card-header" }, [_vm._v("Solicitar Sala")]),
           _vm._v(" "),
+          _vm.errorForm
+            ? _c(
+                "div",
+                {
+                  staticClass: "alert alert-warning d-flex align-items-center",
+                  attrs: { role: "alert" },
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass:
+                        "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        fill: "currentColor",
+                        viewBox: "0 0 16 16",
+                        role: "img",
+                        "aria-label": "Warning:",
+                      },
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                        },
+                      }),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", [
+                    _vm._v(
+                      "\n                        Existe un error en los datos Ingresados, por favor verifiquelos.\n                    "
+                    ),
+                  ]),
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c(
               "form",
@@ -33741,12 +33829,46 @@ var render = function () {
                       2
                     ),
                     _vm._v(" "),
-                    _vm.errores && _vm.errores["solicitud.sala"]
-                      ? _c("span", { staticClass: "is-invalid" }, [
-                          _c("strong", [
-                            _vm._v(_vm._s(_vm.errores["solicitud.idSala"][0])),
-                          ]),
-                        ])
+                    _vm.errorSelect
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-warning d-flex align-items-center",
+                            attrs: { role: "alert" },
+                          },
+                          [
+                            _c(
+                              "svg",
+                              {
+                                staticClass:
+                                  "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  fill: "currentColor",
+                                  viewBox: "0 0 16 16",
+                                  role: "img",
+                                  "aria-label": "Warning:",
+                                },
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                                  },
+                                }),
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", [
+                              _vm._v(
+                                "\n                                        Seleccione una Sala por favor.\n                                    "
+                              ),
+                            ]),
+                          ]
+                        )
                       : _vm._e(),
                   ]),
                   _vm._v(" "),
@@ -33818,6 +33940,7 @@ var render = function () {
                       attrs: {
                         required: "",
                         type: "time",
+                        step: "3600",
                         min: "08:00",
                         max: "17:00",
                       },
@@ -33868,6 +33991,7 @@ var render = function () {
                       attrs: {
                         required: "",
                         type: "time",
+                        step: "3600",
                         min: _vm.solicitud.horaIni,
                         max: "18:00",
                       },
@@ -33906,15 +34030,60 @@ var render = function () {
                     _vm._v(" "),
                     _c("input", {
                       staticClass: "form-control",
-                      attrs: { type: "file" },
+                      attrs: {
+                        required: "",
+                        accept: "application/pdf",
+                        type: "file",
+                        id: "inputFormSol",
+                      },
                       on: { change: _vm.seleccionarArchivo },
                     }),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _vm.errorFile
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-warning d-flex align-items-center",
+                            attrs: { role: "alert" },
+                          },
+                          [
+                            _c(
+                              "svg",
+                              {
+                                staticClass:
+                                  "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  fill: "currentColor",
+                                  viewBox: "0 0 16 16",
+                                  role: "img",
+                                  "aria-label": "Warning:",
+                                },
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                                  },
+                                }),
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(0),
+                          ]
+                        )
+                      : _vm._e(),
                   ]),
                 ]),
                 _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
-                _vm._m(0),
+                _vm._m(1),
               ]
             ),
           ]),
@@ -33924,6 +34093,18 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _vm._v(
+        "\n                                        El tipo de archivo es incorrecto, seleccione un "
+      ),
+      _c("strong", [_vm._v("PDF")]),
+      _vm._v(" por favor\n                                    "),
+    ])
+  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
