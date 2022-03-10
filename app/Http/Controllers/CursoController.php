@@ -49,6 +49,10 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur', 'curso.estado')
+                        ->fechaInicio($request->fecha_inicio)
+                        ->fechaFin($request->fecha_fin)
+                        ->estado($request->estatus)
+                        ->sala($request->sala)
                         ->orderBy('nomCur', 'ASC')->paginate(10);
         return [
             'pagination' => [
@@ -71,7 +75,7 @@ class CursoController extends Controller
     public function catalogoCurso(Request $request){
         if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur')
-                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->get();
+                        ->orderBy('nomCur', 'ASC')->get();
         return ['cursos' => $cursos];
     }
 

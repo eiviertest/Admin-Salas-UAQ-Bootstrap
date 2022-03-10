@@ -8,8 +8,7 @@
                             <h4 class="">Administrar Cursos</h4>
                         </div>
                         <div class="col-md-4 d-flex justify-content-left">
-                            <button type="button" class="btn btn-primary" v-if="!cursos.length">Carga Masiva</button>
-                            <button type="button" class="btn btn-success" v-if="!mostrar" v-on:click="mostrar = !mostrar">Ver Cursos Registrados</button>
+                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 1" v-on:click="mostrar = !mostrar">Ver Cursos Registrados</button>
                             <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar curso</button>
                         </div>
                     </div>
@@ -106,6 +105,28 @@
                                 </div>
                             </div>
                         </form>
+                        <div v-if="mostrar">
+                            <div class="row">
+                                <button class="btn btn-info" v-on:click="mostrarFiltros = !mostrarFiltros ">Filtros</button>
+                            </div>
+                            <div class="row" v-if="mostrarFiltros">
+                                <div class="col-md-3">
+                                    <label class="form-control-label" for="text-input">Fecha de inicio</label>
+                                    <input required type="date" v-model="fecha_inicio" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-control-label" for="text-input">Fecha de fin</label>
+                                    <input required type="date" v-model="fecha_fin" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-control-label" for="text-input">Sala</label>
+                                    <select required class="form-select" v-model="sala">
+                                        <option value="0" selected disabled>Seleccione una sala</option>
+                                        <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table" v-if="mostrar">
                             <thead> 
                                 <tr>
@@ -202,6 +223,11 @@ export default {
             accion: '',
             idCurso: 0,
             isLoading: true,
+            fecha_inicio: '',
+            fecha_fin: '',
+            estatus: '',
+            sala: 0,
+            mostrarFiltros: false
         }
     },
     computed: {
@@ -283,7 +309,6 @@ export default {
             me.isLoading = true;
             axios.get('/catalogoSalas').then(response=>{
                 me.salas = response.data.salas;
-                me.isLoading = false;
             })
             .catch(error=>{
                 me.errores = error.data;
@@ -291,7 +316,14 @@ export default {
         },
         getCursos(page){
             let me = this;
-            axios.get('/curso_admin?page=' + page).then(response=>{
+            axios.get('/curso_admin?page=' + page, {
+                params: {
+                    estatus : me.estatus,
+                    fecha_inicio : me.fecha_inicio,
+                    fecha_fin : me.fecha_fin,
+                    sala: me.sala
+                }
+            }).then(response=>{
                 me.cursos = response.data.cursos.data;
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
@@ -327,6 +359,23 @@ export default {
     mounted() {
         this.getSalas();
         this.getCursos(1);
+    },
+    watch: {
+        fecha_inicio: function(val){
+            this.isLoading = true;
+            this.fecha_inicio = val;
+            this.getCursos(1);
+        },
+        fecha_fin: function(val){
+            this.isLoading = true;
+            this.fecha_fin = val;
+            this.getCursos(1);
+        },
+        sala: function(val){
+            this.isLoading = true;
+            this.sala = val;
+            this.getCursos(1);
+        }
     }
 }
 </script>
