@@ -153,9 +153,6 @@ class CursoController extends Controller
         $this->validarDatos($request);
         $fecha_inicio = Carbon::createFromFormat('Y-m-d', $request->curso['fecInCur']);
         $fecha_fin = Carbon::createFromFormat('Y-m-d', $request->curso['fecFinCur']);
-        $durCur = $fecha_inicio->diffInDays($fecha_fin);
-        $fecha_inicio = $fecha_inicio->format('Y-m-d');
-        $fecha_fin = $fecha_fin->format('Y-m-d');
         $horario = $request->curso['horarioscurso'];
         $sala = $request->curso['idSala'];
         $cursos = $this->cursos_registrados($fecha_inicio, $fecha_fin, $horario, $sala);
@@ -164,8 +161,8 @@ class CursoController extends Controller
                 $durCur = $fecha_inicio->diff($fecha_fin);
                 $curso = new Curso();
                 $curso->nomCur = $request->curso['nomCur'];
-                $curso->fecInCur = $fecha_inicio;
-                $curso->fecFinCur = $fecha_fin;
+                $curso->fecInCur = $fecha_inicio->format('Y-m-d');
+                $curso->fecFinCur = $fecha_fin->format('Y-m-d');
                 $curso->reqCur = $request->curso['reqCur'];
                 $curso->durCur = $durCur->days;
                 $curso->instructor = $request->curso['instructor'];

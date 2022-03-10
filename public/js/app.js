@@ -5474,9 +5474,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       successCurso: false,
       cursoExistente: false,
       mostrar: false,
-      cursos: [{
-        'datos': 'datos'
-      }]
+      cursos: []
     }, _defineProperty(_ref, "errores", []), _defineProperty(_ref, "pagination", {
       'total': 0,
       'current_page': 0,
@@ -31719,7 +31717,7 @@ var render = function () {
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4 d-flex justify-content-left" }, [
-              !_vm.mostrar && _vm.cursos.length > 1
+              !_vm.mostrar && _vm.cursos.length > 0
                 ? _c(
                     "button",
                     {

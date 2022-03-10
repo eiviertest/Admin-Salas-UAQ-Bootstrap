@@ -8,7 +8,7 @@
                             <h4 class="">Administrar Cursos</h4>
                         </div>
                         <div class="col-md-4 d-flex justify-content-left">
-                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 1" v-on:click="mostrar = !mostrar">Ver Cursos Registrados</button>
+                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados</button>
                             <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar curso</button>
                         </div>
                     </div>
@@ -204,11 +204,7 @@ export default {
             successCurso: false,
             cursoExistente: false,
             mostrar: false,
-            cursos: [
-                {
-                    'datos': 'datos'
-                }
-            ],
+            cursos: [],
             errores: [],
             pagination: {
                 'total': 0, 
