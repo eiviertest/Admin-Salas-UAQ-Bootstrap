@@ -10,6 +10,7 @@ use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use PDF;
 
 class SolicitudController extends Controller
@@ -77,14 +78,19 @@ class SolicitudController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+        if($request->hasFile(key:'rutaSol')){
+            $fileName = $request->rutaSol->getClientOriginalName();
+        }else{
+            $filename = null;
+        }
         //Formato Unix
-        $hora_inicio = strtotime($request->horainicio);
+        $hora_inicio = strtotime($request->horaIni);
         //Horas solicitadas.
         $horas_solicitadas = $request->horas_solicitadas;
         //Convertir horas a segundos
         $segundos = $horas_solicitadas * (60 * 60);
         //Hora de fin.
-        $hora_fin = date('H:i:s', $hora_inicio + $segundos);
+        $hora_fin = $request->horaFin;
         $idPersona = $this->getIdPersona(Auth::user()->id);
         $nombreEstatus = "En proceso";
         $idEstatus = $this->getIdEstatus($nombreEstatus);
@@ -94,14 +100,17 @@ class SolicitudController extends Controller
             $estatus->save();
             $idEstatus = $estatus->idEst;
         }
+        $uuid = (string) Str::uuid();
         $cursos_registrados = HorarioCurso::select('c.nomCur')
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
-                            ->where('c.idSala', '=', $request->idSala)
                             ->where('c.fecInCur', '<=', [date($request->fecha)])
-                            ->where('c.fecFinCur', '>=', [date($request->fecha)])
+                            ->Where('c.fecFinCur', '>=', [date($request->fecha)])
+                            ->where('c.idSala', '=', $request->idSala)
                             ->where(function ($query) use ($request, $hora_fin) {
-                                $query->whereBetween('horIn', [$request->horainicio, $hora_fin])
-                                    ->orWhereRaw('horFin between ? and ?', [$request->horainicio, $hora_fin]);
+                                $query->where('horIn', '<=', $request->horaIni)
+                                    ->where('horFin', '<=', $request->horaFin)
+                                    ->whereBetween('horIn', [$request->horaIni, $hora_fin])
+                                    ->orWhereRaw('horFin between ? and ?', [$request->horaIni, $hora_fin]);
                             })
                             ->get();
         if(count($cursos_registrados) == 0){
@@ -109,32 +118,45 @@ class SolicitudController extends Controller
                                         ->where('idSal', '=', $request->idSala)
                                         ->where('fecha', '=', [date($request->fecha)])
                                         ->where(function ($query) use ($request, $hora_fin) {
-                                            $query->whereBetween('horaIni', [$request->horainicio, $hora_fin])
-                                                ->orWhereRaw('horaFin between ? and ?', [$request->horainicio, $hora_fin])
-                                                ->orWhereRaw('horaIni <= ? and horaFin >= ?', [$request->horainicio, $hora_fin]);
+                                            $query->whereBetween('horaIni', [$request->horaIni, $hora_fin])
+                                                ->orWhereRaw('horaFin between ? and ?', [$request->horaIni, $hora_fin])
+                                                ->orWhereRaw('horaIni <= ? and horaFin >= ?', [$request->horaIni, $hora_fin]);
                                         })
                                         ->get();
             if(count($solicitudes_registradas) == 0) {
                 try {
                     $horaFinUnix = strtotime($hora_fin);
                     $solicitud = new Solicitud();
-                    $solicitud->rutaSol = $request->rutaSol;
+                    if($request->hasFile(key:'rutaSol')){
+                        //$solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
+                        $solicitud->rutaSol = time() . '_' . $request->file(key:'rutaSol')->getClientOriginalName();
+                        $request->file(key:'rutaSol')->storeAs(path:'formatosSol', name:$solicitud->rutaSol); 
+                    }else{
+                        $solicitud->rutaSol = null;
+                    }
+                    $solicitud->uuid = $uuid;
                     $solicitud->idSal = $request->idSala;
                     $solicitud->idPer = $idPersona->idPer;
                     $solicitud->idEst = $idEstatus->idEst;
                     $solicitud->fecha = $request->fecha;
-                    $solicitud->horaIni = $request->horainicio;
-                    $solicitud->horaFin = date('H:i:s', $horaFinUnix - 1);
+                    $solicitud->horaIni = $request->horaIni;
+                    $solicitud->horaFin = $request->horaFin;
                     $solicitud->save();
-                    return ['mensaje' => 'Ha sido guardado la solicitud'];
+                    return [
+                        'code' => 1,
+                        'mensaje' => 'Ha sido guardada la solicitud'];
                 } catch (exception $e) {
                     return $e->getMessage();
                 }
             }else{
-                return ['mensaje' => 'Una solicitud se encuentra registrada'];
+                return [
+                    'code' => 2,
+                    'mensaje' => 'Una solicitud se encuentra registrada'];
             }
         }else{
-                return ['mensaje' => 'Un curso se encuentra registrado'];
+                return [
+                    'code' => 2,
+                    'mensaje' => 'Un curso se encuentra registrado'];
         }    
     }
 
