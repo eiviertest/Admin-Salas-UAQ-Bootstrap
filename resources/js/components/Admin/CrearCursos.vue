@@ -251,9 +251,18 @@ export default {
                     me.successCurso = true;
                     me.getCursos(1);
                     me.resetVariables();
+                    // Alerta que notifica que todo salio correcto
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'El registro se ah realizado con éxito',
+                        showConfirmButton: false,
+                        timer: 1200
+                    })
                 }else{
                     me.errores = {};
                     me.cursoExistente = true;
+                    me.isLoading = false;
                 }
             }).catch(error=>{
                 if(error.response.status == 422){
@@ -304,6 +313,14 @@ export default {
             this.modalRUCurso = true;
             this.accion = "Actualizar curso";
             this.idCurso = idCurso;
+            // Alerta que notifica que todo salio correcto
+            // Swal.fire({
+            //     position: 'center',
+            //     icon: 'success',
+            //     title: 'El registro se ah actualizado con éxito',
+            //     showConfirmButton: false,
+            //     timer: 1200
+            // });
         },
         verDetalle(idCurso){
             this.modalRUCurso = true;
@@ -311,17 +328,39 @@ export default {
             this.idCurso = idCurso;
         },
         disableCurso(idCurso){
-            let me = this;
-            me.isLoading = true;
-            axios.put('/curso',{
+        Swal.fire({
+                title: 'Estas seguro?',
+                text: "Una vez deshabilitado no se podrán revertir los cambios!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si, deshabilitar registro!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición para eliminar el registro
+                    let me = this;
+                    me.isLoading = true;
+                    axios.put('/curso',
+                    {
                     'idCur': idCurso,
-                }).then(function (response) {
-                    if(response.data.code == 1) {
-                        me.getCursos(1);
-                    }
-                }).catch( function (error) {
-                    me.errores = error.data;
-            });
+                            }).then(function (response) {
+                                if(response.data.code == 1) {
+                                    me.getCursos(1);
+                                    //Mensaje de eliminación 
+                                    Swal.fire(
+                                    'Borrado!',
+                                    'El registro ha sido deshabilitado exitosamente.',
+                                    'success'
+                                    )
+                            }
+                            }).catch( function (error) {
+                                me.errores = error.data;
+                                console.log(error)
+                        });
+                }
+            })
         }
     },
     mounted() {
