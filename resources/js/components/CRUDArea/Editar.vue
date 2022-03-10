@@ -51,11 +51,19 @@ export default({
         let me = this;
         axios.put('/area',{"nomArea":this.dataArea.nombre, "id":this.dataArea.ide})
                 .then(response=>{
-                    me.$emit('sucessUpdate')
+                    me.$emit('sucessUpdate');
                     this.closeModelUpdate();
+                    // Alerta que notifica que todo salio correcto
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'El registro se ah actualizado con éxito',
+                    showConfirmButton: false,
+                    timer: 1200
+                    });
                 })
                 .catch(error=>{
-                    console.log(error)
+                    console.log(error);
                 })
         },
         closeModelUpdate(){

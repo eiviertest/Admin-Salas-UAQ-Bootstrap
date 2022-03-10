@@ -122,18 +122,73 @@ export default({
             });
         },
         borrarRegistro(ide){
-           let  me = this;
-           me.isLoading = true;
-           if (confirm("¿Esta seguro de eliminar el registro?")){
-               console.log(ide);
-               axios.delete('/area/'+ide)
-               .then(response=>{
-                        me.getArea(1);
-                    })
+            Swal.fire({
+                title: 'Estas seguro?',
+                text: "Una vez borrado no se podrán revertir los cambios!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si, borrar registro!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición para eliminar el registro
+                    let  me = this;
+                    me.isLoading = true;
+                    axios.delete('/area/'+ide)
+                        .then(response=>{
+                                me.getArea(1);
+                                //Mensaje de eliminación 
+                                Swal.fire(
+                                'Borrado!',
+                                'El registro ha sido eliminado exitosamente.',
+                                'success'
+                                )
+                            })
+                        .catch(error=>{
+                            console.log(error)
+                            // Alerta que notifica que hay un error
+                            Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'El area que intentar borras está utilizada por un usuario',
+                            showConfirmButton: false,
+                            timer: 1500
+                            })
+                            me.isLoading = false;
+                        })
+                }
+            })
+            /*
+            this.$swal({
+                title: 'Estás seguro?',
+                text: "Uná vez borrado no se podrán revertir los cambios!",
+                icon: 'warning',
+                buttons: true,
+                })
+                .then((willDelete) => {
+                if (willDelete) {
+                
+                // Petición para eliminar el registro
+                let  me = this;
+                me.isLoading = true;
+                axios.delete('/area/'+ide)
+                    .then(response=>{
+                            me.getArea(1);
+                        })
                     .catch(error=>{
                         console.log(error)
                     })
-           }
+                    // Mensaje de confirmación
+                    swal("!Eliminado exitosamente¡",{
+                        icon: "success",
+                    });
+                } else {
+                    //Mensaje de cancelación
+                    swal ('Operación cancelada')
+                }
+            }) */
         },
         mostrarModalCreate(){
             this.showModelCreate = true;
