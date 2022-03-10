@@ -23,8 +23,8 @@ class CursoController extends Controller
         $idPersona = $this->getIdPersona(Auth::user()->id);
         $idPer = $idPersona->idPer;
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
-                        ->whereNotExists(function ($query) {
-                            $query->select(DB::raw(1))->from('curso_persona')->whereColumn('curso_persona.idCur', 'curso.idCur');
+                        ->whereNotExists(function ($query) use ($idPer) {
+                            $query->select(DB::raw(1))->from('curso_persona')->where('curso_persona.idPer', '=', $idPer)->whereColumn('curso_persona.idCur', 'curso.idCur');
                         })
                         ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(9);
         return [
