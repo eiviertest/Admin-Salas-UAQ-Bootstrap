@@ -132,16 +132,38 @@ export default {
             });
         },
         rechazarSolicitud(idSol){
-            let me = this;
-            me.isLoading = true;
-            axios.put('/solicitud',{
-                    'idSol': idSol,
-                    'idEst': 3,
-                }).then(function (response) {
-                    me.getSolicitudes(1);
-                }).catch( function (error) {
-                    me.errores = error.data;
-            });
+            Swal.fire({
+                title: 'Estas seguro?',
+                text: "Una vez rechazado no se podrán revertir los cambios!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si, rechazar registro!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición para eliminar el registro
+                    let me = this;
+                    axios.put('/solicitud',{
+                            'idSol': idSol,
+                            'idEst': 3,
+                            }).then(function (response) {
+                                me.getSolicitudes(1);
+                                //Mensaje de eliminación 
+                                            Swal.fire(
+                                            'Rechazado!',
+                                            'El registro ha sido rechazado correctamente.',
+                                            'success'
+                                            )
+                            }).catch( function (error) {
+                                me.errores = error.data;
+                        })
+                        .catch(error=>{
+                            console.log(error)
+                        })
+                }
+            })
         }
     },
     mounted() {

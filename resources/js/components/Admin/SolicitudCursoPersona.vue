@@ -133,16 +133,39 @@ export default {
             });
         },
         rechazarUsuario(idPer, idCur){
-            let me = this;
-            me.isLoading = true;
-            axios.put('/rechazar_persona_curso',{
-                    'idPer': idPer,
-                    'idCur': idCur,
-                }).then(function (response) {
-                    me.getListaCursoPersona(1);
-                }).catch( function (error) {
-                    me.errores = error.data;
-            });
+            Swal.fire({
+                title: 'Estas seguro?',
+                text: "Una vez rechazado no se podrán revertir los cambios!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si, rechazar registro!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición para eliminar el registro
+                    let me = this;
+                    me.isLoading = true;
+                    axios.put('/rechazar_persona_curso',{
+                            'idPer': idPer,
+                            'idCur': idCur,
+                        }).then(function (response) {
+                            me.getListaCursoPersona(1);
+                             //Mensaje de eliminación 
+                            Swal.fire(
+                                'Rechazado!',
+                                'El registro ha sido rechazado correctamente.',
+                                'success'
+                            )
+                        }).catch( function (error) {
+                            me.errores = error.data;
+                        })
+                        .catch(error=>{
+                            console.log(error)
+                        })
+                }
+            })
         }
     },
     mounted() {

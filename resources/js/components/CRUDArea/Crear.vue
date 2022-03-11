@@ -50,6 +50,14 @@ export default({
         axios.post('/area',{"nomArea":this.registro.nombre})
             .then(response=>{
                 this.$emit('sucessCreate');
+                // Alerta que notifica que todo salio correcto
+                Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'El registro se ah realizado con éxito',
+                showConfirmButton: false,
+                timer: 1200
+                })
             })
             .catch(error=>{
                 console.log(error)
