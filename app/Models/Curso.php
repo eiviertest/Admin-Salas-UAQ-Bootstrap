@@ -25,6 +25,31 @@ class Curso extends Model
         'idSala'
     ];
 
+    public function scopeFechaInicio($query, $fecha_inicio){
+        if($fecha_inicio != '') {
+            return $query->where('curso.fecInCur', '=', $fecha_inicio);
+        }
+    }
+    
+    public function scopeFechaFin($query, $fecha_fin){
+        if($fecha_fin != '') {
+            return $query->where('curso.fecFinCur', '=', $fecha_fin);
+        }
+    }
+
+    public function scopeSala($query, $sala){
+        if($sala != 0) {
+            return $query->where('curso.idSala', '=', $sala);
+        }
+    }
+    
+    public function scopeEstado($query, $estado){
+        if($estado != '') {
+            return $query->where('curso.estado', '=', $estado);
+        }
+    }
+
+
     public function horarioscurso(){
         return $this->hasMany(HorarioCurso::class, 'idCur');
     }

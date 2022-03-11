@@ -11,9 +11,6 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            @can('Admin_Cursos')
-                <a @click="menu=2" class="dropdown-item" href="#">Administrar Cursos</a>
-            @endcan
             @can('Admin_Cursos_Crear')
                 <a @click="menu=3" class="dropdown-item" href="#">Crear Cursos</a>
             @endcan

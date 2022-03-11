@@ -18546,6 +18546,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -18577,9 +18598,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       successCurso: false,
       cursoExistente: false,
       mostrar: false,
-      cursos: [{
-        'datos': 'datos'
-      }]
+      cursos: []
     }, _defineProperty(_ref, "errores", []), _defineProperty(_ref, "pagination", {
       'total': 0,
       'current_page': 0,
@@ -18587,7 +18606,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       'last_page': 0,
       'from': 0,
       'to': 0
-    }), _defineProperty(_ref, "offset", 2), _defineProperty(_ref, "modalRUCurso", false), _defineProperty(_ref, "accion", ''), _defineProperty(_ref, "idCurso", 0), _defineProperty(_ref, "isLoading", true), _ref;
+    }), _defineProperty(_ref, "offset", 2), _defineProperty(_ref, "modalRUCurso", false), _defineProperty(_ref, "accion", ''), _defineProperty(_ref, "idCurso", 0), _defineProperty(_ref, "isLoading", true), _defineProperty(_ref, "fecha_inicio", ''), _defineProperty(_ref, "fecha_fin", ''), _defineProperty(_ref, "estatus", ''), _defineProperty(_ref, "sala", 0), _defineProperty(_ref, "mostrarFiltros", false), _ref;
   },
   computed: {
     isActived: function isActived() {
@@ -18686,14 +18705,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       me.isLoading = true;
       axios.get('/catalogoSalas').then(function (response) {
         me.salas = response.data.salas;
-        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     getCursos: function getCursos(page) {
       var me = this;
-      axios.get('/curso_admin?page=' + page).then(function (response) {
+      axios.get('/curso_admin?page=' + page, {
+        params: {
+          estatus: me.estatus,
+          fecha_inicio: me.fecha_inicio,
+          fecha_fin: me.fecha_fin,
+          sala: me.sala
+        }
+      }).then(function (response) {
         me.cursos = response.data.cursos.data;
         me.pagination = response.data.pagination;
         me.isLoading = false;
@@ -18747,6 +18772,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     this.getSalas();
     this.getCursos(1);
+  },
+  watch: {
+    fecha_inicio: function fecha_inicio(val) {
+      this.isLoading = true;
+      this.fecha_inicio = val;
+      this.getCursos(1);
+    },
+    fecha_fin: function fecha_fin(val) {
+      this.isLoading = true;
+      this.fecha_fin = val;
+      this.getCursos(1);
+    },
+    sala: function sala(val) {
+      this.isLoading = true;
+      this.sala = val;
+      this.getCursos(1);
+    }
   }
 });
 
@@ -18763,6 +18805,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 //
 //
 //
@@ -18814,7 +18859,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    Loading: (vue_loading_overlay__WEBPACK_IMPORTED_MODULE_0___default())
+  },
   data: function data() {
     return {
       solicitudes: [],
@@ -18827,7 +18882,8 @@ __webpack_require__.r(__webpack_exports__);
         'from': 0,
         'to': 0
       },
-      offset: 2
+      offset: 2,
+      isLoading: true
     };
   },
   computed: {
@@ -18865,6 +18921,7 @@ __webpack_require__.r(__webpack_exports__);
     cambiarPagina: function cambiarPagina(page) {
       var me = this;
       me.pagination.current_page = page;
+      me.isLoading = true;
       me.getSolicitudes(page);
     },
     getSolicitudes: function getSolicitudes(page) {
@@ -18872,12 +18929,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/solicitud_admin?page=' + page).then(function (response) {
         me.solicitudes = response.data.solicitudes.data;
         me.pagination = response.data.pagination;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     aceptarSolicitud: function aceptarSolicitud(idSol) {
       var me = this;
+      me.isLoading = true;
       axios.put('/solicitud', {
         'idSol': idSol,
         'idEst': 2
@@ -19115,6 +19174,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TablasReportes_TablaConcentradoCurso_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../TablasReportes/TablaConcentradoCurso.vue */ "./resources/js/components/TablasReportes/TablaConcentradoCurso.vue");
 /* harmony import */ var _TablasReportes_TablaCursosImpartidos_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../TablasReportes/TablaCursosImpartidos.vue */ "./resources/js/components/TablasReportes/TablaCursosImpartidos.vue");
 /* harmony import */ var _TablasReportes_TablaAreaSolicitudesDetalle_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../TablasReportes/TablaAreaSolicitudesDetalle.vue */ "./resources/js/components/TablasReportes/TablaAreaSolicitudesDetalle.vue");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 //
 //
 //
@@ -19171,6 +19233,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -19178,7 +19247,8 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     TablaConcentradoCurso: _TablasReportes_TablaConcentradoCurso_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     TablaCursosImpartidos: _TablasReportes_TablaCursosImpartidos_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    TablaAreaSolicitudes: _TablasReportes_TablaAreaSolicitudesDetalle_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    TablaAreaSolicitudes: _TablasReportes_TablaAreaSolicitudesDetalle_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Loading: (vue_loading_overlay__WEBPACK_IMPORTED_MODULE_3___default())
   },
   data: function data() {
     return {
@@ -19197,30 +19267,36 @@ __webpack_require__.r(__webpack_exports__);
       idCurso: 0,
       idArea: 0,
       ruta: '',
-      id: ''
+      id: '',
+      isLoading: false
     };
   },
   methods: {
     getCursos: function getCursos() {
       var me = this;
+      me.isLoading = true;
       axios.get('/catalogo_curso').then(function (response) {
         me.cursos = response.data.cursos;
         me.mostrarElementoCurso = true;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     getAreas: function getAreas() {
       var me = this;
+      me.isLoading = true;
       axios.get('/catalogo_area').then(function (response) {
         me.areas = response.data.areas;
         me.mostrarElementoArea = true;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     concentradoCurso: function concentradoCurso(idCurso) {
       var me = this;
+      me.isLoading = true;
       axios.get('/concentrado_curso/' + idCurso).then(function (response) {
         me.id = idCurso;
         me.ruta = 'concentrado_curso_pdf';
@@ -19234,12 +19310,14 @@ __webpack_require__.r(__webpack_exports__);
         }];
         me.btnDescargarInfo = true;
         me.mostrarElementoTablaConcentradoCurso = true;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     getCursosImpartidos: function getCursosImpartidos() {
       var me = this;
+      me.isLoading = true;
       axios.get('/cursos_impartidos').then(function (response) {
         me.id = 0;
         me.ruta = 'cursos_impartidos_pdf';
@@ -19262,12 +19340,14 @@ __webpack_require__.r(__webpack_exports__);
         }];
         me.mostrarElementoTablaCursosImpartidos = true;
         me.btnDescargarInfo = true;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
     },
     concentradoSolicitudes: function concentradoSolicitudes(idArea) {
       var me = this;
+      me.isLoading = true;
       axios.get('/area_solicitudes_detalle/' + idArea).then(function (response) {
         me.id = idArea;
         me.ruta = 'area_solicitudes_detalle_pdf';
@@ -19284,6 +19364,7 @@ __webpack_require__.r(__webpack_exports__);
         }];
         me.btnDescargarInfo = true;
         me.mostrarElementoTablaSolicitudes = true;
+        me.isLoading = false;
       })["catch"](function (error) {
         me.errores = error.data;
       });
@@ -20599,6 +20680,201 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.getSolicitudes(1);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    var _ref;
+
+    return _ref = {
+      solicitud: {
+        'idSala': 0,
+        'fecha': '',
+        'horaIni': '',
+        'horaFin': '',
+        'rutaSol': null
+      },
+      salas: [],
+      errores: {}
+    }, _defineProperty(_ref, "errores", []), _defineProperty(_ref, "errorFile", false), _defineProperty(_ref, "errorSelect", false), _defineProperty(_ref, "errorForm", false), _ref;
+  },
+  methods: {
+    getSalas: function getSalas() {
+      var me = this;
+      axios.get('/catalogoSalas').then(function (response) {
+        me.salas = response.data.salas;
+      })["catch"](function (error) {
+        me.errores = error.data;
+      });
+    },
+    verificarDatos: function verificarDatos() {
+      this.errorSelect = false;
+
+      if (this.solicitud.idSala == 0) {
+        this.errorSelect = true;
+        this.errorForm = true;
+      } else {
+        if (this.errorFile == true) {
+          this.errorForm = true;
+        } else {
+          this.errorForm = false;
+        }
+      }
+    },
+    seleccionarArchivo: function seleccionarArchivo(e) {
+      this.errorFile = false, console.log(e.target.files[0].type);
+
+      if (e.target.files[0].type == 'application/pdf') {
+        console.log('Es un PDF');
+        this.solicitud.rutaSol = e.target.files[0];
+      } else {
+        this.errorFile = true;
+        console.log('Selecciona Un PDF webonzo');
+      }
+    },
+    registrarSolicitud: function registrarSolicitud() {
+      this.errorForm = false;
+      this.verificarDatos();
+
+      if (this.errorForm == false) {
+        var me = this;
+        var solicitudForm = new FormData();
+
+        for (var key in this.solicitud) {
+          solicitudForm.append(key, this.solicitud[key]);
+        }
+
+        console.log(solicitudForm);
+        axios.post('/solicitud', solicitudForm).then(function (response) {
+          if (response.data.code == 1) {
+            me.errores = {};
+            me.resetVariables();
+          } else {
+            me.errores = {};
+          }
+        })["catch"](function (error) {
+          if (error.response.status == 422) {
+            me.errores = error.response.data.errors;
+          }
+        });
+      }
+    },
+    resetVariables: function resetVariables() {
+      this.solicitud = {
+        'idSala': 0,
+        'fecha': '',
+        'horaIni': '',
+        'horaFin': '',
+        'rutaSol': null
+      };
+      document.getElementById("inputFormSol").value = null;
+    }
+  },
+  mounted: function mounted() {
+    this.getSalas();
   }
 });
 
@@ -47698,15 +47974,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _SolicitarSala_vue_vue_type_template_id_2dcbbd70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SolicitarSala.vue?vue&type=template&id=2dcbbd70& */ "./resources/js/components/User/SolicitarSala.vue?vue&type=template&id=2dcbbd70&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _SolicitarSala_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SolicitarSala.vue?vue&type=script&lang=js& */ "./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 ;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SolicitarSala_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _SolicitarSala_vue_vue_type_template_id_2dcbbd70___WEBPACK_IMPORTED_MODULE_0__.render,
   _SolicitarSala_vue_vue_type_template_id_2dcbbd70___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -47960,6 +48238,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MisSolicitudes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./MisSolicitudes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/MisSolicitudes.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MisSolicitudes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SolicitarSala_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SolicitarSala.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/User/SolicitarSala.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SolicitarSala_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -48354,18 +48648,7 @@ var render = function () {
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4 d-flex justify-content-left" }, [
-              !_vm.cursos.length
-                ? _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: { type: "button" },
-                    },
-                    [_vm._v("Carga Masiva")]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              !_vm.mostrar
+              !_vm.mostrar && _vm.cursos.length > 0
                 ? _c(
                     "button",
                     {
@@ -48978,6 +49261,165 @@ var render = function () {
                 : _vm._e(),
               _vm._v(" "),
               _vm.mostrar
+                ? _c("div", [
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-info",
+                          on: {
+                            click: function ($event) {
+                              _vm.mostrarFiltros = !_vm.mostrarFiltros
+                            },
+                          },
+                        },
+                        [_vm._v("Filtros")]
+                      ),
+                    ]),
+                    _vm._v(" "),
+                    _vm.mostrarFiltros
+                      ? _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-md-3" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-control-label",
+                                attrs: { for: "text-input" },
+                              },
+                              [_vm._v("Fecha de inicio")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fecha_inicio,
+                                  expression: "fecha_inicio",
+                                },
+                              ],
+                              staticClass: "form-control",
+                              attrs: { required: "", type: "date" },
+                              domProps: { value: _vm.fecha_inicio },
+                              on: {
+                                input: function ($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.fecha_inicio = $event.target.value
+                                },
+                              },
+                            }),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-3" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-control-label",
+                                attrs: { for: "text-input" },
+                              },
+                              [_vm._v("Fecha de fin")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fecha_fin,
+                                  expression: "fecha_fin",
+                                },
+                              ],
+                              staticClass: "form-control",
+                              attrs: { required: "", type: "date" },
+                              domProps: { value: _vm.fecha_fin },
+                              on: {
+                                input: function ($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.fecha_fin = $event.target.value
+                                },
+                              },
+                            }),
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-3" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-control-label",
+                                attrs: { for: "text-input" },
+                              },
+                              [_vm._v("Sala")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.sala,
+                                    expression: "sala",
+                                  },
+                                ],
+                                staticClass: "form-select",
+                                attrs: { required: "" },
+                                on: {
+                                  change: function ($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call(
+                                        $event.target.options,
+                                        function (o) {
+                                          return o.selected
+                                        }
+                                      )
+                                      .map(function (o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.sala = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  },
+                                },
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: {
+                                      value: "0",
+                                      selected: "",
+                                      disabled: "",
+                                    },
+                                  },
+                                  [_vm._v("Seleccione una sala")]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.salas, function (sala) {
+                                  return _c("option", {
+                                    key: sala.idSala,
+                                    domProps: {
+                                      value: sala.idSala,
+                                      textContent: _vm._s(sala.nomSala),
+                                    },
+                                  })
+                                }),
+                              ],
+                              2
+                            ),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.mostrar
                 ? _c("table", { staticClass: "table" }, [
                     _vm._m(2),
                     _vm._v(" "),
@@ -49229,6 +49671,26 @@ var render = function () {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "vld-parent" },
+              [
+                _c("loading", {
+                  attrs: {
+                    active: _vm.isLoading,
+                    "can-cancel": false,
+                    "is-full-page": true,
+                  },
+                  on: {
+                    "update:active": function ($event) {
+                      _vm.isLoading = $event
+                    },
+                  },
+                }),
+              ],
+              1
+            ),
+            _vm._v(" "),
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -50038,6 +50500,26 @@ var render = function () {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "vld-parent" },
+              [
+                _c("loading", {
+                  attrs: {
+                    active: _vm.isLoading,
+                    "can-cancel": false,
+                    "is-full-page": true,
+                  },
+                  on: {
+                    "update:active": function ($event) {
+                      _vm.isLoading = $event
+                    },
+                  },
+                }),
+              ],
+              1
+            ),
+            _vm._v(" "),
             _c("div", { staticClass: "form-group row" }, [
               _c("div", { staticClass: "col-md-3" }, [
                 _c(
@@ -51958,28 +52440,417 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("h4", { staticClass: "card-header" }, [_vm._v("Solicitar Sala")]),
+          _vm._v(" "),
+          _vm.errorForm
+            ? _c(
+                "div",
+                {
+                  staticClass: "alert alert-warning d-flex align-items-center",
+                  attrs: { role: "alert" },
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass:
+                        "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        fill: "currentColor",
+                        viewBox: "0 0 16 16",
+                        role: "img",
+                        "aria-label": "Warning:",
+                      },
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                        },
+                      }),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", [
+                    _vm._v(
+                      "\n                        Existe un error en los datos Ingresados, por favor verifiquelos.\n                    "
+                    ),
+                  ]),
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "form",
+              {
+                attrs: { method: "post", enctype: "multipart/form-data" },
+                on: {
+                  submit: function ($event) {
+                    $event.preventDefault()
+                    return _vm.registrarSolicitud()
+                  },
+                },
+              },
+              [
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Sala A Solicitar: *")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.solicitud.idSala,
+                            expression: "solicitud.idSala",
+                          },
+                        ],
+                        staticClass: "form-select",
+                        attrs: { required: "" },
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.solicitud,
+                              "idSala",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "option",
+                          { attrs: { value: "0", selected: "", disabled: "" } },
+                          [_vm._v("Seleccione una sala...")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.salas, function (sala) {
+                          return _c("option", {
+                            key: sala.idSala,
+                            domProps: {
+                              value: sala.idSala,
+                              textContent: _vm._s(sala.nomSala),
+                            },
+                          })
+                        }),
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _vm.errorSelect
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-warning d-flex align-items-center",
+                            attrs: { role: "alert" },
+                          },
+                          [
+                            _c(
+                              "svg",
+                              {
+                                staticClass:
+                                  "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  fill: "currentColor",
+                                  viewBox: "0 0 16 16",
+                                  role: "img",
+                                  "aria-label": "Warning:",
+                                },
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                                  },
+                                }),
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", [
+                              _vm._v(
+                                "\n                                        Seleccione una Sala por favor.\n                                    "
+                              ),
+                            ]),
+                          ]
+                        )
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Fecha: *")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.solicitud.fecha,
+                          expression: "solicitud.fecha",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: { required: "", type: "date" },
+                      domProps: { value: _vm.solicitud.fecha },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.solicitud, "fecha", $event.target.value)
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["solicitud.fecha"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["solicitud.fecha"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Hora de inicio: *")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.solicitud.horaIni,
+                          expression: "solicitud.horaIni",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        type: "time",
+                        step: "3600",
+                        min: "08:00",
+                        max: "17:00",
+                      },
+                      domProps: { value: _vm.solicitud.horaIni },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.solicitud,
+                            "horaIni",
+                            $event.target.value
+                          )
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["solicitud.horaIni"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["solicitud.horaIni"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-control-label",
+                        attrs: { for: "text-input" },
+                      },
+                      [_vm._v("Hora de Fin: *")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.solicitud.horaFin,
+                          expression: "solicitud.horaFin",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        type: "time",
+                        step: "3600",
+                        min: _vm.solicitud.horaIni,
+                        max: "18:00",
+                      },
+                      domProps: { value: _vm.solicitud.horaFin },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.solicitud,
+                            "horaFin",
+                            $event.target.value
+                          )
+                        },
+                      },
+                    }),
+                    _vm._v(" "),
+                    _vm.errores && _vm.errores["solicitud.horaFin"]
+                      ? _c("span", { staticClass: "is-invalid" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.errores["solicitud.horaFin"][0])),
+                          ]),
+                        ])
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("label", { staticClass: "form-control-label" }, [
+                      _vm._v("Formato de Solicitud: *"),
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        accept: "application/pdf",
+                        type: "file",
+                        id: "inputFormSol",
+                      },
+                      on: { change: _vm.seleccionarArchivo },
+                    }),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _vm.errorFile
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-warning d-flex align-items-center",
+                            attrs: { role: "alert" },
+                          },
+                          [
+                            _c(
+                              "svg",
+                              {
+                                staticClass:
+                                  "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  fill: "currentColor",
+                                  viewBox: "0 0 16 16",
+                                  role: "img",
+                                  "aria-label": "Warning:",
+                                },
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                                  },
+                                }),
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(0),
+                          ]
+                        )
+                      : _vm._e(),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _vm._m(1),
+              ]
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
+  ])
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("h4", { staticClass: "card-header" }, [
-              _vm._v("Solicitar Sala"),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    Usted se encuentra en Solicitar Sala!\n                "
-              ),
-            ]),
-          ]),
-        ]),
+    return _c("div", [
+      _vm._v(
+        "\n                                        El tipo de archivo es incorrecto, seleccione un "
+      ),
+      _c("strong", [_vm._v("PDF")]),
+      _vm._v(" por favor\n                                    "),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row form-group" }, [
+      _c("div", { staticClass: "col-md-3" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [_vm._v("Solicitar Sala")]
+        ),
       ]),
     ])
   },

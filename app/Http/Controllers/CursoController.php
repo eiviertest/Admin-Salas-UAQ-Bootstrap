@@ -23,8 +23,8 @@ class CursoController extends Controller
         $idPersona = $this->getIdPersona(Auth::user()->id);
         $idPer = $idPersona->idPer;
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur')
-                        ->whereNotExists(function ($query) {
-                            $query->select(DB::raw(1))->from('curso_persona')->whereColumn('curso_persona.idCur', 'curso.idCur');
+                        ->whereNotExists(function ($query) use ($idPer) {
+                            $query->select(DB::raw(1))->from('curso_persona')->where('curso_persona.idPer', '=', $idPer)->whereColumn('curso_persona.idCur', 'curso.idCur');
                         })
                         ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->paginate(9);
         return [
@@ -49,6 +49,10 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $cursos = Curso::select('curso.idCur', 'curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'curso.reqCur', 'curso.estado')
+                        ->fechaInicio($request->fecha_inicio)
+                        ->fechaFin($request->fecha_fin)
+                        ->estado($request->estatus)
+                        ->sala($request->sala)
                         ->orderBy('nomCur', 'ASC')->paginate(10);
         return [
             'pagination' => [
@@ -71,7 +75,7 @@ class CursoController extends Controller
     public function catalogoCurso(Request $request){
         if(!$request->ajax()) return redirect('/');   
         $cursos = Curso::select('curso.idCur', 'curso.nomCur')
-                        ->orderBy('nomCur', 'ASC')->where('curso.estado', '=', '1')->get();
+                        ->orderBy('nomCur', 'ASC')->get();
         return ['cursos' => $cursos];
     }
 
@@ -149,9 +153,6 @@ class CursoController extends Controller
         $this->validarDatos($request);
         $fecha_inicio = Carbon::createFromFormat('Y-m-d', $request->curso['fecInCur']);
         $fecha_fin = Carbon::createFromFormat('Y-m-d', $request->curso['fecFinCur']);
-        $durCur = $fecha_inicio->diffInDays($fecha_fin);
-        $fecha_inicio = $fecha_inicio->format('Y-m-d');
-        $fecha_fin = $fecha_fin->format('Y-m-d');
         $horario = $request->curso['horarioscurso'];
         $sala = $request->curso['idSala'];
         $cursos = $this->cursos_registrados($fecha_inicio, $fecha_fin, $horario, $sala);
@@ -160,8 +161,8 @@ class CursoController extends Controller
                 $durCur = $fecha_inicio->diff($fecha_fin);
                 $curso = new Curso();
                 $curso->nomCur = $request->curso['nomCur'];
-                $curso->fecInCur = $fecha_inicio;
-                $curso->fecFinCur = $fecha_fin;
+                $curso->fecInCur = $fecha_inicio->format('Y-m-d');
+                $curso->fecFinCur = $fecha_fin->format('Y-m-d');
                 $curso->reqCur = $request->curso['reqCur'];
                 $curso->durCur = $durCur->days;
                 $curso->instructor = $request->curso['instructor'];

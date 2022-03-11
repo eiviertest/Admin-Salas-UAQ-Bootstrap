@@ -14,6 +14,11 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="vld-parent">
+                            <loading :active.sync="isLoading"
+                                    :can-cancel="false"
+                                    :is-full-page="true"/>
+                        </div>
                         <div class="form-group row">
                             <div class="col-md-3">
                                 <label class="form-control-label" for="text-input">Reporte a generar</label>
@@ -58,12 +63,15 @@
 import TablaConcentradoCurso from '../TablasReportes/TablaConcentradoCurso.vue';
 import TablaCursosImpartidos from '../TablasReportes/TablaCursosImpartidos.vue';
 import TablaAreaSolicitudes from '../TablasReportes/TablaAreaSolicitudesDetalle.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     components: {
         TablaConcentradoCurso,
         TablaCursosImpartidos,
-        TablaAreaSolicitudes
+        TablaAreaSolicitudes,
+        Loading
     },
     data(){
         return {
@@ -82,30 +90,36 @@ export default {
             idCurso: 0,
             idArea: 0,
             ruta: '',
-            id: ''
+            id: '',
+            isLoading: false
         }
     },
     methods: {
         getCursos() {
             let me = this;
+            me.isLoading = true;
             axios.get('/catalogo_curso').then(function (response) {
                 me.cursos = response.data.cursos;
                 me.mostrarElementoCurso = true;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         getAreas() {
             let me = this;
+            me.isLoading = true;
             axios.get('/catalogo_area').then(function (response) {
                 me.areas = response.data.areas;
                 me.mostrarElementoArea = true;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         concentradoCurso(idCurso){
             let me = this;
+            me.isLoading = true;
             axios.get('/concentrado_curso/' + idCurso).then(function (response) {
                 me.id = idCurso;
                 me.ruta = 'concentrado_curso_pdf';
@@ -116,12 +130,14 @@ export default {
                 ];
                 me.btnDescargarInfo = true;
                 me.mostrarElementoTablaConcentradoCurso = true;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         getCursosImpartidos(){
             let me = this;
+            me.isLoading = true;
             axios.get('/cursos_impartidos').then(function (response) {
                 me.id = 0;
                 me.ruta = 'cursos_impartidos_pdf';
@@ -135,12 +151,14 @@ export default {
                 ];
                 me.mostrarElementoTablaCursosImpartidos = true;
                 me.btnDescargarInfo = true;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
         },
         concentradoSolicitudes(idArea){
             let me = this;
+            me.isLoading = true;
             axios.get('/area_solicitudes_detalle/' + idArea).then(function (response) {
                 me.id = idArea;
                 me.ruta = 'area_solicitudes_detalle_pdf';
@@ -152,6 +170,7 @@ export default {
                 ];
                 me.btnDescargarInfo = true;
                 me.mostrarElementoTablaSolicitudes = true;
+                me.isLoading = false;
             }).catch(function (error) {
                 me.errores = error.data;
             });
