@@ -137,6 +137,14 @@ export default({
                 .then(response=>{
                     me.$emit('sucessUpdate');
                     me.closeModal();
+                    //Alerta que notifica que todo salio correcto
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'El registro se ah actualizado con éxito',
+                        showConfirmButton: false,
+                        timer: 1200
+                    });
                 })
                 .catch(error=>{
                     console.log(error)

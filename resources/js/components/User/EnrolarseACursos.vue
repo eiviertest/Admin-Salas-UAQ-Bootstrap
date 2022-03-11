@@ -115,10 +115,26 @@ export default {
             axios.post('/enrolarse',{'idCur':idCur}).then(function (response){
                 if(response.data.code==2){
                     console.log('usted ya está enrolado');
+                    // Alerta que notifica que todo salio correcto
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Ya estaba enrolado a este curso, espere la respuesta del admin',
+                    showConfirmButton: false,
+                    timer: 1200
+                    })
                 }
                 else{
                     console.log('usted se enrolo');
                     me.getCursos(1);
+                    // Alerta que notifica que todo salio correcto
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Se ha enrolado con éxito, espere la respuesta del admin',
+                    showConfirmButton: false,
+                    timer: 1200
+                    })
                 }
             }).catch(function (error){
                 me.errores = error.data;

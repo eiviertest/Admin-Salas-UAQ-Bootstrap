@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 mb-2">
-                <button type="button" class="btn btn-info" @click="mostrarModalCreate()"> Nuevo Registro </button>
+                <button type="button" class="btn btn-info" @click="mostrarModalCreate()"> Nuevo Registro  </button>
                 <crear v-if="showModelCreate" @close="closeModalCreate()" @sucessCreate="getArea(1);closeModalCreate()"> </crear>
             </div> 
             <div class="vld-parent">
@@ -25,7 +25,7 @@
                                 <td v-text="dato.ide">  </td>
                                 <td v-text="dato.nombre">  </td> 
                                 <td>
-                                    <a type="button" v-on:click="editarRegistro(dato)" class="btn btn-primary"> Actualizar </a>
+                                    <a type="button" v-on:click="editarRegistro(dato)" class="btn btn-primary"> Actualizar <font-awesome-icon :icon="['fas', 'user-secret']" /> </a>
                                     <a type="button" v-on:click="borrarRegistro(dato.ide)" class="btn btn-danger"> Eliminar </a>
                                 </td>
                             </tr>

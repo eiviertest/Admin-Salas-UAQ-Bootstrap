@@ -313,14 +313,6 @@ export default {
             this.modalRUCurso = true;
             this.accion = "Actualizar curso";
             this.idCurso = idCurso;
-            // Alerta que notifica que todo salio correcto
-            // Swal.fire({
-            //     position: 'center',
-            //     icon: 'success',
-            //     title: 'El registro se ah actualizado con éxito',
-            //     showConfirmButton: false,
-            //     timer: 1200
-            // });
         },
         verDetalle(idCurso){
             this.modalRUCurso = true;
@@ -350,7 +342,7 @@ export default {
                                     me.getCursos(1);
                                     //Mensaje de eliminación 
                                     Swal.fire(
-                                    'Borrado!',
+                                    'Deshabilitado!',
                                     'El registro ha sido deshabilitado exitosamente.',
                                     'success'
                                     )
