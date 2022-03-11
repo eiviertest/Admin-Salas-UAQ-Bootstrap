@@ -14,9 +14,14 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="vld-parent">
+                        <loading :active.sync="isLoading"
+                                :can-cancel="false"
+                                :is-full-page="true"/>
+                        </div>
                         <form method="post" @submit.prevent="registrarSolicitud()" enctype="multipart/form-data">
                             <div class="form-group row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-control-label" for="text-input">Sala A Solicitar: *</label>
                                     <select required class="form-select" v-model="solicitud.idSala">
                                         <option value="0" selected disabled>Seleccione una sala...</option>
@@ -31,7 +36,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-control-label" for="text-input">Fecha: *</label>
                                     <input required type="date" v-model="solicitud.fecha" class="form-control">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.fecha']">
@@ -41,14 +46,14 @@
                             </div>
                             <br>
                             <div class="form-group row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-control-label" for="text-input">Hora de inicio: *</label>
                                     <input required type="time" v-model="solicitud.horaIni" class="form-control" step="3600" min="08:00" max="17:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaIni']">
                                         <strong>{{ errores['solicitud.horaIni'][0] }}</strong>
                                     </span> 
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-control-label" for="text-input">Hora de Fin: *</label>
                                     <input required type="time" v-model="solicitud.horaFin" class="form-control" step="3600" :min="solicitud.horaIni" max="18:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaFin']">
@@ -58,7 +63,7 @@
                             </div>
                             <br>
                             <div class="row form-group">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-control-label">Formato de Solicitud: *</label>
                                     <input required accept="application/pdf" class="form-control" type="file" id="inputFormSol" @change="seleccionarArchivo">
                                     <br>
@@ -86,6 +91,8 @@
     </div>
 </template>
 <script>
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     data(){
@@ -102,15 +109,20 @@ export default {
             errores: [],
             errorFile: false,
             errorSelect:false,
-            errorForm:false
+            errorForm:false,
+            isLoading: true,
             
         }
+    },
+    components: {
+        Loading
     },
     methods: {
         getSalas(){
             let me = this;
             axios.get('/catalogoSalas').then(response=>{
                 me.salas = response.data.salas;
+                me.isLoading = false;
             })
             .catch(error=>{
                 me.errores = error.data;
@@ -145,6 +157,7 @@ export default {
             this.verificarDatos();
             if(this.errorForm == false){
                 let me = this;
+                me.isLoading = true;
                 let solicitudForm = new FormData();
                 for(let key in this.solicitud){
                     solicitudForm.append(key, this.solicitud[key]);
@@ -154,6 +167,7 @@ export default {
                     if(response.data.code == 1) {
                         me.errores = {};
                         me.resetVariables();
+                        me.isLoading = false;
                     }else{
                         me.errores = {};
                     }
