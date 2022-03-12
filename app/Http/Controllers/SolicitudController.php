@@ -6,6 +6,7 @@ use App\Models\Solicitud;
 use App\Models\Persona;
 use App\Models\Estatus;
 use App\Models\Area;
+use App\Models\Curso;
 use App\Models\HorarioCurso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,25 @@ use PDF;
 
 class SolicitudController extends Controller
 {
+
+    public function calendar(Request $request)
+    {
+        $cursos = Curso::select(DB::raw('CONCAT(nomCur, " Inicio: ", DATE_FORMAT(h.horIn, "%H:%i"), " Fin: ", DATE_FORMAT(h.horFin, "%H:%i")) as title'), 'fecInCur as start', 'fecFinCur as end')
+                        ->join('horario_curso as h', 'curso.idCur', 'h.idCur')
+                        ->sala($request->sala)
+                        ->fechaInicio($request->fecha)
+                        ->where('curso.estado', '=', 1)
+                        ->get();
+        $solicitudes = Solicitud::select(DB::raw('CONCAT("Solicitud", " Inicio: ", DATE_FORMAT(horaIni, "%H:%i"), " Fin: ", DATE_FORMAT(horaFin, "%H:%i")) as title'), 'solicitud.fecha as start', 'solicitud.fecha as end')
+                        ->horaInicio($request->horaInicio)
+                        ->horaFin($request->horaFin)
+                        ->sala($request->sala)
+                        ->fecha($request->fecha)
+                        ->get();
+        $eventos = array_merge($solicitudes->toarray(), $cursos->toarray());
+        return ['eventos' => $eventos];
+    }
+
     /**
      * Lista las solicitudes del usuario logeado
      *

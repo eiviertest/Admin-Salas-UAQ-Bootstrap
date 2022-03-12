@@ -24,6 +24,30 @@ class Solicitud extends Model
         'idEst'
     ];
 
+    public function scopeFecha($query, $fecha){
+        if($fecha != '') {
+            return $query->where('solicitud.fecha', '=', $fecha);
+        }
+    }
+    
+    public function scopeHoraFin($query, $horaInicio){
+        if($horaInicio != '') {
+            return $query->where('solicitud.horaIni', '=', $horaInicio);
+        }
+    }
+
+    public function scopeHoraInicio($query, $horaFin){
+        if($horaFin != '') {
+            return $query->where('solicitud.horaFin', '=', $horaFin);
+        }
+    }
+
+    public function scopeSala($query, $sala){
+        if($sala != 0) {
+            return $query->where('solicitud.idSal', '=', $sala);
+        }
+    }
+
     public function scopePersona($query, $idPer){
         return $query->where('solicitud.idPer', '=', $idPer);
     }
