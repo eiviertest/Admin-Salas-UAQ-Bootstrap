@@ -30,15 +30,15 @@ class Solicitud extends Model
         }
     }
     
-    public function scopeHoraFin($query, $horaInicio){
+    public function scopeHoraInicio($query, $horaInicio){
         if($horaInicio != '') {
-            return $query->where('solicitud.horaIni', '=', $horaInicio);
+            return $query->where('solicitud.horaIni', '=', date('H:i:s', strtotime($horaInicio)));
         }
     }
 
-    public function scopeHoraInicio($query, $horaFin){
+    public function scopeHoraFin($query, $horaFin){
         if($horaFin != '') {
-            return $query->where('solicitud.horaFin', '=', $horaFin);
+            return $query->where('solicitud.horaFin', '=', date('H:i:s', strtotime($horaFin)));
         }
     }
 

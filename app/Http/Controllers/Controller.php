@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Estatus;
 use App\Models\Persona;
+use App\Models\Area;
 
 class Controller extends BaseController
 {
@@ -21,5 +22,10 @@ class Controller extends BaseController
     public function getIdPersona($idUser) {
         $idPersona = Persona::select('idPer')->where('idUsr', '=', $idUser)->first();
         return $idPersona;
+    }
+
+    public function getIdArea($nomArea) {
+        $idArea = Area::select('idArea')->where('nomArea', '=', $nomArea)->first();
+        return $idArea;
     }
 }

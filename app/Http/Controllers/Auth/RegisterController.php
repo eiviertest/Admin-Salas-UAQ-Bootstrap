@@ -70,28 +70,30 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            //Crear usuario
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
             ])->assignRole('User');
-            //Crar persona
+
+            $nomArea = $data['idArea'];
+            $dataArea = $this->getIdArea($nomArea);
+            if(empty($idArea)) {
+                $area = new Area();
+                $area->nomArea = $nomArea;
+                $area->save();
+                $dataArea = $area;
+            }
             $persona = new Persona();
             $persona->nomPer = $data['nomPer'];
             $persona->apePatPer = $data['apePatPer'];
             $persona->apeMatPer = $data['apeMatPer'];
             $persona->telPer = $data['telPer'];
-            $persona->idArea = $data['idArea'];
+            $persona->idArea = $dataArea->idArea;
             $persona->idUsr = $user->id;
             $persona->save();
             return $user;
         }catch(exception $e) {
             return $e->getMessage();
         }
-    }
-
-    public function mostrarFormulario(){
-        $areas = Area::select('idArea', 'nomArea')->orderBy('nomArea', 'ASC')->get();
-        return view('auth/register', ['areas' => $areas]);
     }
 }
