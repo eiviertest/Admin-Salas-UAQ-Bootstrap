@@ -8,8 +8,8 @@
                             <h4 class="">Administrar Cursos</h4>
                         </div>
                         <div class="col-md-4 d-flex justify-content-left">
-                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados</button>
-                            <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar curso</button>
+                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados <font-awesome-icon icon="fa-solid fa-eye" /> </button>
+                            <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
                         </div>
                     </div>
 
@@ -95,7 +95,7 @@
                             <br>
                             <div class="row form-group">
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-primary">Registrar curso</button>
+                                    <button type="submit" class="btn btn-primary">Registrar curso  <font-awesome-icon icon="fa-solid fa-plus" /> </button>
                                 </div>
                             </div>
                         </form>
@@ -136,10 +136,10 @@
                                     <td v-text="curso.nomCur"></td>
                                     <td v-text="curso.fecInCur"></td>
                                     <td v-text="curso.fecFinCur"></td>
-                                    <td v-on:click="verDetalle(curso.idCur)"><a href="#">Ver detalles</a></td>
+                                    <td v-on:click="verDetalle(curso.idCur)"><a href="#">Ver detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></a></td>
                                     <td v-if="curso.estado |= 0">
-                                        <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)">Deshabilitar</button>
-                                        <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar</button>
+                                        <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)">Deshabilitar <font-awesome-icon icon="fa-solid fa-trash-arrow-up" /> </button>
+                                        <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar <font-awesome-icon icon="fa-solid fa-pencil" /> </button>
                                     </td>
                                     <td v-else>
                                         <label class="form-control-label">Sin acción disponible</label>

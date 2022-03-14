@@ -27,8 +27,8 @@
                                     <td v-text="curso_persona.nomCur"></td>
                                     <td v-text="curso_persona.estatus"></td>
                                     <td v-if="curso_persona.estatus == 'En proceso'">
-                                        <button class="btn btn-primary" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar</button>
-                                        <button class="btn btn-danger" v-on:click="rechazarUsuario(curso_persona.idPer, curso_persona.idCur)">Rechazar</button>
+                                        <button class="btn btn-primary" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar <font-awesome-icon icon="fa-solid fa-check" /></button>
+                                        <button class="btn btn-danger" v-on:click="rechazarUsuario(curso_persona.idPer, curso_persona.idCur)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
                                     <td v-else>
                                         <label class="form-control-label">Sin acción disponible</label>

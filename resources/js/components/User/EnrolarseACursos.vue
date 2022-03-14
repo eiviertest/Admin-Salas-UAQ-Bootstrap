@@ -21,7 +21,7 @@
                                             <label> Fecha Termino: </label>
                                             <h6>{{curso.fecFinCur}}</h6>
                                         </div>
-                                        <div class="card-footer" ><button class="btn btn-primary" @click="enrolarseCurso(curso.idCur)"> Enrolarse a Curso </button></div>
+                                        <div class="card-footer" ><button class="btn btn-primary" @click="enrolarseCurso(curso.idCur)"> Enrolarse a Curso <font-awesome-icon icon="fa-solid fa-square-plus" /> </button></div>
                                 </div>
                                 <nav>
                                     <ul class="pagination">

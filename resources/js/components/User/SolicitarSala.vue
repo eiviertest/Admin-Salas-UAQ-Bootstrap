@@ -60,7 +60,7 @@
                                 <br>
                                 <div class="row form-group">
                                     <div class="col-md-4">
-                                        <label class="form-control-label">Formato de Solicitud: *</label>
+                                        <label class="form-control-label">Formato de Solicitud: * <font-awesome-icon icon="fa-solid fa-file-invoice" /></label>
                                         <input required accept="application/pdf" class="form-control" type="file" id="inputFormSol" @change="seleccionarArchivo">
                                         <br>
                                         <div v-if="errorFile" class="alert alert-warning d-flex align-items-center" role="alert">
@@ -75,9 +75,9 @@
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-md-3">
-                                        <button type="submit" class="btn btn-primary">Solicitar Sala</button>
+                                        <button type="submit" class="btn btn-primary">Solicitar Sala <font-awesome-icon icon="fa-solid fa-house-laptop" /></button>
                                     </div>
-                                </div>
+                                </div> <br>
                             </form>
                         </div>
                         <div class="row">

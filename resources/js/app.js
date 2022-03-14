@@ -38,10 +38,6 @@ Vue.component('reportes', require('./components/Admin/Reportes.vue').default);
 Vue.component('crear-curso', require('./components/Admin/CrearCursos.vue').default);
 Vue.component('solicitud-curso-persona', require('./components/Admin/SolicitudCursoPersona').default);
 Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitudes.vue').default);
-Vue.component('areas', require('./components/Admin/Areas.vue').default);
-Vue.component('salas', require('./components/Admin/Salas.vue').default);
-// CRUD
-Vue.component('mostrar-salas', require('./components/CRUDSalas/MostrarSalas.vue').default);
 //User
 Vue.component('ver-cursos-user', require('./components/User/EnrolarseACursos.vue').default);
 Vue.component('asistencia-cursos', require('./components/User/AsistenciaCursos.vue').default);

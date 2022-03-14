@@ -29,8 +29,8 @@
                                     <td v-text="solicitud.horaFin"></td>
                                     <td v-text="solicitud.estado"></td>
                                     <td v-if="solicitud.estado == 'En proceso'">
-                                        <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar</button>
-                                        <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar</button>
+                                        <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
+                                        <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -153,7 +153,7 @@ export default {
                                 //Mensaje de eliminación 
                                             Swal.fire(
                                             'Rechazado!',
-                                            'El registro ha sido rechazado correctamente.',
+                                            'La solicitud ha sido rechazado correctamente.',
                                             'success'
                                             )
                             }).catch( function (error) {

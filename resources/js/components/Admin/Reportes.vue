@@ -9,7 +9,7 @@
                                 <h4>Reportes</h4>
                             </div>
                             <div class="col-md-6" v-if="btnDescargarInfo">
-                                <button class="btn btn-primary justify-content-end" v-on:click="descargarInfo(ruta, id)">Descargar información</button>
+                                <button class="btn btn-primary justify-content-end" v-on:click="descargarInfo(ruta, id)">Descargar información <font-awesome-icon icon="fa-solid fa-file-arrow-down" /></button>
                             </div>
                         </div>
                     </div>
