@@ -135,19 +135,31 @@ export default({
         me.isLoading = true;
         axios.put('/update_curso',{"curso": me.curso})
                 .then(response=>{
+                if(response.data.code==1){
                     me.$emit('sucessUpdate');
                     me.closeModal();
                     //Alerta que notifica que todo salio correcto
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'El registro se ah actualizado con éxito',
+                        title: 'El registro se ha actualizado con éxito',
                         showConfirmButton: false,
                         timer: 1200
                     });
+                }else{
+                    // Alerta que notifica que surgio un error
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Ya existe un curso registrado',
+                        showConfirmButton: false,
+                        timer: 1200
+                    })
+                    me.isLoading= false;
+                }
                 })
                 .catch(error=>{
-                    console.log(error)
+                    console.log(error);
                 })
         },
         closeModal(){
