@@ -5,6 +5,16 @@
  */
 
 import Vue from 'vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+library.add(fas, far);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+Vue.config.productionTip = false;
 
 require('./bootstrap');
 
@@ -31,9 +41,6 @@ Vue.component('solicitudes-admin', require('./components/Admin/MostrarSolicitude
 Vue.component('areas', require('./components/Admin/Areas.vue').default);
 Vue.component('salas', require('./components/Admin/Salas.vue').default);
 // CRUD
-Vue.component('crear', require('./components/CRUDArea/Crear.vue').default);
-Vue.component('editar', require('./components/CRUDArea/Editar.vue').default);
-Vue.component('mostrar', require('./components/CRUDArea/Mostrar.vue').default);
 Vue.component('mostrar-salas', require('./components/CRUDSalas/MostrarSalas.vue').default);
 //User
 Vue.component('ver-cursos-user', require('./components/User/EnrolarseACursos.vue').default);

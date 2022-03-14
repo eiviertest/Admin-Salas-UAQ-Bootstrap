@@ -19,12 +19,6 @@
                                     :can-cancel="false"
                                     :is-full-page="true"/>
                         </div>
-                        <div class="alert alert-success" role="alert" v-if="successCurso">
-                            El curso se ha creado con éxito.
-                        </div>
-                        <div class="alert alert-warning" role="alert" v-if="cursoExistente">
-                            Un curso ya se encuentra registrado.
-                        </div>
                         <form method="post" @submit.prevent="registrarCurso()" enctype="multipart/form-data" class="form-horizontal" v-if="!mostrar">
                             <div class="row form-group">
                                 <div class="col-md-4">
@@ -277,7 +271,7 @@ export default {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'El registro se ah realizado con éxito',
+                        title: 'El registro se ha realizado con éxito',
                         showConfirmButton: false,
                         timer: 1200
                     })
@@ -285,6 +279,14 @@ export default {
                     me.errores = {};
                     me.cursoExistente = true;
                     me.isLoading = false;
+                    // Alerta que notifica que surgio un error
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Ya existe un curso registrado',
+                        showConfirmButton: false,
+                        timer: 1200
+                    })
                 }
             }).catch(error=>{
                 if(error.response.status == 422){
@@ -341,14 +343,6 @@ export default {
             this.modalRUCurso = true;
             this.accion = "Actualizar curso";
             this.idCurso = idCurso;
-            // Alerta que notifica que todo salio correcto
-            // Swal.fire({
-            //     position: 'center',
-            //     icon: 'success',
-            //     title: 'El registro se ah actualizado con éxito',
-            //     showConfirmButton: false,
-            //     timer: 1200
-            // });
         },
         verDetalle(idCurso){
             this.modalRUCurso = true;
@@ -378,7 +372,7 @@ export default {
                                     me.getCursos(1);
                                     //Mensaje de eliminación 
                                     Swal.fire(
-                                    'Borrado!',
+                                    'Deshabilitado!',
                                     'El registro ha sido deshabilitado exitosamente.',
                                     'success'
                                     )
