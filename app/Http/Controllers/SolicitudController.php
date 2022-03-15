@@ -30,6 +30,7 @@ class SolicitudController extends Controller
                         ->horaFin($request->horaFin)
                         ->sala($request->sala)
                         ->fecha($request->fecha)
+                        ->where('idEst', '!=', 3)
                         ->get();
         $eventos = array_merge($solicitudes->toarray(), $cursos->toarray());
         return ['eventos' => $eventos];
