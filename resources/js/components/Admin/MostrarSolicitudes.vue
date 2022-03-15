@@ -31,7 +31,8 @@
                                     <td v-text="solicitud.estado"></td>
                                     <td v-text="solicitud.telPer"></td>
                                     <td v-if="solicitud.estado == 'En proceso'">
-                                        <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
+                                        <button class="btn btn-primary" v-on:click="getDocumento(solicitud.uuid)">Mostrar Formato <font-awesome-icon icon="fa-solid fa-eye" /></button>
+                                        <button class="btn btn-success" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
                                     <td v-else>
@@ -170,7 +171,10 @@ export default {
                         })
                 }
             })
-        }
+        },
+        getDocumento(uuid){
+            window.open('/solicitud_mostrar_formato/'+uuid, '_blank');
+        },
     },
     mounted() {
         this.getSolicitudes(1);

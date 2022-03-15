@@ -72,7 +72,7 @@ class SolicitudController extends Controller
     public function index_admin(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado')
+        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid')
                         ->orderBy('solicitud.fecha', 'DESC')
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
@@ -88,6 +88,16 @@ class SolicitudController extends Controller
                 'to' => $solicitudes->lastItem()
             ],
             'solicitudes' => $solicitudes];
+    }
+
+    /**
+     * Muestra el formato que se adjunto a una solicitud
+     */
+    public function mostrar_formato($uuid)
+    {
+        $solicitud = Solicitud::where('uuid', $uuid)->firstOrFail();
+        $pathToFile = storage_path(path: "app/public/formatosSol/" . $solicitud->rutaSol);
+        return response()->file($pathToFile);
     }
 
     /**
