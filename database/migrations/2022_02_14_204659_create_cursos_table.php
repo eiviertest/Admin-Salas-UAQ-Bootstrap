@@ -16,6 +16,7 @@ class CreateCursosTable extends Migration
         Schema::create('curso', function (Blueprint $table) {
             $table->id('idCur')->comment('Identificador autoincremental');
             $table->string('nomCur', 100)->comment('Nombre de curso');
+            $table->string('instructor');
             $table->date('fecInCur')->comment('Fecha inicio de curso');
             $table->date('fecFinCur')->comment('Fecha fin de curso');
             $table->string('reqCur', 100)->comment('Requisitos de curso');

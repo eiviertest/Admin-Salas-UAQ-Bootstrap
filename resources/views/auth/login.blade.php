@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
-@section('content')
+@section('contenido')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row justify-content-center d-flex align-items-center">
+        <div class="col-md-6">
+            <br>
+            <img src="{{URL::asset('img/logo.png')}}" width="400" height="400" 
+                class="img-fluid rounded mx-auto d-block" alt="logo">
+        </div>
+        <div class="col-md-6">
+            <br>
             <div class="card">
-                <div class="card-header">{{ __('Inicar sesión') }}</div>
+                <h4 class="card-header">{{ __('Inicar sesión') }}</h4>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -53,15 +59,17 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
+                                <br>
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Iniciar sesión') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
+                                <!--@if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Olvide mi contraseña') }}
                                     </a>
-                                @endif
+                                @endif-->
+                                <p></p>
                             </div>
                         </div>
                     </form>

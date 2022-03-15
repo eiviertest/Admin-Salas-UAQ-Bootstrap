@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
-@section('content')
+@section('contenido')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row justify-content-center d-flex align-items-center">
+        <div class="col-md-6">
+            <br>
+            <img src="{{URL::asset('img/logo.png')}}" width="400" height="400" 
+                class="img-fluid rounded mx-auto d-block" alt="logo">
+        </div>
+        <div class="col-md-6">
             <div class="card">
-                <div class="card-header">{{ __('Registrarse') }}</div>
+                <h4 class="card-header">{{ __('Registrarse') }}</h4>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
@@ -71,8 +76,7 @@
                             <label for="idArea" class="col-md-4 col-form-label text-md-end">{{ __('¿A qué área, institución o facultad pertenece?') }}</label>
 
                             <div class="col-md-6">
-                                <input id="idArea" type="number" class="form-control @error('idArea') is-invalid @enderror" name="idArea" value="{{ old('idArea') }}" required autocomplete="idArea" autofocus>
-
+                                <input id="idArea" type="text" class="form-control @error('idArea') is-invalid @enderror" name="idArea" value="{{ old('idArea') }}" required autocomplete="email">
                                 @error('idArea')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Estatus;
 
 class EstatusSeeder extends Seeder
 {
@@ -13,6 +14,16 @@ class EstatusSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Estatus::factory(15)->create();
+        Estatus::create([
+            'nomEst' => 'En proceso'
+        ]);
+
+        Estatus::create([
+            'nomEst' => 'Aceptada'
+        ]);
+
+        Estatus::create([
+            'nomEst' => 'Rechazada'
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\Area;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,18 +70,25 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            //Crear usuario
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-            ]);
-            //Crar persona
+            ])->assignRole('User');
+
+            $nomArea = $data['idArea'];
+            $dataArea = $this->getIdArea($nomArea);
+            if(empty($idArea)) {
+                $area = new Area();
+                $area->nomArea = $nomArea;
+                $area->save();
+                $dataArea = $area;
+            }
             $persona = new Persona();
             $persona->nomPer = $data['nomPer'];
             $persona->apePatPer = $data['apePatPer'];
             $persona->apeMatPer = $data['apeMatPer'];
             $persona->telPer = $data['telPer'];
-            $persona->idArea = $data['idArea'];
+            $persona->idArea = $dataArea->idArea;
             $persona->idUsr = $user->id;
             $persona->save();
             return $user;

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +15,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
-Auth::routes();
+//Rutas registrarse
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);
+//Rutas para login
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+//Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => ['auth']], function () {
+    //Ruta para cerrar sesión
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+});
 
 require __DIR__.'/area.php';
 require __DIR__.'/sala.php';
 require __DIR__.'/estatus.php';
 require __DIR__.'/curso.php';
+require __DIR__.'/reportes.php';
+require __DIR__.'/solicitud.php';

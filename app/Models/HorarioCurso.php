@@ -20,6 +20,6 @@ class HorarioCurso extends Model
     ];
 
     public function curso(){
-        return $this->belongsTo(Curso::class, 'idCur');
+        return $this->belongsTo(Curso::class, 'horario_curso.idCur');
     }
 }
