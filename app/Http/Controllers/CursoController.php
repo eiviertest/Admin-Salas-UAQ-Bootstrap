@@ -151,7 +151,7 @@ class CursoController extends Controller
                 $curso->fecInCur = $fecha_inicio->format('Y-m-d');
                 $curso->fecFinCur = $fecha_fin->format('Y-m-d');
                 $curso->reqCur = $request->curso['reqCur'];
-                $curso->durCur = $durCur->days;
+                $curso->durCur = $durCur->days + 1;
                 $curso->instructor = $request->curso['instructor'];
                 $curso->estado = 1;
                 $curso->cupCur = $request->curso['cupCur'];
