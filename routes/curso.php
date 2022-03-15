@@ -11,6 +11,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/curso', [CursoController::class, 'store']);
     Route::put('/update_curso', [CursoController::class, 'update']);
     Route::put('/curso', [CursoController::class, 'disable']);
+    Route::put('/enable', [CursoController::class, 'enable']);
     Route::get('/catalogo_curso', [CursoController::class, 'catalogoCurso']);
     Route::get('/lista_curso_persona', [CursoPersonaController::class, 'lista_curso_persona']);
     Route::get('/mis_cursos_persona', [CursoPersonaController::class, 'mis_cursos_persona']);

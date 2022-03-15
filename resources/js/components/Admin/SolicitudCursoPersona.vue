@@ -15,6 +15,7 @@
                                 <tr>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Área/Facultad/Institución</th>
+                                    <th scope="col">Contacto</th>
                                     <th scope="col">Curso</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col">Acción</th>
@@ -24,6 +25,7 @@
                                 <tr v-for="curso_persona in lista_cursos_persona" :key="curso_persona.idPer.toString() + curso_persona.idCur.toString()"> 
                                     <td v-text="curso_persona.nombre"></td>
                                     <td v-text="curso_persona.nomArea"></td>
+                                    <td v-text="curso_persona.telPer"></td>
                                     <td v-text="curso_persona.nomCur"></td>
                                     <td v-text="curso_persona.estatus"></td>
                                     <td v-if="curso_persona.estatus == 'En proceso'">
