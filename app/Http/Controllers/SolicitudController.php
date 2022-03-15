@@ -115,12 +115,6 @@ class SolicitudController extends Controller
         $idPersona = $this->getIdPersona(Auth::user()->id);
         $nombreEstatus = "En proceso";
         $idEstatus = $this->getIdEstatus($nombreEstatus);
-        if(empty($idEstatus)) {
-            $estatus = new Estatus();
-            $estatus->nomEst = 'En proceso';
-            $estatus->save();
-            $idEstatus = $estatus->idEst;
-        }
         $uuid = (string) Str::uuid();
         $cursos_registrados = HorarioCurso::select('c.nomCur')
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
