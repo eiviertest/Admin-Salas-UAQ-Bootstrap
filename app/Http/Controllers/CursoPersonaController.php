@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 class CursoPersonaController extends Controller
 {   
     /**
-     * Lista los cursos de un semestre
+     * Retorna los cursos de un semestre
      *
-     * @return array cursos y semestre
+     * @return array cursos
+     * @return string semestre
      */
     public function cursos_impartidos(){
         $fecha_actual = Carbon::now()->format('m-d');
@@ -179,7 +180,7 @@ class CursoPersonaController extends Controller
 
     
     /**
-     * Lista las solicitudes de enrolarse a un curso
+     * Lista las solicitudes de enrolarse a un curso con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -206,7 +207,7 @@ class CursoPersonaController extends Controller
 
     
     /**
-     * Lista los cursos de una persona
+     * Lista los cursos de una persona con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

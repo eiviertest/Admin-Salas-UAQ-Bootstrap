@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class EstatusController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista los estatus con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -17,11 +17,20 @@ class EstatusController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         $estados = Estatus::select('idEst as ide', 'nomEst as nombre')->orderBy('nomEst', 'ASC')->paginate(10);
-        return ['estados' => $estados];
+        return [
+            'pagination' => [
+                'total' => $estados->total(),
+                'current_page' => $estados->currentPage(),
+                'per_page' => $estados->perPage(),
+                'last_page' => $estados->lastPage(),
+                'from' => $estados->firstItem(),
+                'to' => $estados->lastItem()
+            ],
+            'estados' => $estados];
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un estatus
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -41,7 +50,7 @@ class EstatusController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Actualiza un estatus
      *
      * @param  \Illuminate\Http\Request  $request
      */
@@ -60,7 +69,7 @@ class EstatusController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Valida los datos enviados
      *
      * @param  \Illuminate\Http\Request  $request
      */
@@ -71,7 +80,7 @@ class EstatusController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina un estatus
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

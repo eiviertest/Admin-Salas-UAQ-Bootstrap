@@ -17,6 +17,12 @@ use PDF;
 class SolicitudController extends Controller
 {
 
+    /**
+     * Lista los eventos (cursos y solicitudes de sala)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function calendar(Request $request)
     {
         $cursos = Curso::select(DB::raw('CONCAT(nomCur, " Inicio: ", DATE_FORMAT(h.horIn, "%H:%i"), " Fin: ", DATE_FORMAT(h.horFin, "%H:%i")) as title'), 'fecInCur as start', 'fecFinCur as end')
@@ -37,7 +43,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * Lista las solicitudes del usuario logeado
+     * Lista las solicitudes de usuario con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -65,7 +71,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * Lista las solicitudes para administrador
+     * Lista las solicitudes para administrador con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -195,6 +201,12 @@ class SolicitudController extends Controller
         }
     }
 
+    /**
+     * Actualiza el estatus de la solicitud
+     *
+     * @param  int idArea
+     * @return collection solicitudes
+     */
     public function area_solicitudes_detalle($idArea){
         $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomEst', 'nomSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
@@ -207,6 +219,12 @@ class SolicitudController extends Controller
         return ['solicitudes' => $solicitudes];
     }
 
+    /**
+     * Descargar PDF de solicitudes por area
+     *
+     * @param int idArea
+     * @return PDF
+     */
     public function area_solicitudes_detalle_pdf($idArea) {
         $area = Area::select('nomArea')->where('idArea', '=', $idArea)->first();
         $solicitudes = $this->area_solicitudes_detalle($idArea);

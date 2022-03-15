@@ -67,7 +67,7 @@ class CursoController extends Controller
     }
 
     /**
-     * Retorna todos los cursos activos sin paginacion
+     * Retorna todos los cursos sin paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -94,19 +94,6 @@ class CursoController extends Controller
             'curso.cupCur' => 'required|int|max:15',
             'curso.idSala' => 'required|int|exists:sala,idSala',
             'curso.horarioscurso' => 'required|array|min:1'
-        ]);
-    }
-
-    /**
-     * Valida los datos de curso.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     */
-    public function validarDatosUpdate($request) {
-        $request->validate([
-            'curso.fecInCur' => 'required|date',
-            'curso.fecFinCur' => 'required|date',
-            'curso.instructor' => 'required|string|max:255',
         ]);
     }
     
@@ -224,6 +211,13 @@ class CursoController extends Controller
         }
     }
 
+    /**
+     * La informacion de un curso.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int idCurso
+     * @return collection dataCurso
+     */
     public function getDataCurso(Request $request, $idCurso){
         if(!$request->ajax()) return redirect('/');
         $curso = Curso::find($idCurso);
