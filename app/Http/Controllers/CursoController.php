@@ -289,4 +289,25 @@ class CursoController extends Controller
             return $e->getMessage();
         }
     }
+
+    /**
+     * Habilita el curso
+     *¿
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        try {
+            $curso = Curso::findOrFail($request->idCur);
+            $curso->estado = 1;
+            $curso->save();
+            return [
+                'code' => 1,
+                'mensaje' => 'Se ha habilitado el curso'];
+        } catch (exception $e) {
+            return $e->getMessage();
+        }
+    }
 }

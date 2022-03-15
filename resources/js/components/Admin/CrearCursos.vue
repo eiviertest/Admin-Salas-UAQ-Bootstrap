@@ -142,7 +142,7 @@
                                         <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar <font-awesome-icon icon="fa-solid fa-pencil" /> </button>
                                     </td>
                                     <td v-else>
-                                        <label class="form-control-label">Sin acción disponible</label>
+                                        <button class="btn btn-info" v-on:click="enableCurso(curso.idCur)">Habilitar <font-awesome-icon icon="fa-regular fa-pen-to-square" /> </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -383,7 +383,41 @@ export default {
                         });
                 }
             })
-        }
+        },
+        enableCurso(idCurso){
+        Swal.fire({
+                title: '¿Estás seguro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Si, habilitar registro!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición para eliminar el registro
+                    let me = this;
+                    me.isLoading = true;
+                    axios.put('/enable',
+                    {
+                    'idCur': idCurso,
+                            }).then(function (response) {
+                                if(response.data.code == 1) {
+                                    me.getCursos(1);
+                                    //Mensaje de eliminación 
+                                    Swal.fire(
+                                    'Habilitado!',
+                                    'El registro ha sido habilitado exitosamente.',
+                                    'success'
+                                    )
+                            }
+                            }).catch( function (error) {
+                                me.errores = error.data;
+                                console.log(error)
+                        });
+                }
+            })
+        },
     },
     mounted() {
         this.getSalas();

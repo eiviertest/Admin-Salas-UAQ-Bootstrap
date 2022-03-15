@@ -18,6 +18,7 @@
                                     <th scope="col">Hora de inicio</th>
                                     <th scope="col">Hora de finalización</th>
                                     <th scope="col">Estado</th>
+                                    <th scope="col">Contacto</th>
                                     <th scope="col">Acción</th>
                                 </tr>
                             </thead>
@@ -28,6 +29,7 @@
                                     <td v-text="solicitud.horaIni"></td>
                                     <td v-text="solicitud.horaFin"></td>
                                     <td v-text="solicitud.estado"></td>
+                                    <td v-text="solicitud.telPer"></td>
                                     <td v-if="solicitud.estado == 'En proceso'">
                                         <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>

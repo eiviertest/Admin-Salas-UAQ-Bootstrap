@@ -186,7 +186,7 @@ class CursoPersonaController extends Controller
      */
     public function lista_curso_persona(Request $request){
         if(!$request->ajax()) return redirect('/');
-        $lista_curso_persona = CursoPersona::select('p.idPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+        $lista_curso_persona = CursoPersona::select('p.idPer', 'p.telPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
                         ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
