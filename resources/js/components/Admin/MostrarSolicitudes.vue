@@ -34,6 +34,10 @@
                                         <button class="btn btn-primary" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
+                                    <td v-else>
+                                        <label class="form-control-label">Sin acción disponible</label>
+                                    </td>
+                                    
                                 </tr>
                             </tbody>
                         </table>

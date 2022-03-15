@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Sala;
 
 class SalaSeeder extends Seeder
 {
@@ -13,6 +14,12 @@ class SalaSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Sala::factory(15)->create();
+        Sala::create([
+            'nomSala' => 'A',
+        ]);
+
+        Sala::create([
+            'nomSala' => 'B',
+        ]);
     }
 }
