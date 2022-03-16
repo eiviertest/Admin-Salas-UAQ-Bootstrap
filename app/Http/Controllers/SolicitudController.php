@@ -218,7 +218,7 @@ class SolicitudController extends Controller
      * @return collection solicitudes
      */
     public function area_solicitudes_detalle($idArea){
-        $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomEst', 'nomSala')
+        $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", p.apeMatPer) as nombre'), 'nomEst', 'nomSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
                         ->join('sala as s', 's.idSala', '=', 'solicitud.idSal')

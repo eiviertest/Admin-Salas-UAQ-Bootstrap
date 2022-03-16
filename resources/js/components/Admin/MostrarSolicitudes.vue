@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Solicitudes de salas</h4>
+                    <h4 class="card-header">Solicitudes de Salas</h4>
                     <div class="card-body">
                         <div class="vld-parent">
                             <loading :active.sync="isLoading"
@@ -13,29 +13,29 @@
                         <table class="table">
                             <thead> 
                                 <tr>
-                                    <th scope="col">Sala</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Hora de inicio</th>
-                                    <th scope="col">Hora de finalización</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Contacto</th>
-                                    <th scope="col">Acción</th>
+                                    <th style="text-align: center" scope="col">Sala</th>
+                                    <th style="text-align: center" scope="col">Fecha</th>
+                                    <th style="text-align: center" scope="col">Hora de Inicio</th>
+                                    <th style="text-align: center" scope="col">Hora de Finalización</th>
+                                    <th style="text-align: center" scope="col">Estado</th>
+                                    <th style="text-align: center" scope="col">Contacto</th>
+                                    <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="solicitud in solicitudes" :key="solicitud.idSol"> 
-                                    <td v-text="solicitud.sala"></td>
-                                    <td v-text="solicitud.fecha"></td>
-                                    <td v-text="solicitud.horaIni"></td>
-                                    <td v-text="solicitud.horaFin"></td>
-                                    <td v-text="solicitud.estado"></td>
-                                    <td v-text="solicitud.telPer"></td>
-                                    <td v-if="solicitud.estado == 'En proceso'">
+                                    <td align="center" v-text="solicitud.sala"></td>
+                                    <td align="center" v-text="solicitud.fecha"></td>
+                                    <td align="center" v-text="solicitud.horaIni"></td>
+                                    <td align="center" v-text="solicitud.horaFin"></td>
+                                    <td align="center" v-text="solicitud.estado"></td>
+                                    <td align="center" v-text="solicitud.telPer"></td>
+                                    <td align="center" v-if="solicitud.estado == 'En proceso'">
                                         <button class="btn btn-primary" v-on:click="getDocumento(solicitud.uuid)">Mostrar Formato <font-awesome-icon icon="fa-solid fa-eye" /></button>
                                         <button class="btn btn-success" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
-                                    <td v-else>
+                                    <td align="center" v-else>
                                         <label class="form-control-label">Sin acción disponible</label>
                                     </td>
                                     
@@ -123,7 +123,12 @@ export default {
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         aceptarSolicitud(idSol){
@@ -135,7 +140,12 @@ export default {
                 }).then(function (response) {
                     me.getSolicitudes(1);
                 }).catch( function (error) {
-                    me.errores = error.data;
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Fallo en el sistema.',
+                        button: 'Entendido'
+                    });
             });
         },
         rechazarSolicitud(idSol){
@@ -164,10 +174,20 @@ export default {
                                             'success'
                                             )
                             }).catch( function (error) {
-                                me.errores = error.data;
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: 'Fallo en el sistema.',
+                                    button: 'Entendido'
+                                });
                         })
                         .catch(error=>{
-                            console.log(error)
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: 'Fallo en el sistema.',
+                                button: 'Entendido'
+                            });
                         })
                 }
             })
