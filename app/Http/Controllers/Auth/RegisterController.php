@@ -56,7 +56,6 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'nomPer' => ['required','string','max:200'],
             'apePatPer' => ['required','string','max:200'],
-            'apeMatPer' => ['string','max:200'],
             'telPer' => ['int','digits:10'] 
         ]);
     }

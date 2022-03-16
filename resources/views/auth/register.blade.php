@@ -17,7 +17,7 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="nomPer" class="col-md-4 col-form-label text-md-end">{{ __('Nombre (s)') }}</label>
+                            <label for="nomPer" class="col-md-4 col-form-label text-md-end">{{ __('Nombre (s)*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="nomPer" type="text" class="form-control @error('nomPer') is-invalid @enderror" name="nomPer" value="{{ old('nomPer') }}" required autocomplete="nomPer" autofocus>
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="apePatPer" class="col-md-4 col-form-label text-md-end">{{ __('Apellido Paterno') }}</label>
+                            <label for="apePatPer" class="col-md-4 col-form-label text-md-end">{{ __('Apellido Paterno*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="apePatPer" type="text" class="form-control @error('apePatPer') is-invalid @enderror" name="apePatPer" value="{{ old('apePatPer') }}" required autocomplete="apePatPer" autofocus>
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="telPer" class="col-md-4 col-form-label text-md-end">{{ __('Número de contacto') }}</label>
+                            <label for="telPer" class="col-md-4 col-form-label text-md-end">{{ __('Número de contacto*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="telPer" type="number" class="form-control @error('telPer') is-invalid @enderror" name="telPer" value="{{ old('telPer') }}" required autocomplete="telPer" autofocus>
@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="idArea" class="col-md-4 col-form-label text-md-end">{{ __('¿A qué área, institución o facultad pertenece?') }}</label>
+                            <label for="idArea" class="col-md-4 col-form-label text-md-end">{{ __('¿A qué área, institución o facultad pertenece?*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="idArea" type="text" class="form-control @error('idArea') is-invalid @enderror" name="idArea" value="{{ old('idArea') }}" required autocomplete="email">
@@ -86,7 +86,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Correo electrónico') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Correo electrónico*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -100,7 +100,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Contraseña') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Contraseña*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
@@ -114,7 +114,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirmar contraseña') }}</label>
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirmar contraseña*') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
