@@ -112,7 +112,12 @@ export default{
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         }
     },
