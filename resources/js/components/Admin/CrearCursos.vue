@@ -7,9 +7,9 @@
                         <div class="col-md-8">
                             <h4 class="">Administrar Cursos</h4>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-left">
+                        <div class="col-md-4 d-flex justify-content-center">
                             <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados <font-awesome-icon icon="fa-solid fa-eye" /> </button>
-                            <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
+                            <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar Curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
                         </div>
                     </div>
 
@@ -22,30 +22,31 @@
                         <form method="post" @submit.prevent="registrarCurso()" enctype="multipart/form-data" class="form-horizontal" v-if="!mostrar">
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Nombre de curso</label>
+                                    <label class="form-control-label" for="text-input">Nombre de Curso: *</label>
                                     <input required v-model="curso.nomCur" name="nomCur" id="nomCur" type="text" class="form-control" placeholder="Nombre de curso">
                                     <span class="is-invalid" v-if="errores && errores['curso.nomCur']">
                                         <strong>{{ errores['curso.nomCur'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Instructor del curso</label>
+                                    <label class="form-control-label" for="text-input">Instructor del Curso: *</label>
                                     <input required v-model="curso.instructor" type="text" class="form-control" placeholder="Nombre del instructor">
                                     <span class="is-invalid" v-if="errores && errores['curso.instructor']">
                                         <strong>{{ errores['curso.instructor'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Requisitos</label>
+                                    <label class="form-control-label" for="text-input">Requisitos: *</label>
                                     <textarea required v-model="curso.reqCur" type="text" class="form-control" placeholder="Requisitos del curso"></textarea>
                                     <span class="is-invalid" v-if="errores && errores['curso.reqCur']">
                                         <strong>{{ errores['curso.reqCur'][0] }}</strong>
                                     </span>
                                 </div>
                             </div>
+                            <br>
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Sala</label>
+                                    <label class="form-control-label" for="text-input">Sala: *</label>
                                     <select required class="form-select" v-model="curso.idSala">
                                         <option value="0" selected disabled>Seleccione una sala</option>
                                         <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
@@ -55,37 +56,38 @@
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Fecha de inicio</label>
+                                    <label class="form-control-label" for="text-input">Fecha de Inicio: *</label>
                                     <input required type="date" v-model="curso.fecInCur" class="form-control">
                                     <span class="is-invalid" v-if="errores && errores['curso.fecInCur']">
                                         <strong>{{ errores['curso.fecInCur'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Fecha de finalización</label>
+                                    <label class="form-control-label" for="text-input">Fecha de Finalización: *</label>
                                     <input required type="date" v-model="curso.fecFinCur" class="form-control" :min="curso.fecInCur">
                                     <span class="is-invalid" v-if="errores && errores['curso.fecFinCur']">
                                         <strong>{{ errores['curso.fecFinCur'][0] }}</strong>
                                     </span>
                                 </div>
                             </div>
+                            <br>
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de inicio</label>
+                                    <label class="form-control-label" for="text-input">Hora de Inicio: *</label>
                                     <input required type="time" step="3600" v-model="horario.horaIni" class="form-control" min="08:00" max="18:00">
                                     <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
                                         <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de fin</label>
+                                    <label class="form-control-label" for="text-input">Hora de Fin: *</label>
                                     <input required type="time" step="3600" v-model="horario.horaFin" class="form-control" :min="horario.horaIni" max="18:00">
                                     <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
                                         <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Cupo límite</label>
+                                    <label class="form-control-label" for="text-input">Cupo Límite: *</label>
                                     <input required v-model="curso.cupCur" type="number" max="15" min="0" class="form-control" placeholder="Cupo del curso">
                                     <span class="is-invalid" v-if="errores && errores['curso.cupCur']">
                                         <strong>{{ errores['curso.cupCur'][0] }}</strong>
@@ -95,7 +97,7 @@
                             <br>
                             <div class="row form-group">
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-primary">Registrar curso  <font-awesome-icon icon="fa-solid fa-plus" /> </button>
+                                    <button type="submit" class="btn btn-primary">Registrar Curso  <font-awesome-icon icon="fa-solid fa-plus" /> </button>
                                 </div>
                             </div>
                         </form>
@@ -103,13 +105,14 @@
                             <div class="row">
                                 <button class="btn btn-info" v-on:click="mostrarFiltros = !mostrarFiltros ">Filtros</button>
                             </div>
+                            <br>
                             <div class="row" v-if="mostrarFiltros">
                                 <div class="col-md-3">
-                                    <label class="form-control-label" for="text-input">Fecha de inicio</label>
+                                    <label class="form-control-label" for="text-input">Fecha de Inicio</label>
                                     <input required type="date" v-model="fecha_inicio" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-control-label" for="text-input">Fecha de fin</label>
+                                    <label class="form-control-label" for="text-input">Fecha de Fin</label>
                                     <input required type="date" v-model="fecha_fin" class="form-control">
                                 </div>
                                 <div class="col-md-3">
@@ -121,23 +124,26 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <table class="table" v-if="mostrar">
                             <thead> 
                                 <tr>
-                                    <th scope="col">Nombre del curso</th>
-                                    <th scope="col">Fecha de inicio</th>
-                                    <th scope="col">Fecha de fin</th>
-                                    <th scope="col">Más detalles</th>
-                                    <th scope="col">Acción</th>
+                                    <th style="text-align: center" scope="col">Nombre del curso</th>
+                                    <th style="text-align: center" scope="col">Fecha de inicio</th>
+                                    <th style="text-align: center" scope="col">Fecha de fin</th>
+                                    <th style="text-align: center" scope="col">Más detalles</th>
+                                    <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="curso in cursos" :key="curso.idCur"> 
-                                    <td v-text="curso.nomCur"></td>
-                                    <td v-text="curso.fecInCur"></td>
-                                    <td v-text="curso.fecFinCur"></td>
-                                    <td v-on:click="verDetalle(curso.idCur)"><a href="#">Ver detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></a></td>
-                                    <td v-if="curso.estado |= 0">
+                                    <td align="center" v-text="curso.nomCur"></td>
+                                    <td align="center" v-text="curso.fecInCur"></td>
+                                    <td align="center" v-text="curso.fecFinCur"></td>
+                                    <td align="center" v-on:click="verDetalle(curso.idCur)">
+                                        <a class="btn btn-outline-primary" href="#" role="button">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></a>
+                                    </td>
+                                    <td align="center" v-if="curso.estado |= 0">
                                         <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)">Deshabilitar <font-awesome-icon icon="fa-solid fa-trash-arrow-up" /> </button>
                                         <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar <font-awesome-icon icon="fa-solid fa-pencil" /> </button>
                                     </td>
@@ -292,6 +298,13 @@ export default {
                 if(error.response.status == 422){
                     me.errores = error.response.data.errors;
                     me.curso.horarios = [];
+                }else{
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Fallo en el sistema.',
+                        button: 'Entendido'
+                    });
                 }
             })
         },
@@ -318,7 +331,12 @@ export default {
                 me.salas = response.data.salas;
             })
             .catch(error=>{
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             })
         },
         getCursos(page){
@@ -336,7 +354,12 @@ export default {
                 me.isLoading = false;
             })
             .catch(error=>{
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             })
         },
         editarCurso(idCurso){
@@ -378,8 +401,12 @@ export default {
                                     )
                             }
                             }).catch( function (error) {
-                                me.errores = error.data;
-                                console.log(error)
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: 'Fallo en el sistema.',
+                                    button: 'Entendido'
+                                });
                         });
                 }
             })
@@ -412,8 +439,12 @@ export default {
                                     )
                             }
                             }).catch( function (error) {
-                                me.errores = error.data;
-                                console.log(error)
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: 'Fallo en el sistema.',
+                                    button: 'Entendido'
+                                });
                         });
                 }
             })

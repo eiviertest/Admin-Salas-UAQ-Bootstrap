@@ -3,15 +3,15 @@
         <table class="table">
             <thead> 
                 <tr>
-                    <th v-for="encabezado in encabezados" :key="encabezado.id">
+                    <th style="text-align: center" v-for="encabezado in encabezados" :key="encabezado.id">
                         {{ encabezado.nombre }}   
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="row in arrayData" :key="row.id"> 
-                    <td v-text="row.nombre"></td>
-                    <td v-text="row.nomArea"></td>
+                    <td align="center" v-text="row.nombre"></td>
+                    <td align="center" v-text="row.nomArea"></td>
                 </tr>
             </tbody>
         </table>
