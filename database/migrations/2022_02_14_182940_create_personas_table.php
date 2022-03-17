@@ -17,7 +17,7 @@ class CreatePersonasTable extends Migration
             $table->id('idPer');
             $table->string('nomPer', 50);
             $table->string('apePatPer', 30);
-            $table->string('apeMatPer', 30);
+            $table->string('apeMatPer', 30)->nullable();
             $table->bigInteger('telPer');
             $table->foreignId('idUsr');
             $table->foreignId('idArea');

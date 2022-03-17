@@ -231,7 +231,7 @@ export default {
                                 position: 'center',
                                 icon: 'warning',
                                 title: 'Su solicitud no se ha registrado.',
-                                text: 'Se encontraron inconvenientes al momemto de registrar la solicitud, fecha u horas seleccionadas, favor de verificarlos.',
+                                text: 'Se encontraron inconvenientes al momento de registrar la solicitud, fecha u horas seleccionadas, favor de verificarlos.',
                                 button: 'Entendido'
                             });
                             me.isLoading = false;

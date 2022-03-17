@@ -151,7 +151,7 @@ export default {
         rechazarSolicitud(idSol){
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: "Una vez rechazado no se podrán revertir los cambios!",
+                text: "Una vez rechazada no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -167,12 +167,11 @@ export default {
                             'idEst': 3,
                             }).then(function (response) {
                                 me.getSolicitudes(1);
-                                //Mensaje de eliminación 
-                                            Swal.fire(
-                                            'Rechazado!',
-                                            'La solicitud ha sido rechazado correctamente.',
-                                            'success'
-                                            )
+                                Swal.fire(
+                                    'Rechazada!',
+                                    'La solicitud ha sido rechazada correctamente.',
+                                    'success'
+                                )
                             }).catch( function (error) {
                                 Swal.fire({
                                     position: 'center',

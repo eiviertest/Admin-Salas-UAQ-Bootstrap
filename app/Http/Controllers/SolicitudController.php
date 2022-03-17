@@ -136,6 +136,7 @@ class SolicitudController extends Controller
         $cursos_registrados = HorarioCurso::select('c.nomCur')
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
                             ->where('c.fecInCur', '<=', [date($request->fecha)])
+                            ->where('c.estado', '=', 1)
                             ->Where('c.fecFinCur', '>=', [date($request->fecha)])
                             ->where('c.idSala', '=', $request->idSala)
                             ->where(function ($query) use ($request, $hora_fin) {
@@ -146,18 +147,20 @@ class SolicitudController extends Controller
                             })
                             ->get();
         if(count($cursos_registrados) == 0){
+            //Error aqui
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
                                         ->where('fecha', '=', [date($request->fecha)])
                                         ->where(function ($query) use ($request, $hora_fin) {
-                                            $query->whereBetween('horaIni', [$request->horaIni, $hora_fin])
-                                                ->orWhereRaw('horaFin between ? and ?', [$request->horaIni, $hora_fin])
-                                                ->orWhereRaw('horaIni <= ? and horaFin >= ?', [$request->horaIni, $hora_fin]);
+                                            $query->where('horaIni', '<=', $request->horaIni)
+                                            ->where('horaFin', '<=', $request->horaFin)
+                                            ->whereBetween('horaIni', [$request->horaIni, $hora_fin])
+                                            ->orWhereRaw('horaFin between ? and ?', [$request->horaIni, $hora_fin]);
                                         })
                                         ->get();
             if(count($solicitudes_registradas) == 0) {
                 try {
-                    $horaFinUnix = strtotime($hora_fin);
+                    $horaFinUnix = strtotime($request->horaFin);
                     $solicitud = new Solicitud();
                     if($request->hasFile(key:'rutaSol')){
                         //$solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
@@ -172,7 +175,7 @@ class SolicitudController extends Controller
                     $solicitud->idEst = $idEstatus->idEst;
                     $solicitud->fecha = $request->fecha;
                     $solicitud->horaIni = $request->horaIni;
-                    $solicitud->horaFin = $request->horaFin;
+                    $solicitud->horaFin = date('H:i:s', $horaFinUnix - 1);
                     $solicitud->save();
                     return [
                         'code' => 1,
