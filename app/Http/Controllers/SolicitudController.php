@@ -140,14 +140,12 @@ class SolicitudController extends Controller
                             ->Where('c.fecFinCur', '>=', [date($request->fecha)])
                             ->where('c.idSala', '=', $request->idSala)
                             ->where(function ($query) use ($request, $hora_fin) {
-                                $query->where('horIn', '<=', $request->horaIni)
-                                    ->where('horFin', '<=', $request->horaFin)
-                                    ->whereBetween('horIn', [$request->horaIni, $hora_fin])
+                                $query->whereBetween('horIn', [$request->horaIni, $hora_fin])
+                                    ->orWhereRaw('horIn <= ? and horFin >= ?', [$request->horaIni, $hora_fin])
                                     ->orWhereRaw('horFin between ? and ?', [$request->horaIni, $hora_fin]);
                             })
                             ->get();
         if(count($cursos_registrados) == 0){
-            //Error aqui
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
                                         ->where('idEst', '!=', 3)
@@ -163,7 +161,6 @@ class SolicitudController extends Controller
                     $horaFinUnix = strtotime($request->horaFin);
                     $solicitud = new Solicitud();
                     if($request->hasFile(key:'rutaSol')){
-                        //$solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
                         $solicitud->rutaSol = time() . '_' . $request->file(key:'rutaSol')->getClientOriginalName();
                         $request->file(key:'rutaSol')->storeAs(path:'formatosSol', name:$solicitud->rutaSol); 
                     }else{
