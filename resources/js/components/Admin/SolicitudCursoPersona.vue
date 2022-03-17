@@ -134,7 +134,23 @@ export default {
                     'idPer': idPer,
                     'idCur': idCur
                 }).then(function (response) {
-                    me.getListaCursoPersona(1);
+                    if(response.data.code == 1) {
+                        me.getListaCursoPersona(1);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'El usuario ha sido aceptado',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    }else{
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'El cupo del curso ha sido alcanzado.',
+                            button: 'Entendido'
+                        });
+                    }
                 }).catch( function (error) {
                     Swal.fire({
                         position: 'center',
