@@ -294,6 +294,7 @@ class CursoController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
         try {
+            DB::delete('delete from curso_persona where idCur = ?', [$request->idCur]);
             $curso = Curso::findOrFail($request->idCur);
             $curso->estado = 1;
             $curso->save();

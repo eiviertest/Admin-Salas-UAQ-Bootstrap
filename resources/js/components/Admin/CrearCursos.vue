@@ -374,7 +374,7 @@ export default {
         },
         disableCurso(idCurso){
         Swal.fire({
-                title: 'Estas seguro?',
+                title: '¿Estás seguro?',
                 text: "Una vez deshabilitado no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,

@@ -135,7 +135,6 @@ export default {
                     'idCur': idCur
                 }).then(function (response) {
                     if(response.data.code == 1) {
-                        me.getListaCursoPersona(1);
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -143,6 +142,7 @@ export default {
                             showConfirmButton: false,
                             timer: 1200
                         });
+                        me.getListaCursoPersona(1);
                     }else{
                         Swal.fire({
                             position: 'center',
@@ -150,6 +150,7 @@ export default {
                             title: 'El cupo del curso ha sido alcanzado.',
                             button: 'Entendido'
                         });
+                        me.isLoading = false;
                     }
                 }).catch( function (error) {
                     Swal.fire({
@@ -162,7 +163,7 @@ export default {
         },
         rechazarUsuario(idPer, idCur){
             Swal.fire({
-                title: 'Estas seguro?',
+                title: '¿Estás seguro?',
                 text: "Una vez rechazado no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,

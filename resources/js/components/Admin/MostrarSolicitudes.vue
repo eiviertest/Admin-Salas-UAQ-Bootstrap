@@ -150,7 +150,7 @@ export default {
         },
         rechazarSolicitud(idSol){
             Swal.fire({
-                title: 'Estas seguro?',
+                title: '¿Estás seguro?',
                 text: "Una vez rechazado no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,

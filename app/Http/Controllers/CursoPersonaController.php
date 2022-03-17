@@ -219,6 +219,7 @@ class CursoPersonaController extends Controller
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
                         ->join('horario_curso as h', 'c.idCur', '=', 'h.idCur')
                         ->where('curso_persona.idPer', '=', $idPersona->idPer)
+                        ->where('c.estado', '=', 1)
                         ->orderBy('curso_persona.estatus', 'ASC')
                         ->paginate(10);
         return [
