@@ -37,6 +37,12 @@ class Curso extends Model
         }
     }
 
+    public function scopeFechaInicio($query, $fecha_inicio){
+        if($fecha_inicio != '') {
+            return $query->where('curso.fecInCur', '=', $fecha_inicio);
+        }
+    }
+
     public function scopeSala($query, $sala){
         if($sala != 0) {
             return $query->where('curso.idSala', '=', $sala);
