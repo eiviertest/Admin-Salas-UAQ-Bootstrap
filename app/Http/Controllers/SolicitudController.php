@@ -28,7 +28,7 @@ class SolicitudController extends Controller
         $cursos = Curso::select(DB::raw('CONCAT(nomCur, " Inicio: ", DATE_FORMAT(h.horIn, "%H:%i"), " Fin: ", DATE_FORMAT(h.horFin, "%H:%i")) as title'), 'fecInCur as start', 'fecFinCur as end')
                         ->join('horario_curso as h', 'curso.idCur', 'h.idCur')
                         ->sala($request->sala)
-                        ->fechaInicio($request->fecha)
+                        ->fecha($request->fecha)
                         ->where('curso.estado', '=', 1)
                         ->get();
         $solicitudes = Solicitud::select(DB::raw('CONCAT("Solicitud", " Inicio: ", DATE_FORMAT(horaIni, "%H:%i"), " Fin: ", DATE_FORMAT(horaFin, "%H:%i")) as title'), 'solicitud.fecha as start', 'solicitud.fecha as end')
