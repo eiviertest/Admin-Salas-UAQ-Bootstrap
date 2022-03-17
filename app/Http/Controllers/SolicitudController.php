@@ -150,12 +150,12 @@ class SolicitudController extends Controller
             //Error aqui
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
+                                        ->where('idEst', '!=', 3)
                                         ->where('fecha', '=', [date($request->fecha)])
                                         ->where(function ($query) use ($request, $hora_fin) {
-                                            $query->where('horaIni', '<=', $request->horaIni)
-                                            ->where('horaFin', '<=', $request->horaFin)
-                                            ->whereBetween('horaIni', [$request->horaIni, $hora_fin])
-                                            ->orWhereRaw('horaFin between ? and ?', [$request->horaIni, $hora_fin]);
+                                            $query->whereBetween('horaIni', [$request->horaIni, $hora_fin])
+                                                ->orWhereRaw('horaFin between ? and ?', [$request->horaIni, $hora_fin])
+                                                ->orWhereRaw('horaIni <= ? and horaFin >= ?', [$request->horaIni, $hora_fin]);
                                         })
                                         ->get();
             if(count($solicitudes_registradas) == 0) {
