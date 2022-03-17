@@ -70,7 +70,7 @@ class CursoPersonaController extends Controller
      * @return array personas
      */
     public function concentrado_curso($idCurso){
-        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", p.apeMatPer) as nombre'), 'a.nomArea')
+        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer,"")) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
@@ -187,7 +187,7 @@ class CursoPersonaController extends Controller
      */
     public function lista_curso_persona(Request $request){
         if(!$request->ajax()) return redirect('/');
-        $lista_curso_persona = CursoPersona::select('p.idPer', 'p.telPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", p.apeMatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+        $lista_curso_persona = CursoPersona::select('p.idPer', 'p.telPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
                         ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
