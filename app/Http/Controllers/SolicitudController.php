@@ -108,6 +108,27 @@ class SolicitudController extends Controller
     }
 
     /**
+     * La informacion de un curso.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int idCurso
+     * @return collection dataSolicitud
+     */
+    public function getDataSolicitud(Request $request, $idSolicitud){
+        if(!$request->ajax()) return redirect('/');
+        $solicitud = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid', 'a.nomArea', 'u.email')
+                    ->orderBy('solicitud.fecha', 'DESC')
+                    ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
+                    ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
+                    ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
+                    ->join('area as a', 'p.idArea', '=', 'a.idArea')
+                    ->join('users as u', 'p.idUsr', '=', 'u.id')
+                    ->where('idSol', '=', $idSolicitud)
+                    ->get();
+        return $solicitud;
+    }
+
+    /**
      * Almacena una nueva solicitud
      *
      * @param  \Illuminate\Http\Request  $request

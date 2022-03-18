@@ -31,12 +31,13 @@
                                     <td align="center" v-text="solicitud.estado"></td>
                                     <td align="center" v-text="solicitud.telPer"></td>
                                     <td align="center" v-if="solicitud.estado == 'En proceso'">
+                                        <button class="btn btn-outline-primary" v-on:click="verDetalle(solicitud.idSol)">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></button>
                                         <button class="btn btn-primary" v-on:click="getDocumento(solicitud.uuid)">Mostrar Formato <font-awesome-icon icon="fa-solid fa-eye" /></button>
                                         <button class="btn btn-success" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
                                     <td align="center" v-else>
-                                        <label class="form-control-label">Sin acción disponible</label>
+                                        <button class="btn btn-outline-primary" v-on:click="verDetalle(solicitud.idSol)">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></button>
                                     </td>
                                     
                                 </tr>
@@ -55,6 +56,7 @@
                                 </li>
                             </ul>
                         </nav>
+                        <ModalSolicitud v-if="modalVerDetalle" :idSolicitud="idSolicitud" @closeModal="modalVerDetalle = false" @sucessUpdate="getSolicitudes(1)"></ModalSolicitud>
                     </div>
                 </div>
             </div>
@@ -62,12 +64,14 @@
     </div>
 </template>
 <script>
+import ModalSolicitud from './ModalSolicitud.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     components: {
-        Loading
+        Loading,
+        ModalSolicitud
     },
     data() {
         return {
@@ -82,7 +86,10 @@ export default {
                 'to': 0
             },
             offset: 2,
-            isLoading: true
+            isLoading: true,
+            modalVerDetalle: false,
+            idSolicitud : 0,
+
         }
     },
     computed: {
@@ -193,6 +200,10 @@ export default {
         },
         getDocumento(uuid){
             window.open('/solicitud_mostrar_formato/'+uuid, '_blank');
+        },
+        verDetalle(idSolicitud){
+            this.modalVerDetalle = true;
+            this.idSolicitud = idSolicitud;
         },
     },
     mounted() {

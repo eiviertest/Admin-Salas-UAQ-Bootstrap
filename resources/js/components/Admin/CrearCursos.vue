@@ -131,10 +131,10 @@
                         <table class="table" v-if="mostrar">
                             <thead> 
                                 <tr>
-                                    <th style="text-align: center" scope="col">Nombre del curso</th>
-                                    <th style="text-align: center" scope="col">Fecha de inicio</th>
-                                    <th style="text-align: center" scope="col">Fecha de fin</th>
-                                    <th style="text-align: center" scope="col">Más detalles</th>
+                                    <th style="text-align: center" scope="col">Nombre del Curso</th>
+                                    <th style="text-align: center" scope="col">Fecha de Inicio</th>
+                                    <th style="text-align: center" scope="col">Fecha de Fin</th>
+                                    <th style="text-align: center" scope="col">Más Detalles</th>
                                     <th scope="col">Acción</th>
                                 </tr>
                             </thead>
