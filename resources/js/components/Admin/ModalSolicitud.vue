@@ -23,15 +23,19 @@
                                 <h5>
                                     <font-awesome-icon icon="fa-solid fa-layer-group" />
                                     <strong> Estado: </strong>
-                                    <button v-if="solicitud.estado == 'Aceptado'" class="btn btn-success">{{solicitud.estado}} <font-awesome-icon icon="fa-solid fa-circle-check" /></button>
+                                    <button v-if="solicitud.estado == 'Aceptada'" class="btn btn-success">{{solicitud.estado}} <font-awesome-icon icon="fa-solid fa-circle-check" /></button>
                                     <button v-if="solicitud.estado == 'En proceso'" class="btn btn-warning">{{solicitud.estado}} <font-awesome-icon icon="fa-solid fa-hourglass" /></button>
-                                    <button v-if="solicitud.estado == 'Rechazado'" class="btn btn-danger">{{solicitud.estado}} <font-awesome-icon icon="fa-solid fa-circle-xmark" /></button>
+                                    <button v-if="solicitud.estado == 'Rechazada'" class="btn btn-danger">{{solicitud.estado}} <font-awesome-icon icon="fa-solid fa-circle-xmark" /></button>
                                 </h5>
                             </div>
                             <div class="col-md-6" align="center">
                                 <h5><font-awesome-icon icon="fa-solid fa-user" /><strong> Nombre: </strong>{{solicitud.nombre}}</h5>
                                 <h5><font-awesome-icon icon="fa-regular fa-envelope" /><strong> Email: </strong>{{solicitud.email}}</h5>
                                 <h5><font-awesome-icon icon="fa-solid fa-phone" /><strong> Telefono: </strong>{{solicitud.telefono}}</h5>
+                                <h5 v-if="solicitud.tipoTel == 2">
+                                    <font-awesome-icon icon="fa-solid fa-plus" />
+                                    <strong> Extensión: </strong>{{solicitud.extension}}
+                                </h5>
                                 <h5><font-awesome-icon icon="fa-solid fa-flag" /><strong> Área: </strong>{{solicitud.area}}</h5>
                                 <br>
                                 <button class="btn btn-info" v-on:click="getDocumento(solicitud.uuid)">Formato de Solicitud <font-awesome-icon icon="fa-solid fa-eye" /></button>
@@ -71,6 +75,8 @@ export default({
                 'area' : '',
                 'estado' : '',
                 'telefono' : 0,
+                'tipoTel' : 0,
+                'extension' : '',
                 'uuid': ''
             },
             errores: [],
@@ -90,6 +96,8 @@ export default({
                 'area' : '',
                 'estado' : '',
                 'telefono' : 0,
+                'tipoTel' : 0,
+                'extension' : '',
                 'uuid': ''
             };
             axios.get('/getDataSolicitud/' + idSolicitud).then(response=>{
@@ -103,8 +111,11 @@ export default({
                     'area' : response.data[0].nomArea,
                     'estado' : response.data[0].estado,
                     'telefono' : response.data[0].telPer,
+                    'tipoTel' : response.data[0].tipoTel,
+                    'extension' : response.data[0].extension,
                     'uuid': response.data[0].uuid
-                }
+                };
+                console.log(me.solicitud);
                 me.isLoading = false;
             })
         },

@@ -116,7 +116,7 @@ class SolicitudController extends Controller
      */
     public function getDataSolicitud(Request $request, $idSolicitud){
         if(!$request->ajax()) return redirect('/');
-        $solicitud = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid', 'a.nomArea', 'u.email')
+        $solicitud = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 's.nomSala as sala', 'p.telPer', 'p.tipoTel', 'p.extension', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid', 'a.nomArea', 'u.email')
                     ->orderBy('solicitud.fecha', 'DESC')
                     ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                     ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
