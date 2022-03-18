@@ -52,6 +52,7 @@ Vue.component('solicitar-sala', require('./components/User/SolicitarSala.vue').d
 const app = new Vue({
     el: '#app',
     data: {
-        menu: 0
+        menu: 0,
+        contacto: 2
     }
 });

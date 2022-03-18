@@ -62,8 +62,34 @@
                             <label for="telPer" class="col-md-4 col-form-label text-md-end">{{ __('Número de contacto*') }}</label>
 
                             <div class="col-md-6">
-                                <input id="telPer" type="number" class="form-control @error('telPer') is-invalid @enderror" name="telPer" value="{{ old('telPer') }}" required autocomplete="telPer" autofocus>
-
+                                <input :minlength="contacto==2 ? 7 : 10" id="telPer" placeholder="Télefono" type="text" class="form-control @error('telPer') is-invalid @enderror" name="telPer" value="{{ old('telPer') }}" required autocomplete="telPer" autofocus placeholder="Télefono">
+                                @error('tipoTel')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <input minlength="3" maxlength="5" :required="contacto==2" type="text" id="extension" name="extension" class="form-control @error('extension') is-invalid @enderror" value="{{ old('extension') }}"  placeholder="Extension" v-show="contacto==2">
+                                @error('extension')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <div class="form-check">
+                                    <input v-on:click="contacto=2" class="form-check-input @error('telPer') is-invalid @enderror" value="2" type="radio" name="tipoTel" id="tipoTel" checked>
+                                    <label class="form-check-label" for="tipoTel">
+                                        Oficina
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                <input v-on:click="contacto=1" class="form-check-input @error('telPer') is-invalid @enderror" value="1" type="radio" name="tipoTel" id="tipoTel">
+                                    <label class="form-check-label" for="tipoTel">
+                                        Personal
+                                    </label>
+                                </div>
+                                <div v-show="contacto==2">
+                                    <p><small>Para número de contacto de oficina, ingrese el télefono y extensión.</small></p>
+                                    <p><small>Ejemplo: 1921200 es el télefono y 3271 la extensión.</small></p>
+                                </div>
                                 @error('telPer')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
