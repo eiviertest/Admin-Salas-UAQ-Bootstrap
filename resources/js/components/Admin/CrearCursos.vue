@@ -3,13 +3,15 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="row card-header">
-                        <div class="col-md-8">
-                            <h4 class="">Administrar Cursos</h4>
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-center">
-                            <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados <font-awesome-icon icon="fa-solid fa-eye" /> </button>
-                            <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar Curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="">Administrar Cursos</h4>
+                            </div>
+                            <div class="col-md-4 d-flex flex-row-reverse">
+                                <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados <font-awesome-icon icon="fa-solid fa-eye" /> </button>
+                                <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar Curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
+                            </div>
                         </div>
                     </div>
 
@@ -103,9 +105,10 @@
                         </form>
                         <div v-if="mostrar">
                             <div class="row">
-                                <button class="btn btn-info" v-on:click="mostrarFiltros = !mostrarFiltros ">Filtros</button>
+                                <div class="col d-flex flex-row-reverse">
+                                    <button class="btn btn-info" v-on:click="mostrarFiltros = !mostrarFiltros ">Filtros <font-awesome-icon icon="fa-solid fa-angle-down" /></button>
+                                </div>
                             </div>
-                            <br>
                             <div class="row" v-if="mostrarFiltros">
                                 <div class="col-md-3">
                                     <label class="form-control-label" for="text-input">Fecha de Inicio</label>
@@ -132,7 +135,7 @@
                                     <th style="text-align: center" scope="col">Fecha de inicio</th>
                                     <th style="text-align: center" scope="col">Fecha de fin</th>
                                     <th style="text-align: center" scope="col">Más detalles</th>
-                                    <th style="text-align: center" scope="col">Acción</th>
+                                    <th scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -143,7 +146,7 @@
                                     <td align="center" v-on:click="verDetalle(curso.idCur)">
                                         <a class="btn btn-outline-primary" href="#" role="button">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></a>
                                     </td>
-                                    <td align="center" v-if="curso.estado |= 0">
+                                    <td v-if="curso.estado != 0">
                                         <button class="btn btn-warning" v-on:click="disableCurso(curso.idCur)">Deshabilitar <font-awesome-icon icon="fa-solid fa-trash-arrow-up" /> </button>
                                         <button class="btn btn-danger" v-on:click="editarCurso(curso.idCur)">Actualizar <font-awesome-icon icon="fa-solid fa-pencil" /> </button>
                                     </td>
@@ -375,7 +378,6 @@ export default {
         disableCurso(idCurso){
         Swal.fire({
                 title: '¿Estás seguro?',
-                text: "Una vez deshabilitado no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
