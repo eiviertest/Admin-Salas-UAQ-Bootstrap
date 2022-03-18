@@ -37,8 +37,6 @@
                                     <strong> Extensión: </strong>{{solicitud.extension}}
                                 </h5>
                                 <h5><font-awesome-icon icon="fa-solid fa-flag" /><strong> Área: </strong>{{solicitud.area}}</h5>
-                                <br>
-                                <button class="btn btn-info" v-on:click="getDocumento(solicitud.uuid)">Formato de Solicitud <font-awesome-icon icon="fa-solid fa-eye" /></button>
                             </div>
                         </div>
                     </form>
@@ -74,10 +72,9 @@ export default({
                 'email' : '',
                 'area' : '',
                 'estado' : '',
-                'telefono' : 0,
+                'telefono' : '',
                 'tipoTel' : 0,
                 'extension' : '',
-                'uuid': ''
             },
             errores: [],
             isLoading: true
@@ -86,20 +83,6 @@ export default({
     methods:{
         getDataSolicitud(idSolicitud){
             let me = this;
-            me.solicitud = {
-                'sala': '',
-                'fecha': '',
-                'horaIni': '',
-                'horaFin': '',
-                'nombre': '',
-                'email' : '',
-                'area' : '',
-                'estado' : '',
-                'telefono' : 0,
-                'tipoTel' : 0,
-                'extension' : '',
-                'uuid': ''
-            };
             axios.get('/getDataSolicitud/' + idSolicitud).then(response=>{
                 me.solicitud = {
                     'sala': response.data[0].sala,
@@ -113,17 +96,12 @@ export default({
                     'telefono' : response.data[0].telPer,
                     'tipoTel' : response.data[0].tipoTel,
                     'extension' : response.data[0].extension,
-                    'uuid': response.data[0].uuid
                 };
-                console.log(me.solicitud);
                 me.isLoading = false;
             })
         },
         closeModal(){
             this.$emit('closeModal')
-        },
-        getDocumento(uuid){
-            window.open('/solicitud_mostrar_formato/'+uuid, '_blank');
         }
     },
     mounted() {
