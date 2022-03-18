@@ -56,8 +56,10 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'nomPer' => ['required','string','max:200'],
             'apePatPer' => ['required','string','max:200'],
-            'telPer' => ['required','int','digits_between:10,14'],
-            'tipoTel' => ['required', 'int', 'digits:1', 'min:1', 'max:2']
+            'telPer' => ['required','int','digits_between:7,10'],
+            'idArea' => ['required','string','max:200', 'min:10'],
+            'tipoTel' => ['required', 'int', 'digits:1', 'min:1', 'max:2'],
+            'extension' => ['int', 'digits_between:3,5']
         ]);
     }
 
@@ -89,6 +91,7 @@ class RegisterController extends Controller
             $persona->apeMatPer = $data['apeMatPer'];
             $persona->telPer = $data['telPer'];
             $persona->tipoTel = $data['tipoTel'];
+            $persona->extension = $data['extension'];
             $persona->idArea = $dataArea->idArea;
             $persona->idUsr = $user->id;
             $persona->save();
