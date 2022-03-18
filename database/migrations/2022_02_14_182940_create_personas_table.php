@@ -19,6 +19,7 @@ class CreatePersonasTable extends Migration
             $table->string('apePatPer', 30);
             $table->string('apeMatPer', 30)->nullable();
             $table->bigInteger('telPer');
+            $table->enum('tipoTel', [1,2])->comment('1=>Personal, 2=>Oficina');
             $table->foreignId('idUsr');
             $table->foreignId('idArea');
             $table->foreign('idUsr')->references('id')->on('users');

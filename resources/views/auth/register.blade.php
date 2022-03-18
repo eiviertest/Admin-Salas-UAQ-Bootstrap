@@ -63,7 +63,25 @@
 
                             <div class="col-md-6">
                                 <input id="telPer" type="number" class="form-control @error('telPer') is-invalid @enderror" name="telPer" value="{{ old('telPer') }}" required autocomplete="telPer" autofocus>
-
+                                <div class="form-check">
+                                <input class="form-check-input @error('telPer') is-invalid @enderror" value="1" type="radio" name="tipoTel" id="tipoTel" checked>
+                                    <label class="form-check-label" for="tipoTel">
+                                        Personal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input @error('telPer') is-invalid @enderror" value="2" type="radio" name="tipoTel" id="tipoTel">
+                                    <label class="form-check-label" for="tipoTel">
+                                        Oficina
+                                    </label>
+                                </div>
+                                @error('tipoTel')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <p><small>Para número de contacto de oficina, ingrese el télefono y extensión.</small></p>
+                                <p><small>Ejemplo: 19212003271, donde 1921200, es el télefono y 3271 la extensión.</small></p>
                                 @error('telPer')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
