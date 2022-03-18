@@ -59,7 +59,7 @@ class RegisterController extends Controller
             'telPer' => ['required','int','digits_between:7,10'],
             'idArea' => ['required','string','max:200', 'min:10'],
             'tipoTel' => ['required', 'int', 'digits:1', 'min:1', 'max:2'],
-            'extension' => ['int', 'digits_between:3,5']
+            'extension' => 'exclude_if:tipoTel,1|int|required|digits_between:3,5'
         ]);
     }
 
