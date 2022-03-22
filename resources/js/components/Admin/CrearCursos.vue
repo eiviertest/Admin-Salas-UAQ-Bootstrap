@@ -5,9 +5,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-8">
-                                <h4 class="">Administrar Cursos</h4>
-                            </div>
+                            <div class="col-md-8 h4">Administrar Cursos </div>
                             <div class="col-md-4 d-flex flex-row-reverse">
                                 <button type="button" class="btn btn-success" v-if="!mostrar && cursos.length > 0" v-on:click="mostrar = !mostrar">Ver Cursos Registrados <font-awesome-icon icon="fa-solid fa-eye" /> </button>
                                 <button type="button" class="btn btn-success" v-if="mostrar" v-on:click="mostrar = !mostrar">Registrar Curso <font-awesome-icon icon="fa-solid fa-plus" /> </button>
@@ -24,21 +22,21 @@
                         <form method="post" @submit.prevent="registrarCurso()" enctype="multipart/form-data" class="form-horizontal" v-if="!mostrar">
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Nombre de Curso: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Nombre de Curso: *</h5></label>
                                     <input required v-model="curso.nomCur" name="nomCur" id="nomCur" type="text" class="form-control" placeholder="Nombre de curso">
                                     <span class="is-invalid" v-if="errores && errores['curso.nomCur']">
                                         <strong>{{ errores['curso.nomCur'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Instructor del Curso: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Instructor del Curso: *</h5></label>
                                     <input required v-model="curso.instructor" type="text" class="form-control" placeholder="Nombre del instructor">
                                     <span class="is-invalid" v-if="errores && errores['curso.instructor']">
                                         <strong>{{ errores['curso.instructor'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Requisitos: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Requisitos: *</h5></label>
                                     <textarea required v-model="curso.reqCur" type="text" class="form-control" placeholder="Requisitos del curso"></textarea>
                                     <span class="is-invalid" v-if="errores && errores['curso.reqCur']">
                                         <strong>{{ errores['curso.reqCur'][0] }}</strong>
@@ -48,7 +46,7 @@
                             <br>
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Sala: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Sala: *</h5></label>
                                     <select required class="form-select" v-model="curso.idSala">
                                         <option value="0" selected disabled>Seleccione una sala</option>
                                         <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
@@ -58,14 +56,14 @@
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Fecha de Inicio: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Fecha de Inicio: *</h5></label>
                                     <input required type="date" v-model="curso.fecInCur" class="form-control">
                                     <span class="is-invalid" v-if="errores && errores['curso.fecInCur']">
                                         <strong>{{ errores['curso.fecInCur'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Fecha de Finalización: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Fecha de Finalización: *</h5></label>
                                     <input required type="date" v-model="curso.fecFinCur" class="form-control" :min="curso.fecInCur">
                                     <span class="is-invalid" v-if="errores && errores['curso.fecFinCur']">
                                         <strong>{{ errores['curso.fecFinCur'][0] }}</strong>
@@ -75,21 +73,21 @@
                             <br>
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de Inicio: *</label>
-                                    <input required type="time" step="3600" v-model="horario.horaIni" class="form-control" min="08:00" max="18:00">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de Inicio: *</h5></label>
+                                    <input required type="time" step="3600" v-model="horario.horaIni" class="form-control" min="08:00" max="19:00">
                                     <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
                                         <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de Fin: *</label>
-                                    <input required type="time" step="3600" v-model="horario.horaFin" class="form-control" :min="horario.horaIni" max="18:00">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de Fin: *</h5></label>
+                                    <input required type="time" step="3600" v-model="horario.horaFin" class="form-control" :min="horario.horaIni" max="20:00">
                                     <span class="is-invalid" v-if="errores && errores['curso.horarioscurso']">
                                         <strong>{{ errores['curso.horarioscurso'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Cupo Límite: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Cupo Límite: *</h5></label>
                                     <input required v-model="curso.cupCur" type="number" max="15" min="0" class="form-control" placeholder="Cupo del curso">
                                     <span class="is-invalid" v-if="errores && errores['curso.cupCur']">
                                         <strong>{{ errores['curso.cupCur'][0] }}</strong>
@@ -111,15 +109,15 @@
                             </div>
                             <div class="row" v-if="mostrarFiltros">
                                 <div class="col-md-3">
-                                    <label class="form-control-label" for="text-input">Fecha de Inicio</label>
+                                    <label class="form-control-label h5" for="text-input">Fecha de Inicio</label>
                                     <input required type="date" v-model="fecha_inicio" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-control-label" for="text-input">Fecha de Fin</label>
+                                    <label class="form-control-label h5" for="text-input">Fecha de Fin</label>
                                     <input required type="date" v-model="fecha_fin" class="form-control">
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-control-label" for="text-input">Sala</label>
+                                <div class="col-md-3 h5">
+                                    <label class="form-control-label h5" for="text-input">Sala</label>
                                     <select required class="form-select" v-model="sala">
                                         <option value="0" selected disabled>Seleccione una sala</option>
                                         <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
@@ -129,7 +127,7 @@
                         </div>
                         <br>
                         <table class="table" v-if="mostrar">
-                            <thead> 
+                            <thead class="h5"> 
                                 <tr>
                                     <th style="text-align: center" scope="col">Nombre del Curso</th>
                                     <th style="text-align: center" scope="col">Fecha de Inicio</th>
@@ -138,7 +136,7 @@
                                     <th scope="col">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="h5">
                                 <tr v-for="curso in cursos" :key="curso.idCur"> 
                                     <td align="center" v-text="curso.nomCur"></td>
                                     <td align="center" v-text="curso.fecInCur"></td>

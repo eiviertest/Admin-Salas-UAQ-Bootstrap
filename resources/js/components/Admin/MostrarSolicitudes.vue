@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Solicitudes de Salas</h4>
+                    <h4 class="card-header h4">Solicitudes de Salas</h4>
                     <div class="card-body">
                         <div class="vld-parent">
                             <loading :active.sync="isLoading"
@@ -11,7 +11,7 @@
                                     :is-full-page="true"/>
                         </div>
                         <table class="table">
-                            <thead> 
+                            <thead class="h5"> 
                                 <tr>
                                     <th style="text-align: center" scope="col">Sala</th>
                                     <th style="text-align: center" scope="col">Fecha</th>
@@ -22,7 +22,7 @@
                                     <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="h5">
                                 <tr v-for="solicitud in solicitudes" :key="solicitud.idSol"> 
                                     <td align="center" v-text="solicitud.sala"></td>
                                     <td align="center" v-text="solicitud.fecha"></td>

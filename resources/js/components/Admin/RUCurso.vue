@@ -15,21 +15,21 @@
                     <form method="put" @submit.prevent="updateCurso()">
                         <div class="row form-group">
                             <div class="col">
-                                <label class="form-control-label" for="text-input">Nombre de Curso:</label>
+                                <label class="form-control-label h5" for="text-input">Nombre de Curso:</label>
                                 <input disabled required v-model="curso.nomCur" name="nomCur" id="nomCur" type="text" class="form-control" placeholder="Nombre de curso">
                                 <span class="is-invalid" v-if="errores && errores['curso.nomCur']">
                                     <strong>{{ errores['curso.nomCur'][0] }}</strong>
                                 </span>
                             </div>
                             <div class="col">
-                                <label class="form-control-label" for="text-input">Instructor del Curso:</label>
+                                <label class="form-control-label h5" for="text-input">Instructor del Curso:</label>
                                 <input disabled required v-model="curso.instructor" type="text" class="form-control" placeholder="Nombre del instructor">
                                 <span class="is-invalid" v-if="errores && errores['curso.instructor']">
                                     <strong>{{ errores['curso.instructor'][0] }}</strong>
                                 </span>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group h5">
                             <div class="col">
                                 <label class="form-control-label" for="text-input">Requisitos:</label>
                                 <textarea disabled required v-model="curso.reqCur" type="text" class="form-control" placeholder="Requisitos del curso"></textarea>
@@ -48,7 +48,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group h5">
                             <div class="col">
                                 <label class="form-control-label" for="text-input">Fecha de Inicio:</label>
                                 <input :disabled="accion == 'Ver Datos del Curso'" required type="date" v-model="curso.fecInCur" class="form-control">
@@ -64,17 +64,17 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group h5">
                             <div class="col">
                                 <label class="form-control-label" for="text-input">Hora de Inicio:</label>
-                                <input :disabled="accion == 'Ver Datos del Curso'" step="3600" v-for="horario in curso.horarioscurso" :key="horario.idHor" required type="time" v-model="horario.horIn" class="form-control" min="08:00" max="18:00">
+                                <input :disabled="accion == 'Ver Datos del Curso'" step="3600" v-for="horario in curso.horarioscurso" :key="horario.idHor" required type="time" v-model="horario.horIn" class="form-control" min="08:00" max="19:00">
                             </div>
                             <div class="col">
                                 <label class="form-control-label" for="text-input">Hora de Fin:</label>
-                                <input :disabled="accion == 'Ver Datos del Curso'" step="3600" v-for="horario in curso.horarioscurso" :key="horario.idHor" required type="time" v-model="horario.horFin" class="form-control" :min="horario.horIn" max="18:00">
+                                <input :disabled="accion == 'Ver Datos del Curso'" step="3600" v-for="horario in curso.horarioscurso" :key="horario.idHor" required type="time" v-model="horario.horFin" class="form-control" :min="horario.horIn" max="20:00">
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group h5">
                             <div class="col">
                                 <label class="form-control-label" for="text-input">Cupo Límite:</label>
                                 <input disabled required v-model="curso.cupCur" name="cupCur" id="cupCur" type="text" class="form-control" placeholder="Cupo límite">

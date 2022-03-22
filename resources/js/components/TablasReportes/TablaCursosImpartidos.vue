@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <table class="table">
-            <thead> 
+            <thead class="h5"> 
                 <tr>
                     <th style="text-align: center" v-for="encabezado in encabezados" :key="encabezado.id">
                         {{ encabezado.nombre }}   
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="h5">
                 <tr v-for="row in arrayData" :key="row.id"> 
                     <td align="center" v-text="row.nomCur"></td>
                     <td align="center" v-text="row.fecInCur"></td>

@@ -10,7 +10,7 @@
                             <form method="post" @submit.prevent="registrarSolicitud()" enctype="multipart/form-data">
                             <div class="form-group row">
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Sala A Solicitar: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Sala A Solicitar: *</h5></label>
                                     <select @change="getEventos()" required class="form-select" v-model="solicitud.idSala">
                                         <option value="0" selected disabled>Seleccione una sala...</option>
                                         <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
@@ -24,21 +24,21 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <label class="form-control-label" for="text-input">Fecha: *</label>
+                                    <label class="form-control-label" for="text-input"><h5>Fecha: *</h5></label>
                                     <input @change="getEventos()" required type="date" v-model="solicitud.fecha" class="form-control" :min="dateFormat">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.fecha']">
                                         <strong>{{ errores['solicitud.fecha'][0] }}</strong>
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-control-label" for="text-input">Hora de inicio: *</label>
-                                    <input @change="getEventos()" required type="time" v-model="solicitud.horaIni" class="form-control" step="3600" min="08:00" max="17:00">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de inicio: *</h5></label>
+                                    <input @change="getEventos()" required type="time" v-model="solicitud.horaIni" class="form-control" step="3600" min="08:00" max="19:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaIni']">
                                         <strong>{{ errores['solicitud.horaIni'][0] }}</strong>
                                     </span> 
                                     <br>
-                                    <label class="form-control-label" for="text-input">Hora de Fin: *</label>
-                                    <input @change="getEventos()" required type="time" v-model="solicitud.horaFin" class="form-control" step="3600" :min="solicitud.horaIni" max="18:00">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de Fin: *</h5></label>
+                                    <input @change="getEventos()" required type="time" v-model="solicitud.horaFin" class="form-control" step="3600" :min="solicitud.horaIni" max="20:00">
                                     <span class="is-invalid" v-if="errores && errores['solicitud.horaFin']">
                                         <strong>{{ errores['solicitud.horaFin'][0] }}</strong>
                                     </span>
@@ -48,14 +48,14 @@
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <font-awesome-icon icon="fa-solid fa-circle-info fa-2xl" />
                                         En caso de no encontrar una sala disponible para su solicitud, despues de varios intentos.
-                                        <p>Puede llamar a el <strong>Centro de Computo Academico - UAQ</strong>.</p>
+                                        <p>Puede llamar a el <strong>Centro de Computo Academico - UAQ. Telefono: 1921200  Extensión: 3271 ó 3270.</strong></p>
                                     </div>
                                 </div>
                             </div>
                             <br>
                             <div class="row form-group">
                                 <div class="col-md-8">
-                                    <label class="form-control-label"><font-awesome-icon icon="fa-solid fa-file-invoice" /> Formato de Solicitud: *</label>
+                                    <label class="form-control-label"><h5><font-awesome-icon icon="fa-solid fa-file-invoice" /> Formato de Solicitud: *</h5></label>
                                     <input required accept="application/pdf" class="form-control" type="file" id="inputFormSol" @change="seleccionarArchivo">
                                     <br>
                                     <div v-if="errorFile" class="alert alert-warning d-flex align-items-center" role="alert">

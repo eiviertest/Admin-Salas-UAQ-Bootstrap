@@ -11,7 +11,7 @@
                                 :is-full-page="true"/>
                     </div>
                         <table class="table">
-                            <thead> 
+                            <thead class="h5"> 
                                 <tr>
                                     <th style="text-align: center" scope="col">Nombre</th>
                                     <th style="text-align: center" scope="col">Área/Facultad/Institución</th>
@@ -21,7 +21,7 @@
                                     <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="h5">
                                 <tr v-for="curso_persona in lista_cursos_persona" :key="curso_persona.idPer.toString() + curso_persona.idCur.toString()"> 
                                     <td align="center" v-text="curso_persona.nombre"></td>
                                     <td align="center" v-text="curso_persona.nomArea"></td>

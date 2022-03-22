@@ -21,7 +21,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <label class="form-control-label" for="text-input">Reporte a Generar:</label>
+                                <label class="form-control-label h5" for="text-input">Reporte a Generar:</label>
                                 <select class="form-select" v-model="eleccion">
                                     <option value=0 selected disabled>Seleccione una opción</option>
                                     <option value=1>Cursos Impartidos</option>

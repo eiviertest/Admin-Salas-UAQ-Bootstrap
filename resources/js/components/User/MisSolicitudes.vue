@@ -11,7 +11,7 @@
                                 :is-full-page="true"/>
                         </div>
                         <table class="table table-hover">
-                            <thead> 
+                            <thead class="h5"> 
                                 <tr>
                                     <th scope="col">Sala</th>
                                     <th scope="col">Fecha</th>
@@ -20,7 +20,7 @@
                                     <th scope="col">Estado</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="h5">
                                 <tr v-for="solicitud in solicitudes" :key="solicitud.idSol"> 
                                     <td v-text="solicitud.sala"></td>
                                     <td v-text="solicitud.fecha"></td>
