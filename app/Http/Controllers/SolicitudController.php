@@ -78,12 +78,27 @@ class SolicitudController extends Controller
      */
     public function index_admin(Request $request)
     {
+        if($request->horaFin != null){
+            //Formato Unix
+            $horaFinUnix = strtotime($request->horaFin);
+            $hora_fin = date('H:i:s', $horaFinUnix - 1);
+        }else{
+            $hora_fin = null;
+        }
+
+        
+
         if(!$request->ajax()) return redirect('/');
-        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid')
+        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid', 'p.idPer')
                         ->orderBy('solicitud.fecha', 'DESC')
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
+                        ->fecha($request->fecha)
+                        ->sala($request->sala)
+                        ->horaInicio($request->horaInicio)
+                        ->horaFin($hora_fin)
+                        ->persona($request->persona)
                         ->paginate(10);
         return [
             'pagination' => [

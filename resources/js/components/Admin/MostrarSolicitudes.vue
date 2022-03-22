@@ -10,6 +10,42 @@
                                     :can-cancel="false"
                                     :is-full-page="true"/>
                         </div>
+                        <div>
+                            <div class="row">
+                                <div class="col d-flex flex-row-reverse">
+                                    <button class="btn btn-info" v-on:click="mostrarFiltros = !mostrarFiltros ">Filtros <font-awesome-icon icon="fa-solid fa-angle-down" /></button>
+                                </div>
+                            </div>
+                            <div class="row" v-if="mostrarFiltros">
+                                <div class="col-md-2 h5">
+                                    <label class="form-control-label h5" for="text-input">Sala</label>
+                                    <select required class="form-select" v-model="idSala">
+                                        <option value="0" selected disabled>Seleccione una sala</option>
+                                        <option :value="sala.idSala" v-text="sala.nomSala" v-for="sala in salas" :key="sala.idSala"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-control-label h5" for="text-input">Fecha</label>
+                                    <input required type="date" v-model="fecha" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de inicio: *</h5></label>
+                                    <input required type="time" v-model="horaIni" class="form-control" step="3600" min="08:00" max="19:00">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-control-label" for="text-input"><h5>Hora de Fin: *</h5></label>
+                                    <input required type="time" v-model="horaFin" class="form-control" step="3600" min="08:00" max="20:00">                            
+                                </div>
+                                <div class="col-md-3 h5">
+                                    <label class="form-control-label h5" for="text-input">Usuario</label>
+                                    <select required class="form-select" v-model="idPersona">
+                                        <option value="0" selected disabled>Seleccione un Usuario</option>
+                                        <option :value="persona.idPer" v-text="persona.nombrePer" v-for="persona in personas" :key="persona.idPer"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                         <table class="table">
                             <thead class="h5"> 
                                 <tr>
@@ -18,7 +54,7 @@
                                     <th style="text-align: center" scope="col">Hora de Inicio</th>
                                     <th style="text-align: center" scope="col">Hora de Finalización</th>
                                     <th style="text-align: center" scope="col">Estado</th>
-                                    <th style="text-align: center" scope="col">Contacto</th>
+                                    <th style="text-align: center" scope="col">Más Detalles</th>
                                     <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
@@ -29,15 +65,16 @@
                                     <td align="center" v-text="solicitud.horaIni"></td>
                                     <td align="center" v-text="solicitud.horaFin"></td>
                                     <td align="center" v-text="solicitud.estado"></td>
-                                    <td align="center" v-text="solicitud.telPer"></td>
-                                    <td align="center" v-if="solicitud.estado == 'En proceso'">
+                                    <td >
                                         <button class="btn btn-outline-primary" v-on:click="verDetalle(solicitud.idSol)">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></button>
+                                    </td>
+                                    <td v-if="solicitud.estado == 'En proceso'">
                                         <button class="btn btn-primary" v-on:click="getDocumento(solicitud.uuid)">Mostrar Formato <font-awesome-icon icon="fa-solid fa-eye" /></button>
                                         <button class="btn btn-success" v-on:click="aceptarSolicitud(solicitud.idSol)">Aceptar  <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarSolicitud(solicitud.idSol)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
-                                    <td align="center" v-else>
-                                        <button class="btn btn-outline-primary" v-on:click="verDetalle(solicitud.idSol)">Ver Detalles <font-awesome-icon icon="fa-solid fa-circle-info" /></button>
+                                    <td v-else>
+                                        <button class="btn btn-primary" v-on:click="getDocumento(solicitud.uuid)">Mostrar Formato <font-awesome-icon icon="fa-solid fa-eye" /></button>
                                     </td>
                                     
                                 </tr>
@@ -76,6 +113,8 @@ export default {
     data() {
         return {
             solicitudes: [],
+            salas: [],
+            personas: [],
             errores: [],
             pagination: {
                 'total': 0, 
@@ -89,6 +128,12 @@ export default {
             isLoading: true,
             modalVerDetalle: false,
             idSolicitud : 0,
+            mostrarFiltros: false,
+            idSala : 0,
+            fecha : '',
+            horaIni : '',
+            horaFin : '',
+            idPersona : 0
 
         }
     },
@@ -125,7 +170,15 @@ export default {
         },
         getSolicitudes(page) {
             let me = this;
-            axios.get('/solicitud_admin?page=' + page).then(function (response) {
+            axios.get('/solicitud_admin?page=' + page, {
+                params: {
+                    fecha : me.fecha,
+                    sala : me.idSala,
+                    horaInicio : me.horaIni,
+                    horaFin : me.horaFin,
+                    persona : me.idPersona
+                }
+            }).then(function (response) {
                 me.solicitudes = response.data.solicitudes.data;
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
@@ -205,9 +258,68 @@ export default {
             this.modalVerDetalle = true;
             this.idSolicitud = idSolicitud;
         },
+        getSalas(){
+            let me = this;
+            me.isLoading = true;
+            axios.get('/catalogoSalas').then(response=>{
+                me.salas = response.data.salas;
+            })
+            .catch(error=>{
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
+            })
+        },
+        getPersonas(){
+            let me = this;
+            me.isLoading = true;
+            axios.get('/catalogoPersonas').then(response=>{
+                me.personas = response.data.personas;
+            })
+            .catch(error=>{
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
+            })
+        },
     },
     mounted() {
+        this.getSalas();
+        this.getPersonas();
         this.getSolicitudes(1);
+    },
+    watch: {
+        fecha: function(val){
+            this.isLoading = true;
+            this.fecha = val;
+            this.getSolicitudes(1);
+        },
+        idSala: function(val){
+            this.isLoading = true;
+            this.idSala = val;
+            this.getSolicitudes(1);
+        },
+        idPersona: function(val){
+            this.isLoading = true;
+            this.idPersona = val;
+            this.getSolicitudes(1);
+        },
+        horaIni: function(val){
+            this.isLoading = true;
+            this.horaIni = val;
+            this.getSolicitudes(1);
+        },
+        horaFin: function(val){
+            this.isLoading = true;
+            this.horaFin = val;
+            this.getSolicitudes(1);
+        }
     }
 }
 </script>
