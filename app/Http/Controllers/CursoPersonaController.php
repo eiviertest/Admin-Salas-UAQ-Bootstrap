@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 class CursoPersonaController extends Controller
 {   
     /**
-     * Lista los cursos de un semestre
+     * Retorna los cursos de un semestre
      *
-     * @return array cursos y semestre
+     * @return array cursos
+     * @return string semestre
      */
     public function cursos_impartidos(){
         $fecha_actual = Carbon::now()->format('m-d');
@@ -69,7 +70,7 @@ class CursoPersonaController extends Controller
      * @return array personas
      */
     public function concentrado_curso($idCurso){
-        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'a.nomArea')
+        $personas = CursoPersona::select('p.idPer as id', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer,"")) as nombre'), 'a.nomArea')
                     ->join('persona as p', 'curso_persona.idPer', '=', 'p.idPer')
                     ->join('area as a', 'a.idArea', '=', 'p.idArea')
                     ->where('curso_persona.idCur', '=', $idCurso)
@@ -179,14 +180,14 @@ class CursoPersonaController extends Controller
 
     
     /**
-     * Lista las solicitudes de enrolarse a un curso
+     * Lista las solicitudes de enrolarse a un curso con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function lista_curso_persona(Request $request){
         if(!$request->ajax()) return redirect('/');
-        $lista_curso_persona = CursoPersona::select('p.idPer', 'p.telPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
+        $lista_curso_persona = CursoPersona::select('p.idPer', 'p.telPer', 'nomArea', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 'c.nomCur', 'curso_persona.estatus', 'c.idCur')
                         ->join('persona as p', 'p.idPer', '=', 'curso_persona.idPer')
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
@@ -206,7 +207,7 @@ class CursoPersonaController extends Controller
 
     
     /**
-     * Lista los cursos de una persona
+     * Lista los cursos de una persona con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -218,6 +219,7 @@ class CursoPersonaController extends Controller
                         ->join('curso as c', 'c.idCur', '=', 'curso_persona.idCur')
                         ->join('horario_curso as h', 'c.idCur', '=', 'h.idCur')
                         ->where('curso_persona.idPer', '=', $idPersona->idPer)
+                        ->where('c.estado', '=', 1)
                         ->orderBy('curso_persona.estatus', 'ASC')
                         ->paginate(10);
         return [

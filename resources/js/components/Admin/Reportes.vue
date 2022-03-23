@@ -5,11 +5,11 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <h4>Reportes</h4>
                             </div>
-                            <div class="col-md-6" v-if="btnDescargarInfo">
-                                <button class="btn btn-primary justify-content-end" v-on:click="descargarInfo(ruta, id)">Descargar información <font-awesome-icon icon="fa-solid fa-file-arrow-down" /></button>
+                            <div class="col-md-4 d-flex justify-content-center" v-if="btnDescargarInfo">
+                                <button class="btn btn-success justify-content-end" v-on:click="descargarInfo(ruta, id)">Descargar información <font-awesome-icon icon="fa-solid fa-file-arrow-down" /></button>
                             </div>
                         </div>
                     </div>
@@ -21,25 +21,25 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <label class="form-control-label" for="text-input">Reporte a generar</label>
+                                <label class="form-control-label h5" for="text-input">Reporte a Generar:</label>
                                 <select class="form-select" v-model="eleccion">
                                     <option value=0 selected disabled>Seleccione una opción</option>
-                                    <option value=1>Cursos impartidos</option>
-                                    <option value=2>Solicitud de sala por área</option>
-                                    <option value=3>Concentrado por curso</option>
+                                    <option value=1>Cursos Impartidos</option>
+                                    <option value=2>Solicitud de Sala por Área</option>
+                                    <option value=3>Concentrado por Curso</option>
                                 </select>
                             </div>
                             <div class="col-md-3" v-if="mostrarElementoArea">
                                 <label class="form-control-label" for="text-input">Área/Facultad/Institución</label>
                                 <select class="form-select" v-model="idArea">
-                                    <option value="0" selected disabled>Seleccione una área/facultad</option>
+                                    <option value="0" selected disabled>Seleccione un Área/Facultad</option>
                                     <option :value="area.idArea" v-text="area.nomArea" v-for="area in areas" :key="area.idArea"></option>
                                 </select>
                             </div>
                             <div class="col-md-3" v-if="mostrarElementoCurso">
                                 <label class="form-control-label" for="text-input">Curso</label>
                                 <select class="form-select" v-model="idCurso">
-                                    <option value="0" selected disabled>Seleccione un curso</option>
+                                    <option value="0" selected disabled>Seleccione un Curso</option>
                                     <option :value="curso.idCur" v-text="curso.nomCur" v-for="curso in cursos" :key="curso.idCur"></option>
                                 </select>
                             </div>
@@ -103,7 +103,12 @@ export default {
                 me.mostrarElementoCurso = true;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         getAreas() {
@@ -114,7 +119,12 @@ export default {
                 me.mostrarElementoArea = true;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         concentradoCurso(idCurso){
@@ -132,7 +142,12 @@ export default {
                 me.mostrarElementoTablaConcentradoCurso = true;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         getCursosImpartidos(){
@@ -153,7 +168,12 @@ export default {
                 me.btnDescargarInfo = true;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         concentradoSolicitudes(idArea){
@@ -172,7 +192,12 @@ export default {
                 me.mostrarElementoTablaSolicitudes = true;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         descargarInfo(ruta, id){
@@ -210,7 +235,12 @@ export default {
                 this.id = 0;
                 this.getCursos();
             }else {
-                console.log('Sin elección.')
+                Swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: 'No puede seleccionar esta opción',
+                    button: 'Entendido'
+                });
             }
         },
         idCurso: function (val) {

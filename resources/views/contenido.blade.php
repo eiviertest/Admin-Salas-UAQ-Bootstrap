@@ -7,7 +7,6 @@
         @elsecan('User_Home')
             <solicitar-sala/>
         @endcan
-        <!--<inicio/>-->
     </template>
     <template v-if="menu == 1">
         <reportes/>

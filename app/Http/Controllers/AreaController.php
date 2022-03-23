@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AreaController extends Controller
 {
     /**
-     * Lista todas las areas, dependencias registradoas
+     * Areas paginadas
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -29,6 +29,12 @@ class AreaController extends Controller
             'areas' => $areas];
     }
 
+    /**
+     * Areas sin paginacion
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function catalogo_area(Request $request)
     {
         if(!$request->ajax()) return redirect('/');

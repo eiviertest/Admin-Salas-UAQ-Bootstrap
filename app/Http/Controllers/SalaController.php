@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class SalaController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
+     * Lista las salas con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -29,6 +29,12 @@ class SalaController extends Controller
             'salas' => $salas];
     }
 
+    /**
+     * Lista las salas sin paginacion
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function catalogoSalas(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
@@ -37,7 +43,7 @@ class SalaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena una sala
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -57,7 +63,7 @@ class SalaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Valida la informacion enviada
      *
      * @param  \Illuminate\Http\Request  $request
      */
@@ -68,7 +74,7 @@ class SalaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza una sala
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -88,7 +94,7 @@ class SalaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina una sala
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

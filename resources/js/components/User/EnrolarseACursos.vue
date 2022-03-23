@@ -106,7 +106,12 @@ export default {
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         enrolarseCurso(idCur){
@@ -114,30 +119,30 @@ export default {
             me.isLoading = true;
             axios.post('/enrolarse',{'idCur':idCur}).then(function (response){
                 if(response.data.code==2){
-                    console.log('usted ya está enrolado');
-                    // Alerta que notifica que todo salio correcto
                     Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Ya estaba enrolado a este curso, espere la respuesta del admin',
-                    showConfirmButton: false,
-                    timer: 1200
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Ya se enrolo a este curso',
+                        showConfirmButton: false,
+                        timer: 1200
                     })
-                }
-                else{
-                    console.log('usted se enrolo');
+                }else{
                     me.getCursos(1);
-                    // Alerta que notifica que todo salio correcto
                     Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Se ha enrolado con éxito, espere la respuesta del admin',
-                    showConfirmButton: false,
-                    timer: 1200
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha enrolado con éxito.',
+                        showConfirmButton: false,
+                        timer: 1200
                     })
                 }
             }).catch(function (error){
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             })
         }
     },

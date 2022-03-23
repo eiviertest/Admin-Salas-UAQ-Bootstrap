@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PersonaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Ruta para cerrar sesión
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
+
+Route::get('/catalogoPersonas', [PersonaController::class, 'catalogoPersonas']);
 
 require __DIR__.'/area.php';
 require __DIR__.'/sala.php';

@@ -17,12 +17,18 @@ use PDF;
 class SolicitudController extends Controller
 {
 
+    /**
+     * Lista los eventos (cursos y solicitudes de sala)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function calendar(Request $request)
     {
         $cursos = Curso::select(DB::raw('CONCAT(nomCur, " Inicio: ", DATE_FORMAT(h.horIn, "%H:%i"), " Fin: ", DATE_FORMAT(h.horFin, "%H:%i")) as title'), 'fecInCur as start', 'fecFinCur as end')
                         ->join('horario_curso as h', 'curso.idCur', 'h.idCur')
                         ->sala($request->sala)
-                        ->fechaInicio($request->fecha)
+                        ->fecha($request->fecha)
                         ->where('curso.estado', '=', 1)
                         ->get();
         $solicitudes = Solicitud::select(DB::raw('CONCAT("Solicitud", " Inicio: ", DATE_FORMAT(horaIni, "%H:%i"), " Fin: ", DATE_FORMAT(horaFin, "%H:%i")) as title'), 'solicitud.fecha as start', 'solicitud.fecha as end')
@@ -30,13 +36,14 @@ class SolicitudController extends Controller
                         ->horaFin($request->horaFin)
                         ->sala($request->sala)
                         ->fecha($request->fecha)
+                        ->where('idEst', '!=', 3)
                         ->get();
         $eventos = array_merge($solicitudes->toarray(), $cursos->toarray());
         return ['eventos' => $eventos];
     }
 
     /**
-     * Lista las solicitudes del usuario logeado
+     * Lista las solicitudes de usuario con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -64,19 +71,34 @@ class SolicitudController extends Controller
     }
 
     /**
-     * Lista las solicitudes para administrador
+     * Lista las solicitudes para administrador con paginacion
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index_admin(Request $request)
     {
+        if($request->horaFin != null){
+            //Formato Unix
+            $horaFinUnix = strtotime($request->horaFin);
+            $hora_fin = date('H:i:s', $horaFinUnix - 1);
+        }else{
+            $hora_fin = null;
+        }
+
+        
+
         if(!$request->ajax()) return redirect('/');
-        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado')
+        $solicitudes = Solicitud::select('idSol', 's.nomSala as sala', 'p.telPer', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'solicitud.uuid', 'p.idPer')
                         ->orderBy('solicitud.fecha', 'DESC')
                         ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
+                        ->fecha($request->fecha)
+                        ->sala($request->sala)
+                        ->horaInicio($request->horaInicio)
+                        ->horaFin($hora_fin)
+                        ->persona($request->persona)
                         ->paginate(10);
         return [
             'pagination' => [
@@ -88,6 +110,37 @@ class SolicitudController extends Controller
                 'to' => $solicitudes->lastItem()
             ],
             'solicitudes' => $solicitudes];
+    }
+
+    /**
+     * Muestra el formato que se adjunto a una solicitud
+     */
+    public function mostrar_formato($uuid)
+    {
+        $solicitud = Solicitud::where('uuid', $uuid)->firstOrFail();
+        $pathToFile = storage_path(path: "app/public/formatosSol/" . $solicitud->rutaSol);
+        return response()->file($pathToFile);
+    }
+
+    /**
+     * La informacion de solicitud
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int idSolicitud
+     * @return collection dataSolicitud
+     */
+    public function getDataSolicitud(Request $request, $idSolicitud){
+        if(!$request->ajax()) return redirect('/');
+        $solicitud = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 's.nomSala as sala', 'p.telPer', 'p.tipoTel', 'p.extension', 'solicitud.fecha as fecha', 'solicitud.horaIni', 'solicitud.horaFin', 'e.nomEst as estado', 'a.nomArea', 'u.email')
+                    ->orderBy('solicitud.fecha', 'DESC')
+                    ->join('sala as s', 'solicitud.idSal', '=', 's.idSala')
+                    ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
+                    ->join('estatus as e', 'solicitud.idEst', '=', 'e.idEst')
+                    ->join('area as a', 'p.idArea', '=', 'a.idArea')
+                    ->join('users as u', 'p.idUsr', '=', 'u.id')
+                    ->where('idSol', '=', $idSolicitud)
+                    ->get();
+        return $solicitud;
     }
 
     /**
@@ -119,18 +172,19 @@ class SolicitudController extends Controller
         $cursos_registrados = HorarioCurso::select('c.nomCur')
                             ->join('curso as c', 'c.idCur', '=', 'horario_curso.idCur')
                             ->where('c.fecInCur', '<=', [date($request->fecha)])
+                            ->where('c.estado', '=', 1)
                             ->Where('c.fecFinCur', '>=', [date($request->fecha)])
                             ->where('c.idSala', '=', $request->idSala)
                             ->where(function ($query) use ($request, $hora_fin) {
-                                $query->where('horIn', '<=', $request->horaIni)
-                                    ->where('horFin', '<=', $request->horaFin)
-                                    ->whereBetween('horIn', [$request->horaIni, $hora_fin])
+                                $query->whereBetween('horIn', [$request->horaIni, $hora_fin])
+                                    ->orWhereRaw('horIn <= ? and horFin >= ?', [$request->horaIni, $hora_fin])
                                     ->orWhereRaw('horFin between ? and ?', [$request->horaIni, $hora_fin]);
                             })
                             ->get();
         if(count($cursos_registrados) == 0){
             $solicitudes_registradas = Solicitud::select('idSol')
                                         ->where('idSal', '=', $request->idSala)
+                                        ->where('idEst', '!=', 3)
                                         ->where('fecha', '=', [date($request->fecha)])
                                         ->where(function ($query) use ($request, $hora_fin) {
                                             $query->whereBetween('horaIni', [$request->horaIni, $hora_fin])
@@ -140,10 +194,9 @@ class SolicitudController extends Controller
                                         ->get();
             if(count($solicitudes_registradas) == 0) {
                 try {
-                    $horaFinUnix = strtotime($hora_fin);
+                    $horaFinUnix = strtotime($request->horaFin);
                     $solicitud = new Solicitud();
                     if($request->hasFile(key:'rutaSol')){
-                        //$solicitud->rutaSol = $request->file(key: 'rutaSol')->store(path: 'formatosSol');
                         $solicitud->rutaSol = time() . '_' . $request->file(key:'rutaSol')->getClientOriginalName();
                         $request->file(key:'rutaSol')->storeAs(path:'formatosSol', name:$solicitud->rutaSol); 
                     }else{
@@ -155,7 +208,7 @@ class SolicitudController extends Controller
                     $solicitud->idEst = $idEstatus->idEst;
                     $solicitud->fecha = $request->fecha;
                     $solicitud->horaIni = $request->horaIni;
-                    $solicitud->horaFin = $request->horaFin;
+                    $solicitud->horaFin = date('H:i:s', $horaFinUnix - 1);
                     $solicitud->save();
                     return [
                         'code' => 1,
@@ -194,8 +247,14 @@ class SolicitudController extends Controller
         }
     }
 
+    /**
+     * Actualiza el estatus de la solicitud
+     *
+     * @param  int idArea
+     * @return collection solicitudes
+     */
     public function area_solicitudes_detalle($idArea){
-        $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apeMatPer, " ", p.apePatPer) as nombre'), 'nomEst', 'nomSala')
+        $solicitudes = Solicitud::select('idSol', DB::raw('CONCAT(p.nomPer, " ", p.apePatPer, " ", IFNULL(p.apeMatPer, "")) as nombre'), 'nomEst', 'nomSala')
                         ->join('persona as p', 'p.idPer', '=', 'solicitud.idPer')
                         ->join('area as a', 'a.idArea', '=', 'p.idArea')
                         ->join('sala as s', 's.idSala', '=', 'solicitud.idSal')
@@ -206,6 +265,12 @@ class SolicitudController extends Controller
         return ['solicitudes' => $solicitudes];
     }
 
+    /**
+     * Descargar PDF de solicitudes por area
+     *
+     * @param int idArea
+     * @return PDF
+     */
     public function area_solicitudes_detalle_pdf($idArea) {
         $area = Area::select('nomArea')->where('idArea', '=', $idArea)->first();
         $solicitudes = $this->area_solicitudes_detalle($idArea);

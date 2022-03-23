@@ -25,15 +25,21 @@ class Curso extends Model
         'idSala'
     ];
 
-    public function scopeFechaInicio($query, $fecha_inicio){
-        if($fecha_inicio != '') {
-            return $query->where('curso.fecInCur', '=', $fecha_inicio);
+    public function scopeFecha($query, $fecha){
+        if($fecha != '') {
+            return $query->where('curso.fecInCur', '<=', $fecha)->where('curso.fecFinCur', '>=', $fecha);
         }
     }
     
     public function scopeFechaFin($query, $fecha_fin){
         if($fecha_fin != '') {
             return $query->where('curso.fecFinCur', '=', $fecha_fin);
+        }
+    }
+
+    public function scopeFechaInicio($query, $fecha_inicio){
+        if($fecha_inicio != '') {
+            return $query->where('curso.fecInCur', '=', $fecha_inicio);
         }
     }
 

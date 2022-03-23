@@ -49,7 +49,9 @@ class Solicitud extends Model
     }
 
     public function scopePersona($query, $idPer){
-        return $query->where('solicitud.idPer', '=', $idPer);
+        if($idPer != 0) {
+            return $query->where('solicitud.idPer', '=', $idPer);
+        }
     }
 
     public function persona(){

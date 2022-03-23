@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="card-header">Solicitudes para enrolarse a curso</h4>
+                    <h4 class="card-header">Solicitudes para Enrolarse a Cursos</h4>
                     <div class="card-body">
                     <div class="vld-parent">
                         <loading :active.sync="isLoading"
@@ -11,28 +11,28 @@
                                 :is-full-page="true"/>
                     </div>
                         <table class="table">
-                            <thead> 
+                            <thead class="h5"> 
                                 <tr>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Área/Facultad/Institución</th>
-                                    <th scope="col">Contacto</th>
-                                    <th scope="col">Curso</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Acción</th>
+                                    <th style="text-align: center" scope="col">Nombre</th>
+                                    <th style="text-align: center" scope="col">Área/Facultad/Institución</th>
+                                    <th style="text-align: center" scope="col">Contacto</th>
+                                    <th style="text-align: center" scope="col">Curso</th>
+                                    <th style="text-align: center" scope="col">Estado</th>
+                                    <th style="text-align: center" scope="col">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="h5">
                                 <tr v-for="curso_persona in lista_cursos_persona" :key="curso_persona.idPer.toString() + curso_persona.idCur.toString()"> 
-                                    <td v-text="curso_persona.nombre"></td>
-                                    <td v-text="curso_persona.nomArea"></td>
-                                    <td v-text="curso_persona.telPer"></td>
-                                    <td v-text="curso_persona.nomCur"></td>
-                                    <td v-text="curso_persona.estatus"></td>
-                                    <td v-if="curso_persona.estatus == 'En proceso'">
-                                        <button class="btn btn-primary" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar <font-awesome-icon icon="fa-solid fa-check" /></button>
+                                    <td align="center" v-text="curso_persona.nombre"></td>
+                                    <td align="center" v-text="curso_persona.nomArea"></td>
+                                    <td align="center" v-text="curso_persona.telPer"></td>
+                                    <td align="center" v-text="curso_persona.nomCur"></td>
+                                    <td align="center" v-text="curso_persona.estatus"></td>
+                                    <td align="center" v-if="curso_persona.estatus == 'En proceso'">
+                                        <button class="btn btn-success" v-on:click="aceptarUsuario(curso_persona.idPer, curso_persona.idCur)">Aceptar <font-awesome-icon icon="fa-solid fa-check" /></button>
                                         <button class="btn btn-danger" v-on:click="rechazarUsuario(curso_persona.idPer, curso_persona.idCur)">Rechazar <font-awesome-icon icon="fa-solid fa-ban" /></button>
                                     </td>
-                                    <td v-else>
+                                    <td align="center" v-else>
                                         <label class="form-control-label">Sin acción disponible</label>
                                     </td>
                                 </tr>
@@ -119,7 +119,12 @@ export default {
                 me.pagination = response.data.pagination;
                 me.isLoading = false;
             }).catch(function (error) {
-                me.errores = error.data;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Fallo en el sistema.',
+                    button: 'Entendido'
+                });
             });
         },
         aceptarUsuario(idPer, idCur){
@@ -129,14 +134,36 @@ export default {
                     'idPer': idPer,
                     'idCur': idCur
                 }).then(function (response) {
-                    me.getListaCursoPersona(1);
+                    if(response.data.code == 1) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'El usuario ha sido aceptado',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                        me.getListaCursoPersona(1);
+                    }else{
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'El cupo del curso ha sido alcanzado.',
+                            button: 'Entendido'
+                        });
+                        me.isLoading = false;
+                    }
                 }).catch( function (error) {
-                    me.errores = error.data;
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Fallo en el sistema.',
+                        button: 'Entendido'
+                    });
             });
         },
         rechazarUsuario(idPer, idCur){
             Swal.fire({
-                title: 'Estas seguro?',
+                title: '¿Estás seguro?',
                 text: "Una vez rechazado no se podrán revertir los cambios!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -161,10 +188,20 @@ export default {
                                 'success'
                             )
                         }).catch( function (error) {
-                            me.errores = error.data;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: 'Fallo en el sistema.',
+                                button: 'Entendido'
+                            });
                         })
                         .catch(error=>{
-                            console.log(error)
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: 'Fallo en el sistema.',
+                                button: 'Entendido'
+                            });
                         })
                 }
             })
