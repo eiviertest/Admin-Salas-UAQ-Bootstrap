@@ -106,8 +106,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -122,8 +121,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -145,8 +143,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -171,8 +168,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -195,8 +191,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -238,8 +233,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'warning',
-                    title: 'No puede seleccionar esta opción',
-                    button: 'Entendido'
+                    title: 'No puede seleccionar esta opción'
                 });
             }
         },

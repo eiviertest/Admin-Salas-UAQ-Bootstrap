@@ -162,8 +162,7 @@ export default({
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Fallo en el sistema.',
-                        button: 'Entendido'
+                        title: 'Fallo en el sistema.'
                     });
                 })
         },

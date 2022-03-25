@@ -161,8 +161,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             })
         },
@@ -176,8 +175,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             })
         },
@@ -219,8 +217,7 @@ export default {
                             position: 'center',
                             icon: 'success',
                             title: 'Su solicitud se ha registrado con éxito.',
-                            text: 'Puede ver el estado en "Mis Solicitudes".',
-                            button: 'Entendido'
+                            text: 'Puede ver el estado en "Mis Solicitudes".'
                         });
                         me.resetVariables();
                         me.getEventos();
@@ -231,8 +228,7 @@ export default {
                                 position: 'center',
                                 icon: 'warning',
                                 title: 'Su solicitud no se ha registrado.',
-                                text: 'Se encontraron inconvenientes al momento de registrar la solicitud, fecha u horas seleccionadas, favor de verificarlos.',
-                                button: 'Entendido'
+                                text: 'Se encontraron inconvenientes al momento de registrar la solicitud, fecha u horas seleccionadas, favor de verificarlos.'
                             });
                             me.isLoading = false;
                         }
@@ -245,8 +241,7 @@ export default {
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            title: 'Fallo en el sistema.',
-                            button: 'Entendido'
+                            title: 'Fallo en el sistema.'
                         });
                     }
                 })
