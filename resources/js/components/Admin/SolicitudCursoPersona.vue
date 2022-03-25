@@ -122,8 +122,7 @@ export default {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'Fallo en el sistema.',
-                    button: 'Entendido'
+                    title: 'Fallo en el sistema.'
                 });
             });
         },
@@ -147,8 +146,7 @@ export default {
                         Swal.fire({
                             position: 'center',
                             icon: 'warning',
-                            title: 'El cupo del curso ha sido alcanzado.',
-                            button: 'Entendido'
+                            title: 'El cupo del curso ha sido alcanzado.'
                         });
                         me.isLoading = false;
                     }
@@ -156,8 +154,7 @@ export default {
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Fallo en el sistema.',
-                        button: 'Entendido'
+                        title: 'Fallo en el sistema.'
                     });
             });
         },
@@ -191,16 +188,14 @@ export default {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'error',
-                                title: 'Fallo en el sistema.',
-                                button: 'Entendido'
+                                title: 'Fallo en el sistema.'
                             });
                         })
                         .catch(error=>{
                             Swal.fire({
                                 position: 'center',
                                 icon: 'error',
-                                title: 'Fallo en el sistema.',
-                                button: 'Entendido'
+                                title: 'Fallo en el sistema.'
                             });
                         })
                 }
