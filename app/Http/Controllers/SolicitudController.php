@@ -118,7 +118,7 @@ class SolicitudController extends Controller
     public function mostrar_formato($uuid)
     {
         $solicitud = Solicitud::where('uuid', $uuid)->firstOrFail();
-        $pathToFile = storage_path(path: "app/public/formatosSol/" . $solicitud->rutaSol);
+        $pathToFile = storage_path("app/public/formatosSol/" . $solicitud->rutaSol);
         return response()->file($pathToFile);
     }
 
@@ -152,7 +152,7 @@ class SolicitudController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        if($request->hasFile(key:'rutaSol')){
+        if($request->hasFile('rutaSol')){
             $fileName = $request->rutaSol->getClientOriginalName();
         }else{
             $filename = null;
@@ -196,9 +196,9 @@ class SolicitudController extends Controller
                 try {
                     $horaFinUnix = strtotime($request->horaFin);
                     $solicitud = new Solicitud();
-                    if($request->hasFile(key:'rutaSol')){
-                        $solicitud->rutaSol = time() . '_' . $request->file(key:'rutaSol')->getClientOriginalName();
-                        $request->file(key:'rutaSol')->storeAs(path:'formatosSol', name:$solicitud->rutaSol); 
+                    if($request->hasFile('rutaSol')){
+                        $solicitud->rutaSol = time() . '_' . $request->file('rutaSol')->getClientOriginalName();
+                        $request->file('rutaSol')->storeAs('formatosSol', $solicitud->rutaSol); 
                     }else{
                         $solicitud->rutaSol = null;
                     }
