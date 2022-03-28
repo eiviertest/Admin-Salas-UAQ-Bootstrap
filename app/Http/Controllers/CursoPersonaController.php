@@ -45,8 +45,9 @@ class CursoPersonaController extends Controller
      * @return array Cursos
      */
     public function cursos_impartidos_fecha($fecha_inicio, $fecha_fin){
-        $cursos = Curso::select('curso.nomCur', 'curso.fecInCur', 'curso.fecFinCur', 'cupCur', 's.nomSala')
+        $cursos = Curso::select('curso.nomCur', 'instructor', 'curso.fecInCur', 'curso.fecFinCur', 'h.horIn', 'h.horFin', 'cupCur', 's.nomSala')
                         ->join('sala as s', 's.idSala', '=', 'curso.idSala')
+                        ->join('horario_curso as h', 'curso.idCur', '=', 'h.idCur')
                         ->whereRaw('DATE_FORMAT(curso.fecInCur, "%m-%d") >= ? and DATE_FORMAT(curso.fecFinCur, "%m-%d") <= ?', [$fecha_inicio, $fecha_fin])
                         ->get();
         return $cursos;
@@ -60,6 +61,7 @@ class CursoPersonaController extends Controller
     public function cursos_impartidos_pdf(){
         $datos = $this->cursos_impartidos();
         $pdf = PDF::loadView('reportes.cursos_impartidos', ['cursos' => $datos['cursos'], 'semestre'=>$datos['semestre']]);
+        $pdf->setPaper('a4', 'landscape');
         return $pdf->download('cursos_impartidos.pdf');
     }
 
