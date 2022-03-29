@@ -63,6 +63,6 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="dropdown-item" target="_blank" href="https://docs.google.com/forms/d/15RV_b7Qfj01kL32WlaidHAQGNRVI4rwD-nyPkmz_-wA/edit">Encuesta de Satisfacción</a>
+        <a class="nav-link h4" target="_blank" href="https://docs.google.com/forms/d/15RV_b7Qfj01kL32WlaidHAQGNRVI4rwD-nyPkmz_-wA/edit">Encuesta de Satisfacción</a>
     </li>
 @endcan
