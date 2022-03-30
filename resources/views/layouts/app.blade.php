@@ -92,5 +92,11 @@
             @yield('contenido')
         </main>
     </div>
+    <footer class="footer">
+        <div class="container-fluid bg-light text-center p-3">
+            <p class="copyright">&copy; Todos los derechos reservados :: UTNG - UAQ :: 2022</p>
+            <p>Alejandro Vargas - Alan Herrera - Brandon León</p>
+        </div>
+    </footer>
 </body>
 </html>
