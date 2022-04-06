@@ -92,11 +92,32 @@
             @yield('contenido')
         </main>
     </div>
-    <footer class="footer">
-        <div class="container-fluid bg-light text-center p-3">
-            <p class="copyright">&copy; Todos los derechos reservados :: UTNG - UAQ :: 2022</p>
-            <p>Alejandro Vargas - Alan Herrera - Brandon León</p>
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-muted p-2" style="background-color: rgba(0, 0, 0, 0.05);">
+        <div class="container text-center text-md-start mt-5">
+            <!-- Grid row -->
+            <div class="row mt-3">
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                <!-- Content -->
+                <h6 class="text-uppercase fw-bold mb-4">
+                <i class="fas fa-gem me-3"></i>Centro de Computo Academico
+                </h6>
+                <p><strong>Proyecto realizado por: </strong></p>
+                <ul>
+                    <li>Alan Eduardo Herrera Alvarado</li>
+                    <li>Brandon Aldahir León Alvarado </li>
+                    <li>Alejandro Vargas Ramírez</li>
+                </ul>
+                <p> <strong>Dirigido por: </strong>Clara Carmen Aguilar Luna</p>
+            </div>
+    
+        <!-- Copyright -->
+        <div class="text-center">
+        © 2022 Todos los Derechos Reservados
         </div>
+        <!-- Copyright -->
     </footer>
+    <!-- Footer -->
 </body>
 </html>
